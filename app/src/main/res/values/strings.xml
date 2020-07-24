@@ -1,0 +1,137 @@
+<resources>
+    <string name="app_name">工科助手</string>
+    <string name="app_introduction">你的忠实仆从，遂幻工作室出品</string>
+    <string name="app_author">Copyright © 2019&#8211;2020 遂幻工作室</string>
+
+    <string name="shortcut_achievement_long">成绩查询</string>
+    <string name="shortcut_achievement_short">成绩</string>
+
+    <string name="permission_title">欢迎使用工科教务</string>
+    <string name="permission_detail">为了向您提供正常的服务，工科教务将向您申请以下必要权限，如果您不授予这些权限，工科教务可能无法正常运行。</string>
+    <string name="permission_title_write_external">储存权限</string>
+    <string name="permission_content_write_external">用于保存日志信息以便版本维护</string>
+    <string name="permission_title_write_calendar">访问日历</string>
+    <string name="permission_content_write_calendar">用于将课表导入日历以提供课前提醒服务</string>
+    <string name="permission_title_phone_state">读取手机信息</string>
+    <string name="permission_content_phone_state">仅获取少量必要信息用于友盟+数据统计服务</string>
+    <string name="permission_granted">同意</string>
+    <string name="permission_denied">工科助手需要获得权限授权才能正常使用哦~</string>
+
+    <string name="title_timetable">课表</string>
+    <string name="title_mine">我的</string>
+    <string name="title_exam">考试安排</string>
+
+    <string name="title_room">空闲教室</string>
+    <string name="title_achievement">成绩</string>
+    <string name="title_category_quick">快捷启动</string>
+    <string name="title_category_usual">常用功能</string>
+    <string name="title_category_expand">拓展功能</string>
+    <string name="title_into_exam">考试安排查询</string>
+    <string name="title_into_calendar">课表导入到日历</string>
+    <string name="title_logout">退出登录</string>
+    <string name="title_category_other">其他</string>
+    <string name="title_about">关于</string>
+    <string name="title_more">更多</string>
+
+    <string name="title_achievement_search">成绩查询</string>
+    <string name="title_achievement_re">至今未过的课程</string>
+    <string name="text_achievement_search">查询</string>
+    <string name="text_achievement_name">课程</string>
+    <string name="text_achievement_achievement">成绩</string>
+    <string name="text_achievement_achievement_make">补考成绩</string>
+    <string name="text_achievement_achievement_re">重修成绩</string>
+    <string name="text_achievement_credit">学分</string>
+    <string name="text_achievement_passed_empty">成绩还没有出来呢~</string>
+    <string name="text_achievement_failed_empty">恭喜你，所有科目全都及格了哦~</string>
+
+    <string name="title_exam_search">考试安排</string>
+    <string name="text_exam_name">科目</string>
+    <string name="text_exam_time">时间</string>
+    <string name="text_exam_location">地点</string>
+    <string name="text_exam_num">座位号</string>
+    <string name="text_exam_empty">还没有考试安排哦~</string>
+
+    <string name="title_calendar_import">将课表导入日历</string>
+    <string name="title_calendar_holiday">假期就别想着上课了，好好玩~</string>
+    <string name="title_calendar_preRemind">提前提醒</string>
+    <string name="text_calendar_preRemind">上课前是否提前提醒</string>
+    <string name="title_calendar_pre_time">提醒时间</string>
+    <string name="title_calendar_pre_time_choose">选择提醒时间</string>
+    <string name="text_calendar_pre_time">设置提前提醒的时间</string>
+    <string name="text_calendar_pre_time_name">分钟</string>
+    <string name="title_calendar_getNewest">使用最新课表数据</string>
+    <string name="text_calendar_getNewest">设置使用最新获取的数据或缓存数据</string>
+    <string name="text_calendar_state">当前状态：</string>
+    <string name="text_calendar_insert_new">立即导入</string>
+    <string name="text_calendar_insert_re">重新导入</string>
+    <string name="text_calendar_insert_success">导入成功</string>
+    <string name="text_calendar_insert_failure">导入失败</string>
+    <string name="text_calendar_reinsert_failure">删除旧数据失败，请重试</string>
+    <string name="text_calendar_setup_failure">初始化失败，请检查日历读写权限</string>
+    <string name="text_calendar_delete">删除已导入内容</string>
+    <string name="text_calendar_delete_success">删除成功</string>
+    <string name="text_calendar_delete_failure">删除失败</string>
+    <string name="text_calendar_count_empty">尚未导入</string>
+    <string name="text_calendar_count">已导入%1$d条</string>
+    <string name="text_calendar_doing_delete">正在删除</string>
+    <string name="text_calendar_doing_getData">正在获取课表数据</string>
+    <string name="text_calendar_doing_prepare">正在准备导入</string>
+    <string name="text_calendar_doing">正在导入第%1$d条</string>
+    <string name="text_calendar_doing_warning">正在导入，请等待导入完成</string>
+
+    <string name="text_hello">%1$s，今天是第%2$s周%3$s</string>
+    <string name="text_hello_holiday">%1$s，今天是%2$s，祝你假期愉快哦~</string>
+    <string name="text_table_next">已为你预先显示下一周课表</string>
+    <string name="text_table_empty">暂无数据</string>
+    <string name="text_monday">周一</string>
+    <string name="text_tuesday">周二</string>
+    <string name="text_wednesday">周三</string>
+    <string name="text_thursday">周四</string>
+    <string name="text_friday">周五</string>
+    <string name="text_saturday">周六</string>
+    <string name="text_sunday">周日</string>
+    <string name="text_lunch">中午</string>
+    <string name="text_dinner">晚上</string>
+
+    <string name="text_hello_morning">早上好</string>
+    <string name="text_hello_am">上午好</string>
+    <string name="text_hello_lunch">中午好</string>
+    <string name="text_hello_afternoon">下午好</string>
+    <string name="text_hello_dinner">晚上好</string>
+
+    <string name="title_feedback">问题反馈</string>
+    <string name="title_update">检查更新</string>
+    <string name="title_developer">开发者</string>
+
+    <string name="title_update_get">有更新版本</string>
+    <string name="title_update_already">已是最新版本</string>
+    <string name="title_update_error">检查更新出错</string>
+    <string name="text_update_content">有更新版本，APK大小 %1$s，是否更新？</string>
+    <string name="text_update_content_force">有更新版本，APK大小 %1$s，请更新，否则将无法正常使用工科助手。</string>
+    <string name="text_update_version">最新版本：</string>
+    <string name="text_update_changelog">更新日志：</string>
+    <string name="title_update_download">工科教务更新</string>
+    <string name="title_update_is_download">正在下载安装包，请勿重复尝试</string>
+
+    <string name="text_username_edit">输入学号</string>
+    <string name="text_password_edit">输入密码</string>
+    <string name="text_login_empty">账号或密码为空</string>
+    <string name="text_login_failure">登录失败</string>
+
+    <string name="title_check_logout">确定退出登录？</string>
+    <string name="text_check_logout">您确定要退出登录吗？退出登录将无法继续使用“工科助手”。</string>
+
+    <string name="text_loading">正在获取，请稍后……</string>
+    <string name="text_load_failed">获取失败</string>
+    <string name="text_developing">正在开发中，敬请期待</string>
+    <string name="text_coming">更多功能准备中，敬请期待</string>
+
+    <string name="text_ok">确定</string>
+    <string name="text_cancel">取消</string>
+
+    <string name="text_check_cancel_login">你确定要退出吗？退出将无法继续使用“工科助手”。</string>
+    <string name="title_check_cancel_login">确定退出？</string>
+
+    <string name="error_network">请检查网络连接</string>
+    <string name="error_setup">应用初始化失败，网络连接异常或服务器维护中</string>
+</resources>

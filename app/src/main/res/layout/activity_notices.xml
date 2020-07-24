@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Notices">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/notices_back"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="15dp"
+                android:layout_gravity="start"
+                android:tint="@color/color_font_normal"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/title_calendar_import"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/color_font_normal"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/notices_pre_base"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:background="?selectableItemBackground">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_calendar_preRemind"
+                        android:textColor="@color/color_font_normal"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/text_calendar_preRemind"
+                        android:textColor="@color/color_card_font"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <Switch
+                    android:id="@+id/notices_pre_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/notices_pre_time_base"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:background="?selectableItemBackground"
+                tools:ignore="DisableBaselineAlignment">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_calendar_pre_time"
+                        android:textColor="@color/color_font_normal"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/text_calendar_pre_time"
+                        android:textColor="@color/color_card_font"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/notices_pre_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="end"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="5dp"
+                    android:maxLines="2"
+                    android:ellipsize="start"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_card_font"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_calendar_pre_time_name"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_card_font" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_check_mark_checked"
+                    android:layout_marginStart="15dp"
+                    tools:ignore="ContentDescription"
+                    app:tint="@color/color_card_font" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/notices_newest_base"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:background="?selectableItemBackground">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_calendar_getNewest"
+                        android:textColor="@color/color_font_normal"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/text_calendar_getNewest"
+                        android:textColor="@color/color_card_font"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <Switch
+                    android:id="@+id/notices_newest_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:text="@string/text_calendar_state"
+                android:textColor="@color/color_font_normal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/notices_state"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="70dp"
+                android:gravity="end"
+                android:textColor="@color/color_font_normal"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="23dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/colorAlert">
+            <TextView
+                android:id="@+id/notices_insert"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/text_calendar_insert_new"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
+            <ProgressBar
+                android:id="@+id/notices_insert_doing"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="invisible"
+                android:layout_gravity="end|center"
+                android:layout_marginEnd="80dp"
+                android:indeterminateTint="@color/colorPrimaryDark"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="23dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/color_button_normal">
+            <TextView
+                android:id="@+id/notices_delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/text_calendar_delete"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+            <ProgressBar
+                android:id="@+id/notices_delete_doing"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="invisible"
+                android:layout_gravity="end|center"
+                android:layout_marginEnd="80dp"
+                android:indeterminateTint="@color/colorPrimary"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
