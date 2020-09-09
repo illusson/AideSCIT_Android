@@ -23,9 +23,9 @@
                 android:layout_height="50dp"
                 android:padding="15dp"
                 android:layout_gravity="start"
-                android:tint="@color/color_font_normal"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_back" />
+                android:src="@drawable/ic_back"
+                app:tint="@color/color_font_normal" />
 
             <TextView
                 android:layout_width="wrap_content"

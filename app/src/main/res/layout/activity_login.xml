@@ -56,7 +56,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:hint="@string/text_username_edit"
-                        android:inputType="number"
                         android:singleLine="true"
                         android:gravity="center"
                         android:background="@null"
@@ -70,9 +69,9 @@
                         android:padding="5dp"
                         android:visibility="invisible"
                         android:scaleType="centerCrop"
-                        android:tint="@color/color_login_tint"
                         android:src="@drawable/ic_edit_clear"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        app:tint="@color/color_login_tint" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -101,9 +100,9 @@
                         android:padding="2dp"
                         android:visibility="invisible"
                         android:scaleType="centerCrop"
-                        android:tint="@color/color_login_tint"
                         android:src="@drawable/pass_invisible"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        app:tint="@color/color_login_tint" />
                     <EditText
                         android:id="@+id/login_password"
                         android:layout_width="0dp"
@@ -126,9 +125,9 @@
                         android:padding="5dp"
                         android:visibility="invisible"
                         android:scaleType="centerCrop"
-                        android:tint="@color/color_login_tint"
                         android:src="@drawable/ic_edit_clear"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        app:tint="@color/color_login_tint" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -147,9 +146,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="15dp"
-                    android:tint="#FFFFFF"
                     android:src="@drawable/ic_login_action"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"
+                    app:tint="#FFFFFF" />
 
                 <ProgressBar
                     android:id="@+id/login_loading"

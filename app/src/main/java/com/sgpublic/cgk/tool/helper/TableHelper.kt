@@ -38,7 +38,6 @@ class TableHelper (val context: Context) {
 
                 override fun onResponse(call: Call, response: Response) {
                     val result = response.body?.string().toString()
-                    Log.d(tag, result)
                     try {
                         val objects = JSONObject(result)
                         if (objects.getInt("code") == 0){

@@ -1,6 +1,7 @@
 package com.sgpublic.cgk.tool.helper
 
 import android.content.Context
+import android.util.Log
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.data.FailedMarkData
 import com.sgpublic.cgk.tool.data.PassedMarkData
@@ -31,6 +32,7 @@ class AchievementHelper (private val context: Context, private val username: Str
 
                 override fun onResponse(call: Call, response: Response) {
                     val result = response.body?.string().toString()
+                    Log.d(tag, result)
                     try {
                         val objects = JSONObject(result)
                         if (objects.getInt("code") == 0){
@@ -50,28 +52,32 @@ class AchievementHelper (private val context: Context, private val username: Str
     fun parsing(objects: JSONObject, callback: Callback) {
         callback.onReadStart()
 
-        if (objects.getJSONObject("passed").getInt("count") > 0){
-            val passedObject: JSONArray = objects.getJSONObject("passed").getJSONArray("data")
-            for (passedIndex in 0 until passedObject.length()){
-                val passedData: JSONObject = passedObject.getJSONObject(passedIndex)
-                callback.onReadPassed(PassedMarkData(
-                    passedData.getString("name"),
-                    passedData.getString("mark"),
-                    passedData.getString("retake"),
-                    passedData.getString("rebuild"),
-                    passedData.getString("credit")
-                ))
+        objects.getJSONObject("passed").let {
+            if (it.getInt("count") > 0){
+                val passedObject: JSONArray = it.getJSONArray("data")
+                for (passedIndex in 0 until passedObject.length()){
+                    val passedData: JSONObject = passedObject.getJSONObject(passedIndex)
+                    callback.onReadPassed(PassedMarkData(
+                        passedData.getString("name"),
+                        passedData.getString("mark"),
+                        passedData.getString("retake"),
+                        passedData.getString("rebuild"),
+                        passedData.getString("credit")
+                    ))
+                }
             }
         }
 
-        if (objects.getJSONObject("failed").getInt("count") > 0){
-            val passedObject: JSONArray = objects.getJSONObject("failed").getJSONArray("data")
-            for (passedIndex in 0 until passedObject.length()){
-                val passedData: JSONObject = passedObject.getJSONObject(passedIndex)
-                callback.onReadFailed(FailedMarkData(
-                    passedData.getString("name"),
-                    passedData.getString("mark")
-                ))
+        objects.getJSONObject("failed").let {
+            if (it.getInt("count") > 0){
+                val passedObject: JSONArray = it.getJSONArray("data")
+                for (passedIndex in 0 until passedObject.length()){
+                    val passedData: JSONObject = passedObject.getJSONObject(passedIndex)
+                    callback.onReadFailed(FailedMarkData(
+                        passedData.getString("name"),
+                        passedData.getString("mark")
+                    ))
+                }
             }
         }
 
