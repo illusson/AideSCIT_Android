@@ -54,9 +54,7 @@ class UserInfoHelper(val context: Context, private val username: String, private
                             faculty,
                             specialty,
                             userClass,
-                            objects.getInt("grade"),
-                            objects.getString("school_year"),
-                            objects.getInt("semester")
+                            objects.getInt("grade")
                         )
                     } else {
                         callback.onFailure(-304, objects.getString("message"))
@@ -75,9 +73,7 @@ class UserInfoHelper(val context: Context, private val username: String, private
             faculty: UserInfoData,
             specialty: UserInfoData,
             userClass: UserInfoData,
-            grade: Int,
-            schoolYear: String,
-            semester: Int
+            grade: Int
         ){}
     }
 }

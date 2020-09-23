@@ -1,11 +1,9 @@
 package com.sgpublic.cgk.tool
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
@@ -15,13 +13,11 @@ import com.sgpublic.cgk.tool.helper.LoginHelper
 import com.sgpublic.cgk.tool.helper.UpdateHelper
 import com.sgpublic.cgk.tool.helper.UserInfoHelper
 import com.sgpublic.cgk.tool.manager.ConfigManager
-import com.umeng.analytics.MobclickAgent
 
 
 class Welcome : BaseActivity(), UpdateHelper.Callback {
     private val isFinished: MutableList<Boolean> = mutableListOf()
-    private var finishedCount: Int = 0
-    private var totalCount: Int = 5
+    private var totalCount: Int = 6
 
     private var grand = true
     private var isLogin = false
@@ -29,11 +25,30 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
     private var from: String? = null
     private var week: Int? = null
 
+    private lateinit var helper: HeaderInfoHelper
+
     override fun onActivityCreate(savedInstanceState: Bundle?) {
-        checkLogin()
-        getSentence()
-        getWeek()
-        UpdateHelper(this@Welcome).getUpdate(0, this)
+        helper = HeaderInfoHelper(
+            this@Welcome,
+            ConfigManager(this@Welcome).getString("username")
+        )
+        helper.setup(
+            object : HeaderInfoHelper.Callback {
+                override fun onSetupFinish() {
+                    UpdateHelper(this@Welcome).getUpdate(0, this@Welcome)
+                    checkLogin()
+                    getSentence()
+                    getWeek()
+                    getSemesterInfo()
+                }
+
+                override fun onSetupTimeout() {
+                    runOnUiThread {
+                        onToast(this@Welcome, R.string.error_setup_timeout)
+                    }
+                }
+            }
+        )
     }
 
     override fun getContentView() = R.layout.activity_welcome
@@ -41,14 +56,10 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
     override fun onSetSwipeBackEnable() = false
 
     private fun getSentence(){
-        HeaderInfoHelper(
-            this@Welcome,
-            ConfigManager(this@Welcome).getString("username")
-        ).getSentence(object : HeaderInfoHelper.Callback{
+        helper.getSentence(object : HeaderInfoHelper.Callback{
             override fun onFailure(code: Int, message: String?, e: Exception?) {
                 saveExplosion(e, code)
                 onFinished(false)
-                e?.printStackTrace()
             }
 
             override fun onSentenceResult(sentence: String, from: String) {
@@ -98,7 +109,6 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
     }
 
     private fun getWeek(){
-        val helper = HeaderInfoHelper(this@Welcome)
         helper.getWeek(object : HeaderInfoHelper.Callback{
             override fun onFailure(code: Int, message: String?, e: Exception?) {
                 saveExplosion(e, code)
@@ -112,9 +122,25 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
         })
     }
 
+    private fun getSemesterInfo(){
+        helper.getSemesterInfo(object : HeaderInfoHelper.Callback{
+            override fun onFailure(code: Int, message: String?, e: Exception?) {
+                saveExplosion(e, code)
+                onFinished(false)
+            }
+
+            override fun onSemesterResult(semester: Int, schoolYear: String) {
+                ConfigManager(this@Welcome)
+                    .putString("school_year", schoolYear)
+                    .putInt("semester", semester)
+                    .apply()
+                onFinished(true)
+            }
+        })
+    }
+
     private fun checkLogin() {
         val permissions = intArrayOf(
-            //ContextCompat.checkSelfPermission(this@Welcome, Manifest.permission.WRITE_EXTERNAL_STORAGE),
             ContextCompat.checkSelfPermission(this@Welcome, Manifest.permission.WRITE_CALENDAR),
             ContextCompat.checkSelfPermission(this@Welcome, Manifest.permission.READ_CALENDAR)
         )
@@ -142,7 +168,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
                             onFinished(true)
                         }
 
-                        override fun onResult(name: String, faculty: UserInfoData, specialty: UserInfoData, userClass: UserInfoData, grade: Int, schoolYear: String, semester: Int) {
+                        override fun onResult(name: String, faculty: UserInfoData, specialty: UserInfoData, userClass: UserInfoData, grade: Int) {
                             ConfigManager(this@Welcome)
                                 .putString("name", name)
                                 .putString("faculty_name", faculty.name)
@@ -152,46 +178,44 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
                                 .putString("class_name", userClass.name)
                                 .putLong("class_id", userClass.id)
                                 .putInt("grade", grade)
-                                .putString("school_year", schoolYear)
-                                .putInt("semester", semester)
                                 .apply()
                             onFinished(true)
                         }
                     })
                 }
             })
-
         } else {
-            totalCount = 4
+            totalCount = 5
         }
         onFinished(true)
     }
 
     private fun onFinished(result: Boolean) {
-        runOnUiThread{
-            finishedCount++
-            isFinished.add(result)
-            if (finishedCount >= totalCount) {
-                if (isFinished.size >= totalCount) {
-                    var allFinished = true
-                    for (index in isFinished) {
-                        allFinished = allFinished && index
+        isFinished.add(result)
+        if (isFinished.size >= totalCount) {
+            var allFinished = true
+            for (index in isFinished) {
+                allFinished = allFinished && index
+            }
+            if (allFinished) {
+                ConfigManager(this@Welcome)
+                    .putInt("week", week!!)
+                    .putString("sentence", sentence.toString())
+                    .putString("from", from.toString())
+                    .apply()
+                if (isLogin){
+                    runOnUiThread {
+                        Main.startActivity(this@Welcome, this@Welcome.session!!)
                     }
-                    if (allFinished) {
-                        ConfigManager(this@Welcome)
-                            .putInt("week", week!!)
-                            .putString("sentence", sentence.toString())
-                            .putString("from", from.toString())
-                            .apply()
-                        if (isLogin){
-                            Main.startActivity(this@Welcome, this@Welcome.session!!)
-                        } else {
-                            Login.startActivity(this@Welcome, grand)
-                        }
-                        return@runOnUiThread
+                } else {
+                    runOnUiThread {
+                        Login.startActivity(this@Welcome, grand)
                     }
                 }
-                onToast(this@Welcome, R.string.error_setup)
+                return
+            }
+            runOnUiThread {
+                onToast(this@Welcome, R.string.error_setup_failed)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.sgpublic.cgk.tool.helper
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.sgpublic.cgk.tool.R
 import okhttp3.Call
@@ -11,101 +12,167 @@ import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HeaderInfoHelper(private val context: Context, private val username: String) {
+class HeaderInfoHelper(private val context: Context, private var username: String) {
     companion object{
         private const val tag: String = "HeaderInfoHelper"
+        private var sentence: String? = null
+        private var day: String? = null
+        private var e_sentence: IOException? = null
+        private var e_day: IOException? = null
     }
 
     constructor(context: Context) : this(context, "")
 
-    fun getSentence(callback: Callback){
-        val call: Call = APIHelper(username).getSentenceRequest()
-        call.enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                if (e is UnknownHostException) {
-                    callback.onFailure(-201, context.getString(R.string.error_network), e)
-                } else {
-                    callback.onFailure(-202, e.message, e)
+    fun setup(callback: Callback?){
+        if (sentence == null && e_sentence == null){
+            val call: Call = APIHelper(username).getSentenceRequest()
+            call.enqueue(object : okhttp3.Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e_sentence = e
                 }
-            }
 
-            override fun onResponse(call: Call, response: Response) {
-                val result = response.body?.string().toString()
-                try {
-                    val objects = JSONObject(result)
-                    callback.onSentenceResult(
-                        objects.getString("string"),
-                        objects.getString("from")
-                    )
-                } catch (e: JSONException) {
-                    callback.onFailure(-202, e.message, e)
+                override fun onResponse(call: Call, response: Response) {
+                    sentence = response.body?.string().toString()
                 }
+            })
+        }
+
+        if (day == null && e_day == null){
+            val call: Call = APIHelper(username).getDayRequest()
+            call.enqueue(object : okhttp3.Callback{
+                override fun onFailure(call: Call, e: IOException) {
+                    e_day = e
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    day = response.body?.string().toString()
+                }
+            })
+        }
+
+        callback?.let {
+            var time: Int = 0
+            Thread {
+                while ((sentence == null && e_sentence == null)
+                    || (day == null && e_day == null)){
+                    Thread.sleep(100)
+                    time ++
+                    if (time >= 100){
+                        time = -1
+                        break
+                    }
+                }
+                if (time == -1){
+                    it.onSetupTimeout()
+                } else {
+                    it.onSetupFinish()
+                }
+            }.start()
+        }
+    }
+
+    fun getSentence(callback: Callback){
+        if (e_sentence != null){
+            if (e_sentence is UnknownHostException){
+                callback.onFailure(-201, context.getString(R.string.error_network), e_sentence)
+            } else {
+                callback.onFailure(-202, e_sentence!!.message, e_sentence)
             }
-        })
+        } else if (sentence != null) {
+            try {
+                val objects = JSONObject(sentence!!)
+                callback.onSentenceResult(
+                    objects.getString("string"),
+                    objects.getString("from")
+                )
+            } catch (e: JSONException) {
+                callback.onFailure(-204, e.message, e)
+            }
+        } else {
+            callback.onFailure(-203, null, e_sentence)
+        }
     }
 
     fun getWeek(callback: Callback){
-        val call: Call = APIHelper().getDayRequest()
-        call.enqueue(object : okhttp3.Callback{
-            override fun onFailure(call: Call, e: IOException) {
-                if (e is UnknownHostException) {
-                    callback.onFailure(-211, context.getString(R.string.error_network), e)
-                } else {
-                    callback.onFailure(-212, e.message, e)
-                }
+        if (e_day != null){
+            if (e_day is UnknownHostException){
+                callback.onFailure(-211, context.getString(R.string.error_network), e_day)
+            } else {
+                callback.onFailure(-212, e_day!!.message, e_day)
             }
-
-            override fun onResponse(call: Call, response: Response) {
-                val result = response.body?.string().toString()
-                try {
-                    val objects = JSONObject(result)
-                    when (objects.getString("direct")) {
-                        "+" -> {
-                            var dayCount: Int = objects.getInt("day_count")
-                            dayCount = if (dayCount % 7 == 0) {
-                                dayCount / 7
-                            } else {
-                                dayCount / 7 + 1
-                            }
-                            if (dayCount > 18) {
-                                dayCount = 0
-                            } else if (dayCount == 18 && getDate() == Calendar.SUNDAY) {
-                                dayCount = 0
-                            }
-                            callback.onWeekResult(dayCount)
+        } else if (day != null) {
+            try {
+                val objects = JSONObject(day!!)
+                when (objects.getString("direct")) {
+                    "+" -> {
+                        var dayCount: Int = objects.getInt("day_count")
+                        dayCount = if (dayCount % 7 == 0) {
+                            dayCount / 7
+                        } else {
+                            dayCount / 7 + 1
                         }
-                        "-" -> callback.onWeekResult(0)
+                        if (dayCount > 18) {
+                            dayCount = 0
+                        } else if (dayCount == 18 && getDate() == Calendar.SUNDAY) {
+                            dayCount = 0
+                        }
+                        callback.onWeekResult(dayCount)
                     }
-                } catch (e: JSONException) {
-                    callback.onFailure(-212, e.message, e)
+                    "-" -> callback.onWeekResult(0)
                 }
+            } catch (e: JSONException) {
+                callback.onFailure(-214, e.message, e)
             }
-        })
+        } else {
+            callback.onFailure(-213, null, e_day)
+        }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun getStartDate(callback: Callback){
-        val call: Call = APIHelper().getDayRequest()
-        call.enqueue(object : okhttp3.Callback{
-            override fun onFailure(call: Call, e: IOException) {
-                if (e is UnknownHostException) {
-                    callback.onFailure(-221, context.getString(R.string.error_network), e)
+        if (e_day != null){
+            if (e_day is UnknownHostException){
+                callback.onFailure(-211, context.getString(R.string.error_network), e_day)
+            } else {
+                callback.onFailure(-212, e_day!!.message, e_day)
+            }
+        } else if (day != null) {
+            try {
+                val dateString = JSONObject(day!!).getString("date")
+                val date = SimpleDateFormat("yyyy/MM/dd").parse(dateString)
+                if (date != null){
+                    callback.onStartDateResult(date)
                 } else {
-                    callback.onFailure(-222, e.message, e)
+                    callback.onFailure(-215, null, null)
                 }
+            } catch (e: JSONException) {
+                callback.onFailure(-214, e.message, e)
             }
+        } else {
+            callback.onFailure(-223, null, e_day)
+        }
+    }
 
-            override fun onResponse(call: Call, response: Response) {
-                val result = response.body?.string().toString()
-                try {
-                    val objects = JSONObject(result)
-                    val startDate: String = objects.getString("date")
-                    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
-                    callback.onStartDateResult(simpleDateFormat.parse(startDate)!!)
-                } catch (e: JSONException) {
-                    callback.onFailure(-224, e.message, e)
-                }
+    fun getSemesterInfo(callback: Callback){
+        if (e_day != null){
+            if (e_day is UnknownHostException){
+                callback.onFailure(-231, context.getString(R.string.error_network), e_day)
+            } else {
+                callback.onFailure(-232, e_day!!.message, e_day)
             }
-        })
+        } else if (day != null) {
+            try {
+                val objects = JSONObject(day!!)
+                callback.onSemesterResult(
+                    objects.getInt("semester"),
+                    objects.getString("school_year")
+                )
+            } catch (e: JSONException) {
+                callback.onFailure(-234, e.message, e)
+            }
+        } else {
+            callback.onFailure(-233, null, e_day)
+        }
     }
 
     fun getDate(): Int {
@@ -136,9 +203,12 @@ class HeaderInfoHelper(private val context: Context, private val username: Strin
     }
 
     interface Callback {
+        fun onSetupFinish(){}
+        fun onSetupTimeout(){}
         fun onFailure(code: Int, message: String?, e: Exception? = null){}
         fun onSentenceResult(sentence: String, from: String){}
         fun onWeekResult(week: Int){}
+        fun onSemesterResult(semester: Int, schoolYear: String){}
         fun onStartDateResult(startDate: Date){}
     }
 }

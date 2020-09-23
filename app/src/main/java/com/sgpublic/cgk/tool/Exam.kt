@@ -6,13 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.ExamData
-import com.sgpublic.cgk.tool.helper.AchievementHelper
 import com.sgpublic.cgk.tool.helper.ExamHelper
 import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_achievement.*
 import kotlinx.android.synthetic.main.activity_exam.*
-import kotlinx.android.synthetic.main.item_achievement_passed.view.*
 import kotlinx.android.synthetic.main.item_exam.view.*
 import org.json.JSONObject
 
@@ -39,6 +36,9 @@ class Exam : BaseActivity(), ExamHelper.Callback {
     override fun onFailure(code: Int, message: String?, e: Exception?) {
         saveExplosion(e, code)
         onToast(this@Exam, R.string.text_load_failed, message, code)
+        runOnUiThread {
+            exam_refresh.isRefreshing = false
+        }
     }
 
     override fun onReadStart() {

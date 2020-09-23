@@ -56,7 +56,7 @@ class TableHelper (val context: Context) {
     @Throws(JSONException::class)
     fun parsing(objects: JSONObject, week: Int, callback: Callback){
         callback.onReadStart()
-        var isEmpty = false
+        var isEmpty = 0
         val tableObject = objects.getJSONArray("table")
         for (dayIndex in 0 until tableObject.length()){
             val dayObject = tableObject.getJSONArray(dayIndex)
@@ -79,16 +79,16 @@ class TableHelper (val context: Context) {
                                 indexObject.getString("teacher"),
                                 indexObject.getString("room")
                             ))
+                            isEmpty ++
                             continue
                         }
                     }
                     continue
                 }
                 callback.onRead(dayIndex, classIndex, null)
-                isEmpty = true
             }
         }
-        callback.onReadFinish(isEmpty)
+        callback.onReadFinish(isEmpty == 0)
     }
 
     interface Callback {

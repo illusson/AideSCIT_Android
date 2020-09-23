@@ -133,5 +133,6 @@
     <string name="title_check_cancel_login">确定退出？</string>
 
     <string name="error_network">请检查网络连接</string>
-    <string name="error_setup">应用初始化失败，网络连接异常或服务器维护中</string>
+    <string name="error_setup_failed">应用初始化失败，网络连接异常或服务器维护中</string>
+    <string name="error_setup_timeout">应用初始化超时，网络连接异常或服务器维护中</string>
 </resources>

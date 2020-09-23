@@ -5,9 +5,9 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,7 +18,6 @@ import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.CalendarManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
 import kotlinx.android.synthetic.main.activity_notices.*
-import kotlinx.android.synthetic.main.fragment_timetable.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -41,7 +40,17 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
     private val startDate: Calendar = Calendar.getInstance()
     private val scheduleWinter: MutableList<Calendar?> = mutableListOf(null, null)
 
+    private lateinit var setup: Thread
+
     override fun onActivityCreate(savedInstanceState: Bundle?) {
+        setup = Thread {
+            if (manager.checkCalendarAccount() <= 0) {
+                addCalendarAccount()
+            }
+            HeaderInfoHelper(this@Notices, ConfigManager(this@Notices).getString("username"))
+                .getStartDate(this)
+        }
+
         val permissions = intArrayOf(
             ContextCompat.checkSelfPermission(this@Notices, Manifest.permission.WRITE_CALENDAR),
             ContextCompat.checkSelfPermission(this@Notices, Manifest.permission.READ_CALENDAR)
@@ -50,13 +59,9 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         for (permission in permissions) {
             isAllowed = isAllowed && permission == PackageManager.PERMISSION_GRANTED
         }
+        setOnActionMode(true, 0)
         if (isAllowed) {
-            Thread {
-                if (manager.checkCalendarAccount() <= 0) {
-                    addCalendarAccount()
-                }
-                HeaderInfoHelper(this@Notices).getStartDate(this)
-            }.start()
+            setup.start()
         } else {
             ActivityCompat.requestPermissions(
                 this@Notices, arrayOf(
@@ -69,6 +74,12 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
 
     override fun onStartDateResult(startDate: Date) {
         this.startDate.time = startDate
+        setOnActionMode(false, 0)
+    }
+
+    override fun onFailure(code: Int, message: String?, e: Exception?) {
+        saveExplosion(e, code)
+        onToast(this@Notices, R.string.text_load_failed, message, code)
         setOnActionMode(false, 0)
     }
 
@@ -328,6 +339,8 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         }
         if (!isGranted) {
             onToast(this@Notices, R.string.permission_denied)
+        } else {
+            setup.start()
         }
     }
 

@@ -8,7 +8,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.TableData
 import com.sgpublic.cgk.tool.helper.HeaderInfoHelper
 import com.sgpublic.cgk.tool.helper.TableHelper
-import com.sgpublic.cgk.tool.helper.UpdateHelper
 import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
 import com.umeng.analytics.MobclickAgent
@@ -44,7 +42,6 @@ class Main : BaseActivity(), TableHelper.Callback {
     private var showTable: Boolean = false
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
-
         setViewState(1)
 
         initShortsCut()

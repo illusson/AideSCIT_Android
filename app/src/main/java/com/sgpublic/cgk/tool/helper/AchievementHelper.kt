@@ -32,7 +32,6 @@ class AchievementHelper (private val context: Context, private val username: Str
 
                 override fun onResponse(call: Call, response: Response) {
                     val result = response.body?.string().toString()
-                    Log.d(tag, result)
                     try {
                         val objects = JSONObject(result)
                         if (objects.getInt("code") == 0){

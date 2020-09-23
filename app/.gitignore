@@ -2,3 +2,4 @@
 /debug
 /release
 /src/main/java/com/sgpublic/cgk/tool/manager/Security.kt
+gradle.properties

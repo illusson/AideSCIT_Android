@@ -96,7 +96,7 @@ class Login : BaseActivity(), LoginHelper.Callback {
                 onToast(this@Login, R.string.text_login_failure, message, code)
             }
 
-            override fun onResult(name: String, faculty: UserInfoData, specialty: UserInfoData, userClass: UserInfoData, grade: Int, schoolYear: String, semester: Int) {
+            override fun onResult(name: String, faculty: UserInfoData, specialty: UserInfoData, userClass: UserInfoData, grade: Int) {
                 ConfigManager(this@Login)
                     .putString("name", name)
                     .putString("faculty_name", faculty.name)
@@ -106,8 +106,6 @@ class Login : BaseActivity(), LoginHelper.Callback {
                     .putString("class_name", userClass.name)
                     .putLong("class_id", userClass.id)
                     .putInt("grade", grade)
-                    .putString("school_year", schoolYear)
-                    .putInt("semester", semester)
                     .apply()
                 setLoadingState(false)
                 Main.startActivity(this@Login, session)

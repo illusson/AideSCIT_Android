@@ -10,6 +10,7 @@ import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.sgpublic.cgk.tool.BuildConfig
 import com.sgpublic.cgk.tool.manager.ConfigManager
 import com.umeng.analytics.MobclickAgent
 import com.umeng.message.PushAgent
@@ -29,6 +30,7 @@ abstract class BaseActivity : SwipeBackActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PushAgent.getInstance(this).onAppStart()
 
         ActivityCollector.addActivity(this)
 
@@ -45,8 +47,6 @@ abstract class BaseActivity : SwipeBackActivity() {
         setContentView(getContentView())
         onViewSetup()
         onActivityCreate(savedInstanceState)
-
-        PushAgent.getInstance(this).onAppStart()
     }
 
     protected abstract fun onActivityCreate(savedInstanceState: Bundle?)

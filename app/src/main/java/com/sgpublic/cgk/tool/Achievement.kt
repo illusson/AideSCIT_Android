@@ -47,6 +47,9 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
     override fun onFailure(code: Int, message: String?, e: Exception?) {
         saveExplosion(e, code)
         onToast(this@Achievement, R.string.text_load_failed, message, code)
+        runOnUiThread {
+            achievement_refresh.isRefreshing = false
+        }
     }
 
     override fun onReadStart() {

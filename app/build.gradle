@@ -6,20 +6,33 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.1"
 
+    signingConfigs {
+        release {
+            storeFile file(SIGN_DIR)
+            storePassword SIGN_PASSWORD_STORE
+            keyAlias SIGN_ALIAS
+            keyPassword SIGN_PASSWORD_KEY
+        }
+    }
+
     defaultConfig {
         applicationId "com.sgpublic.cgk.tool"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 20090901
-        versionName "1.0.5.200909"
+        versionCode 20092301
+        versionName "1.0.7.200923"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -41,7 +54,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
-    implementation "com.squareup.okhttp3:okhttp:4.8.1"
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
     implementation 'com.facebook.rebound:rebound:0.3.8'
 
     //友盟统计基础SDK
