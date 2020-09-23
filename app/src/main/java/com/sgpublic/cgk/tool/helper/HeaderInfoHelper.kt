@@ -128,7 +128,6 @@ class HeaderInfoHelper(private val context: Context, private var username: Strin
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     fun getStartDate(callback: Callback){
         if (e_day != null){
             if (e_day is UnknownHostException){
@@ -139,7 +138,7 @@ class HeaderInfoHelper(private val context: Context, private var username: Strin
         } else if (day != null) {
             try {
                 val dateString = JSONObject(day!!).getString("date")
-                val date = SimpleDateFormat("yyyy/MM/dd").parse(dateString)
+                val date = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE).parse(dateString)
                 if (date != null){
                     callback.onStartDateResult(date)
                 } else {

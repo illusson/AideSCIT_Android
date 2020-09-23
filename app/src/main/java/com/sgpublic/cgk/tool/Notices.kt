@@ -38,7 +38,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
     private var insertCount: Int = 0
     private val manager: CalendarManager = CalendarManager(this@Notices)
     private val startDate: Calendar = Calendar.getInstance()
-    private val scheduleWinter: MutableList<Calendar?> = mutableListOf(null, null)
+    private lateinit var scheduleSummer: MutableList<Calendar>
 
     private lateinit var setup: Thread
 
@@ -74,6 +74,11 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
 
     override fun onStartDateResult(startDate: Date) {
         this.startDate.time = startDate
+        val start: Calendar = Calendar.getInstance()
+        start.set(1970, 5, 1)
+        val end: Calendar = Calendar.getInstance()
+        end.set(1970, 9, 30)
+        scheduleSummer = mutableListOf(start, end)
         setOnActionMode(false, 0)
     }
 
@@ -272,7 +277,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                                 ) == Calendar.SATURDAY
                             ) 1 else 0
                         scheduleIndex =
-                            if (scheduleSet.before(scheduleWinter[1]) && scheduleSet.after(scheduleWinter[0])) {
+                            if (scheduleSet.before(scheduleSummer[1]) and scheduleSet.after(scheduleSummer[0])) {
                                 CalendarManager.CLASS_SUMMER[isWeekend]
                             } else {
                                 CalendarManager.CLASS_WINTER[isWeekend]
