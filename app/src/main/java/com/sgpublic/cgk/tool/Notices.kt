@@ -51,6 +51,12 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                 .getStartDate(this)
         }
 
+        val start: Calendar = Calendar.getInstance()
+        start.set(1970, 5, 1)
+        val end: Calendar = Calendar.getInstance()
+        end.set(1970, 9, 30)
+        scheduleSummer = mutableListOf(start, end)
+
         val permissions = intArrayOf(
             ContextCompat.checkSelfPermission(this@Notices, Manifest.permission.WRITE_CALENDAR),
             ContextCompat.checkSelfPermission(this@Notices, Manifest.permission.READ_CALENDAR)
@@ -74,11 +80,6 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
 
     override fun onStartDateResult(startDate: Date) {
         this.startDate.time = startDate
-        val start: Calendar = Calendar.getInstance()
-        start.set(1970, 5, 1)
-        val end: Calendar = Calendar.getInstance()
-        end.set(1970, 9, 30)
-        scheduleSummer = mutableListOf(start, end)
         setOnActionMode(false, 0)
     }
 
