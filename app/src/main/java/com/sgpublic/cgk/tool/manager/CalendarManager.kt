@@ -124,10 +124,10 @@ class CalendarManager(val context: Context) {
     fun addCalendarEvent(dtStart: String, dtEnd: String, title: String, description: String, location: String) {
         val event = ContentValues()
         event.put("title", title)
-        event.put("description", description ?: "")
+        event.put("description", description)
         // 插入账户
         event.put("calendar_id", CalendarID)
-        event.put("eventLocation", location ?: "")
+        event.put("eventLocation", location)
         val mCalendar = Calendar.getInstance()
         //提醒开始时间
         val startTime = dtStart.split("/").toTypedArray()

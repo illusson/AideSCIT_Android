@@ -52,9 +52,9 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         }
 
         val start: Calendar = Calendar.getInstance()
-        start.set(1970, 5, 1)
+        start.set(2000, 4, 0)
         val end: Calendar = Calendar.getInstance()
-        end.set(1970, 9, 30)
+        end.set(2000, 9, 0)
         scheduleSummer = mutableListOf(start, end)
 
         val permissions = intArrayOf(
@@ -271,7 +271,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                         var scheduleIndex: Array<Array<String>>
                         val scheduleSet = Calendar.getInstance()
                         scheduleSet.time = termDate.time
-                        scheduleSet[Calendar.YEAR] = 1970
+                        scheduleSet.set(Calendar.YEAR, 2000)
                         val isWeekend =
                             if (termDate.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY || termDate.get(
                                     Calendar.DAY_OF_WEEK
@@ -292,36 +292,36 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                                     classCountIndex++
                                     val classData = classTable.getJSONArray("data").getJSONObject(class_count)
                                     val classRange = classData.getJSONArray("range")
-                                    if (week_index >= classRange.getInt(0) && week_index <= classRange.getInt(1)) {
-                                        val classWeek = classData.getInt("week")
-                                        if (classWeek == 2 || classWeek == week_index % 2) {
-                                            val classTime = arrayOf(
-                                                sdfDate.format(termDate.time) + scheduleIndex[class_index][0],
-                                                sdfDate.format(termDate.time) + scheduleIndex[class_index][1]
+                                    var rangeJudge = false
+                                    for (indexRange in 0 until classRange.length()){
+                                        rangeJudge = rangeJudge or (classRange.getInt(indexRange) == week_index)
+                                    }
+                                    if (rangeJudge){
+                                        val classTime = arrayOf(
+                                            sdfDate.format(termDate.time) + scheduleIndex[class_index][0],
+                                            sdfDate.format(termDate.time) + scheduleIndex[class_index][1]
+                                        )
+                                        insertedIndex ++
+                                        runOnUiThread {
+                                            val stateText = java.lang.String.format(
+                                                getString(R.string.text_calendar_doing),
+                                                insertedIndex
                                             )
-                                            insertedIndex ++
-
-                                            runOnUiThread {
-                                                val stateText = java.lang.String.format(
-                                                    getString(R.string.text_calendar_doing),
-                                                    insertedIndex
-                                                )
-                                                notices_state.text = stateText
-                                            }
-
-                                            manager.addCalendarEvent(
-                                                classTime[0],
-                                                classTime[1],
-                                                classData.getString("name"),
-                                                CalendarManager.CLASS_DESCRIPTION[class_count]
-                                                    .toString() + " " + classData.getString("room") + " " + classData.getString(
-                                                    "teacher"
-                                                ),
-                                                classData.getString("room") + " " + classData.getString(
-                                                    "teacher"
-                                                )
-                                            )
+                                            notices_state.text = stateText
                                         }
+
+                                        manager.addCalendarEvent(
+                                            classTime[0],
+                                            classTime[1],
+                                            classData.getString("name"),
+                                            CalendarManager.CLASS_DESCRIPTION[class_count]
+                                                .toString() + " " + classData.getString("room") + " " + classData.getString(
+                                                "teacher"
+                                            ),
+                                            classData.getString("room") + " " + classData.getString(
+                                                "teacher"
+                                            )
+                                        )
                                     }
                                 }
                             }

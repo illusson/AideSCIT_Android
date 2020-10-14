@@ -19,38 +19,37 @@ class TableHelper (val context: Context) {
     }
 
     fun getTable(config: ConfigManager, session: String, callback: Callback){
-        APIHelper(config.getString("username"), session)
-            .getTableRequest(
-                config.getLong("class_id"),
-                config.getInt("grade"),
-                config.getString("school_year"),
-                config.getInt("semester"),
-                config.getLong("faculty_id"),
-                config.getLong("specialty_id")
-            ).enqueue(object : okhttp3.Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    if (e is UnknownHostException) {
-                        callback.onFailure(-401, context.getString(R.string.error_network), e)
-                    } else {
-                        callback.onFailure(-402, e.message, e)
-                    }
+        APIHelper(config.getString("username"), session).getTableRequest(
+            config.getLong("class_id"),
+            config.getInt("grade"),
+            config.getString("school_year"),
+            config.getInt("semester"),
+            config.getLong("faculty_id"),
+            config.getLong("specialty_id")
+        ).enqueue(object : okhttp3.Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                if (e is UnknownHostException) {
+                    callback.onFailure(-401, context.getString(R.string.error_network), e)
+                } else {
+                    callback.onFailure(-402, e.message, e)
                 }
+            }
 
-                override fun onResponse(call: Call, response: Response) {
-                    val result = response.body?.string().toString()
-                    try {
-                        val objects = JSONObject(result)
-                        if (objects.getInt("code") == 0){
-                            CacheManager(context).save(CacheManager.CACHE_TABLE, result)
-                            parsing(objects, config.getInt("week"), callback)
-                        } else {
-                            callback.onFailure(-404, objects.getString("message"))
-                        }
-                    } catch (e: JSONException){
-                        callback.onFailure(-404, e.message, e)
+            override fun onResponse(call: Call, response: Response) {
+                val result = response.body?.string().toString()
+                try {
+                    val objects = JSONObject(result)
+                    if (objects.getInt("code") == 0){
+                        CacheManager(context).save(CacheManager.CACHE_TABLE, result)
+                        parsing(objects, config.getInt("week"), callback)
+                    } else {
+                        callback.onFailure(-404, objects.getString("message"))
                     }
+                } catch (e: JSONException){
+                    callback.onFailure(-404, e.message, e)
                 }
-            })
+            }
+        })
     }
 
     @Throws(JSONException::class)
@@ -68,12 +67,11 @@ class TableHelper (val context: Context) {
                     for (index in 0 until classCount){
                         val indexObject = indexArray.getJSONObject(index)
                         val rangeObject = indexObject.getJSONArray("range")
-
-                        val weekJudge = indexObject.getInt("week") == 2
-                                || (week % 2 == indexObject.getInt("week"))
-                        val rangeJudge = rangeObject.getInt(0) <= week
-                                && rangeObject.getInt(1) >= week
-                        if (weekJudge && rangeJudge){
+                        var rangeJudge = false
+                        for (indexRange in 0 until rangeObject.length()){
+                            rangeJudge = rangeJudge or (rangeObject.getInt(indexRange) == week)
+                        }
+                        if (rangeJudge){
                             callback.onRead(dayIndex, classIndex, TableData(
                                 indexObject.getString("name"),
                                 indexObject.getString("teacher"),

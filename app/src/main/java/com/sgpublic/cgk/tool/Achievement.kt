@@ -29,17 +29,19 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
     }
 
     private fun getAchievement(objects: JSONObject? = null){
+        val year = achievement_year.selectedItem.toString()
+        val semester = achievement_term.selectedItem.toString().toInt()
+        val config = ConfigManager(this@Achievement);
+        config.putString("school_year_inquiry", year)
+            .putInt("semester_inquiry", semester)
+            .apply()
         achievement_refresh.isRefreshing = true
-        val helper = AchievementHelper(this@Achievement, ConfigManager(this@Achievement).getString("username"))
+        val helper = AchievementHelper(this@Achievement, config.getString("username"))
         if (objects != null) {
             helper.parsing(objects, this)
         } else {
             session?.let {
-                helper.getMark(
-                    achievement_year.selectedItem.toString(),
-                    achievement_term.selectedItem.toString().toInt(),
-                    it, this
-                )
+                helper.getMark(year, semester, it, this)
             }
         }
     }
@@ -121,12 +123,13 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         super.onViewSetup()
 
         val listYear: MutableList<String?> = ArrayList()
-        val achievementStudent: Int = ConfigManager(this@Achievement).getInt("grade", 2019)
-        val yearStudent: String = ConfigManager(this@Achievement).getString("school_year", "2019-2020")
+        val config = ConfigManager(this@Achievement)
+        val gradeStudent: Int = config.getInt("grade", 2019)
+        val yearStudent: String = config.getString("school_year_inquiry", config.getString("school_year", "2019-2020"))
         var yearSelected = 0
         for (year_index in 0 until 4) {
             val itemYearText =
-                (achievementStudent + year_index).toString() + "-" + (achievementStudent + year_index + 1)
+                (gradeStudent + year_index).toString() + "-" + (gradeStudent + year_index + 1)
             listYear.add(itemYearText)
             if (yearStudent == itemYearText) {
                 yearSelected = year_index
@@ -136,11 +139,11 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         achievement_year.adapter = arrayAdapterYear
         achievement_year.setSelection(yearSelected, true)
 
-        val termStudent: Int = ConfigManager(this@Achievement).getInt("semester", 1) - 1
+        val semesterStudent: Int = config.getInt("semester_inquiry", config.getInt("semester", 1)) - 1
         val listTerm: List<String?> = listOf("1", "2")
         val arrayAdapterTerm: ArrayAdapter<String?> = ArrayAdapter(this@Achievement, R.layout.item_option, listTerm)
         achievement_term.adapter = arrayAdapterTerm
-        achievement_term.setSelection(termStudent, true)
+        achievement_term.setSelection(semesterStudent, true)
 
         achievement_action.setOnClickListener { getAchievement() }
         achievement_refresh.setOnRefreshListener { getAchievement() }
