@@ -17,7 +17,7 @@ import com.sgpublic.cgk.tool.manager.ConfigManager
 
 class Welcome : BaseActivity(), UpdateHelper.Callback {
     private val isFinished: MutableList<Boolean> = mutableListOf()
-    private var totalCount: Int = 6
+    private var totalCount: Int = 5
 
     private var grand = true
     private var isLogin = false
@@ -28,11 +28,8 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
     private lateinit var helper: HeaderInfoHelper
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
-        helper = HeaderInfoHelper(
-            this@Welcome,
-            ConfigManager(this@Welcome).getString("username")
-        )
-        helper.setup(
+        helper = HeaderInfoHelper(this@Welcome)
+        helper.setup(ConfigManager(this@Welcome).getString("access_token"),
             object : HeaderInfoHelper.Callback {
                 override fun onSetupFinish() {
                     UpdateHelper(this@Welcome).getUpdate(0, this@Welcome)
@@ -147,46 +144,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
         for (permission in permissions) {
             grand = grand && permission == PackageManager.PERMISSION_GRANTED
         }
-        isLogin = ConfigManager(this@Welcome).getBoolean("is_login")
-        if (isLogin){
-            val username = ConfigManager(this@Welcome).getString("username")
-            val password = ConfigManager(this@Welcome).getString("password")
-
-            LoginHelper(this@Welcome).login(username, password, object : LoginHelper.Callback{
-                override fun onFailure(code: Int, message: String?, e: Exception?) {
-                    onToast(this@Welcome, R.string.text_login_failure, message, code)
-                    onFinished(false)
-                }
-
-                override fun onResult(session: String, identity: String) {
-                    this@Welcome.session = session
-                    ConfigManager(this@Welcome)
-                        .putString("identity", identity)
-                        .apply()
-                    UserInfoHelper(this@Welcome, username, session).getUserInfo(identity, object : UserInfoHelper.Callback{
-                        override fun onFailure(code: Int, message: String?, e: Exception?) {
-                            onFinished(true)
-                        }
-
-                        override fun onResult(name: String, faculty: UserInfoData, specialty: UserInfoData, userClass: UserInfoData, grade: Int) {
-                            ConfigManager(this@Welcome)
-                                .putString("name", name)
-                                .putString("faculty_name", faculty.name)
-                                .putLong("faculty_id", faculty.id)
-                                .putString("specialty_name", specialty.name)
-                                .putLong("specialty_id", specialty.id)
-                                .putString("class_name", userClass.name)
-                                .putLong("class_id", userClass.id)
-                                .putInt("grade", grade)
-                                .apply()
-                            onFinished(true)
-                        }
-                    })
-                }
-            })
-        } else {
-            totalCount = 5
-        }
+        isLogin = ConfigManager(this@Welcome).getString("access_token", "") != ""
         onFinished(true)
     }
 
@@ -205,7 +163,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
                     .apply()
                 if (isLogin){
                     runOnUiThread {
-                        Main.startActivity(this@Welcome, this@Welcome.session!!)
+                        Main.startActivity(this@Welcome)
                     }
                 } else {
                     runOnUiThread {

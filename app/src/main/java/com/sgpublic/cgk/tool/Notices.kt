@@ -47,8 +47,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
             if (manager.checkCalendarAccount() <= 0) {
                 addCalendarAccount()
             }
-            HeaderInfoHelper(this@Notices, ConfigManager(this@Notices).getString("username"))
-                .getStartDate(this)
+            HeaderInfoHelper(this@Notices).getStartDate(this)
         }
 
         val start: Calendar = Calendar.getInstance()
@@ -214,7 +213,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         if (useNewest){
             TableHelper(this@Notices).getTable(
                 ConfigManager(this@Notices),
-                session!!, object : TableHelper.Callback{
+                object : TableHelper.Callback{
                     override fun onReadStart() {
                         onReadTable()
                     }

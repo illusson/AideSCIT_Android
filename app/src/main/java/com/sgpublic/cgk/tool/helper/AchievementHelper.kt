@@ -6,6 +6,7 @@ import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.data.FailedMarkData
 import com.sgpublic.cgk.tool.data.PassedMarkData
 import com.sgpublic.cgk.tool.manager.CacheManager
+import com.sgpublic.cgk.tool.manager.ConfigManager
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONArray
@@ -15,36 +16,42 @@ import java.io.IOException
 import java.net.UnknownHostException
 
 class AchievementHelper (private val context: Context, private val username: String) {
-    companion object{
+    companion object {
         private const val tag: String = "AchievementHelper"
     }
 
-    fun getMark(schoolYear: String, semester: Int, session: String, callback: Callback){
-        APIHelper(username, session).getAchievementRequest(schoolYear, semester)
-            .enqueue(object : okhttp3.Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    if (e is UnknownHostException) {
-                        callback.onFailure(-501, context.getString(R.string.error_network), e)
-                    } else {
-                        callback.onFailure(-502, e.message, e)
-                    }
+    fun getMark(config: ConfigManager, callback: Callback){
+        APIHelper(config.getString("access_token")).getAchievementRequest(
+            config.getString("school_year"),
+            config.getInt("semester")
+        ).enqueue(object : okhttp3.Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                if (e is UnknownHostException) {
+                    callback.onFailure(-501, context.getString(R.string.error_network), e)
+                } else {
+                    callback.onFailure(-502, e.message, e)
                 }
+            }
 
-                override fun onResponse(call: Call, response: Response) {
+            override fun onResponse(call: Call, response: Response) {
+                if (response.code == 200){
                     val result = response.body?.string().toString()
                     try {
                         val objects = JSONObject(result)
-                        if (objects.getInt("code") == 0){
+                        if (objects.getInt("code") == 200){
                             CacheManager(context).save(CacheManager.CACHE_ACHIEVEMENT, result)
-                            parsing(objects, callback)
+                            parsing(objects.getJSONObject("achievement"), callback)
                         } else {
                             callback.onFailure(-504, objects.getString("message"))
                         }
                     } catch (e: JSONException){
                         callback.onFailure(-504, e.message, e)
                     }
+                } else {
+                    callback.onFailure(-505, context.getString(R.string.error_server_error))
                 }
-            })
+            }
+        })
     }
 
     @Throws(JSONException::class)

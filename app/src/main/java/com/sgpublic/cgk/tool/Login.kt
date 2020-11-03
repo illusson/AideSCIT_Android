@@ -82,33 +82,26 @@ class Login : BaseActivity(), LoginHelper.Callback {
         setLoadingState(false)
     }
 
-    override fun onResult(session: String, identity: String) {
-        ConfigManager(this@Login)
-            .putString("username", login_username.text.toString())
-            .putString("password", login_password.text.toString())
-            .putBoolean("is_login", true)
-            .putString("identity", identity)
-            .apply()
-
-        UserInfoHelper(this@Login, login_username.text.toString(), session).getUserInfo(identity, object : UserInfoHelper.Callback{
+    override fun onResult(access: String, refresh: String) {
+        val helper = UserInfoHelper(this@Login, login_username.text.toString(), login_username.text.toString());
+        helper.getUserInfo(access, object : UserInfoHelper.Callback{
             override fun onFailure(code: Int, message: String?, e: Exception?) {
                 setLoadingState(false)
                 onToast(this@Login, R.string.text_login_failure, message, code)
             }
 
-            override fun onResult(name: String, faculty: UserInfoData, specialty: UserInfoData, userClass: UserInfoData, grade: Int) {
+            override fun onResult(name: String, faculty: String, specialty: String, userClass: String, grade: Int) {
                 ConfigManager(this@Login)
+                    .putString("access_token", access)
+                    .putString("refresh_token", refresh)
                     .putString("name", name)
-                    .putString("faculty_name", faculty.name)
-                    .putLong("faculty_id", faculty.id)
-                    .putString("specialty_name", specialty.name)
-                    .putLong("specialty_id", specialty.id)
-                    .putString("class_name", userClass.name)
-                    .putLong("class_id", userClass.id)
+                    .putString("faculty_name", faculty)
+                    .putString("specialty_name", specialty)
+                    .putString("class_name", userClass)
                     .putInt("grade", grade)
                     .apply()
                 setLoadingState(false)
-                Main.startActivity(this@Login, session)
+                Main.startActivity(this@Login)
             }
         })
     }

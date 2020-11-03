@@ -5,6 +5,7 @@ import android.util.Log
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.data.ExamData
 import com.sgpublic.cgk.tool.manager.CacheManager
+import com.sgpublic.cgk.tool.manager.ConfigManager
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONArray
@@ -13,13 +14,13 @@ import org.json.JSONObject
 import java.io.IOException
 import java.net.UnknownHostException
 
-class ExamHelper (private val context: Context, private val username: String) {
+class ExamHelper (private val context: Context) {
     companion object{
         private const val tag: String = "ExamHelper"
     }
 
-    fun getExam(session: String, callback: Callback){
-        APIHelper(username, session).getExamRequest()
+    fun getExam(access: String, callback: Callback){
+        APIHelper(access).getExamRequest()
             .enqueue(object : okhttp3.Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     if (e is UnknownHostException) {
@@ -30,17 +31,21 @@ class ExamHelper (private val context: Context, private val username: String) {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    val result = response.body?.string().toString()
-                    try {
-                        val objects = JSONObject(result)
-                        if (objects.getInt("code") == 0){
-                            CacheManager(context).save(CacheManager.CACHE_EXAM, result)
-                            parsing(objects, callback)
-                        } else {
-                            callback.onFailure(-604, objects.getString("message"))
+                    if (response.code == 200){
+                        val result = response.body?.string().toString()
+                        try {
+                            val objects = JSONObject(result)
+                            if (objects.getInt("code") == 200){
+                                CacheManager(context).save(CacheManager.CACHE_EXAM, result)
+                                parsing(objects, callback)
+                            } else {
+                                callback.onFailure(-604, objects.getString("message"))
+                            }
+                        } catch (e: JSONException){
+                            callback.onFailure(-604, e.message, e)
                         }
-                    } catch (e: JSONException){
-                        callback.onFailure(-604, e.message, e)
+                    } else {
+                        callback.onFailure(-605, context.getString(R.string.error_server_error))
                     }
                 }
             })

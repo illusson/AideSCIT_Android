@@ -34,7 +34,7 @@ class LoginHelper (val context: Context) {
                 cp.doFinal(password.toByteArray())
             ).toString()
 
-            val call: Call = APIHelper(username).getLoginRequest(passwordEncrypted)
+            val call: Call = APIHelper().getLoginRequest(username, passwordEncrypted)
             call.enqueue(object : okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
                     if (e is UnknownHostException) {
@@ -45,19 +45,23 @@ class LoginHelper (val context: Context) {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    val result = response.body?.string().toString()
-                    try {
-                        val objects = JSONObject(result)
-                        if (objects.getInt("code") == 0) {
-                            callback.onResult(
-                                objects.getString("session"),
-                                objects.getString("identity")
-                            )
-                        } else {
-                            callback.onFailure(-104, objects.getString("message"))
+                    if (response.code == 200){
+                        val result = response.body?.string().toString()
+                        try {
+                            val objects = JSONObject(result)
+                            if (objects.getInt("code") == 200) {
+                                callback.onResult(
+                                    objects.getString("access_token"),
+                                    objects.getString("refresh_token")
+                                )
+                            } else {
+                                callback.onFailure(-104, objects.getString("message"))
+                            }
+                        } catch (e: JSONException){
+                            callback.onFailure(-103, e.message, e)
                         }
-                    } catch (e: JSONException){
-                        callback.onFailure(-103, e.message, e)
+                    } else {
+                        callback.onFailure(-105, context.getString(R.string.error_server_error))
                     }
                 }
             })
@@ -68,6 +72,6 @@ class LoginHelper (val context: Context) {
 
     interface Callback {
         fun onFailure(code: Int, message: String?, e: Exception? = null) {}
-        fun onResult(session: String, identity: String){}
+        fun onResult(access: String, refresh: String){}
     }
 }

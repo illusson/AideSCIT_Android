@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.data.UserInfoData
+import com.sgpublic.cgk.tool.manager.ConfigManager
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -17,8 +18,8 @@ class UserInfoHelper(val context: Context, private val username: String, private
         private const val tag: String = "UserInfoHelper"
     }
 
-    fun getUserInfo(identity: String = "student", callback: Callback){
-        val call: Call = APIHelper(username, session).getInfoRequest(identity)
+    fun getUserInfo(access: String, callback: Callback){
+        val call: Call = APIHelper(access).getInfoRequest()
         call.enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 if (e is UnknownHostException) {
@@ -29,38 +30,30 @@ class UserInfoHelper(val context: Context, private val username: String, private
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val result: String = response.body?.string().toString()
-                try {
-                    val objects = JSONObject(result)
-                    if (objects.getInt("code") == 0){
-                        val facultyObject = objects.getJSONObject("faculty")
-                        val faculty = UserInfoData(
-                            facultyObject.getString("name"),
-                            facultyObject.getLong("id")
-                        )
-                        val specialtyObject = objects.getJSONObject("specialty")
-                        val specialty = UserInfoData(
-                            specialtyObject.getString("name"),
-                            specialtyObject.getLong("id")
-                        )
-                        val classObject = objects.getJSONObject("class")
-                        val userClass = UserInfoData(
-                            classObject.getString("name"),
-                            classObject.getLong("id")
-                        )
-
-                        callback.onResult(
-                            objects.getString("name"),
-                            faculty,
-                            specialty,
-                            userClass,
-                            objects.getInt("grade")
-                        )
-                    } else {
-                        callback.onFailure(-304, objects.getString("message"))
+                if (response.code == 200){
+                    val result: String = response.body?.string().toString()
+                    try {
+                        var objects = JSONObject(result)
+                        if (objects.getInt("code") == 200){
+                            objects = objects.getJSONObject("info")
+                            val facultyString = objects.getString("faculty")
+                            val specialtyString = objects.getString("specialty")
+                            val classString = objects.getString("class")
+                            callback.onResult(
+                                objects.getString("name"),
+                                facultyString,
+                                specialtyString,
+                                classString,
+                                objects.getInt("grade")
+                            )
+                        } else {
+                            callback.onFailure(-304, objects.getString("message"))
+                        }
+                    } catch (e: JSONException) {
+                        callback.onFailure(-303, e.message, e)
                     }
-                } catch (e: JSONException) {
-                    callback.onFailure(-303, e.message, e)
+                } else {
+                    callback.onFailure(-305, context.getString(R.string.error_server_error))
                 }
             }
         })
@@ -68,12 +61,6 @@ class UserInfoHelper(val context: Context, private val username: String, private
 
     interface Callback {
         fun onFailure(code: Int, message: String?, e: Exception? = null) {}
-        fun onResult(
-            name: String,
-            faculty: UserInfoData,
-            specialty: UserInfoData,
-            userClass: UserInfoData,
-            grade: Int
-        ){}
+        fun onResult(name: String, faculty: String, specialty: String, userClass: String, grade: Int){}
     }
 }

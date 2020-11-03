@@ -10,7 +10,7 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
 
-class APIHelper(private val username: String, private val session: String) {
+class APIHelper(private val access: String, private val refresh: String) {
     companion object {
         private const val tag: String = "APIHelper"
 
@@ -23,7 +23,7 @@ class APIHelper(private val username: String, private val session: String) {
     constructor() : this("", "")
     constructor(username: String) : this(username, "")
 
-    fun getLoginRequest(passwordEncrypted: String): Call{
+    fun getLoginRequest(username: String, passwordEncrypted: String): Call{
         val url = "login.php"
         val argArray: Map<String, Any> = mapOf(
             "password" to passwordEncrypted,
@@ -36,8 +36,8 @@ class APIHelper(private val username: String, private val session: String) {
     fun getSentenceRequest(): Call{
         val url = "hitokoto.php"
         val argArray: Map<String, Any> = mapOf(
-            "ts" to getTS(),
-            "username" to username
+            "access_token" to access,
+            "ts" to getTS()
         )
         return onReturn(url, argArray)
     }
@@ -47,28 +47,21 @@ class APIHelper(private val username: String, private val session: String) {
         return onReturn(url)
     }
 
-    fun getInfoRequest(identity: String): Call{
+    fun getInfoRequest(): Call{
         val url = "info.php"
         val argArray: Map<String, Any> = mapOf(
-            "identity" to identity,
-            "session" to session,
-            "ts" to getTS(),
-            "username" to username
+            "access_token" to access,
+            "ts" to getTS()
         )
         return onReturn(url, argArray)
     }
 
-    fun getTableRequest(userClass: Long, grade: Int, year: String, semester: Int, faculty: Long, specialty: Long): Call{
+    fun getTableRequest(year: String, semester: Int): Call{
         val url = "table.php"
         val argArray: Map<String, Any> = mapOf(
-            "class" to userClass,
-            "faculty" to faculty,
-            "grade" to grade,
+            "access_token" to access,
             "semester" to semester,
-            "session" to session,
-            "specialty" to specialty,
             "ts" to getTS(),
-            "username" to username,
             "year" to year
         )
         return onReturn(url, argArray)
@@ -77,9 +70,8 @@ class APIHelper(private val username: String, private val session: String) {
     fun getExamRequest(): Call{
         val url = "exam.php"
         val argArray: Map<String, Any> = mapOf(
-            "session" to session,
-            "ts" to getTS(),
-            "username" to username
+            "access_token" to access,
+            "ts" to getTS()
         )
         return onReturn(url, argArray)
     }
@@ -87,10 +79,9 @@ class APIHelper(private val username: String, private val session: String) {
     fun getAchievementRequest(schoolYear: String, semester: Int): Call{
         val url = "achievement.php"
         val argArray: Map<String, Any> = mapOf(
+            "access_token" to access,
             "semester" to semester,
-            "session" to session,
             "ts" to getTS(),
-            "username" to username,
             "year" to schoolYear
         )
         return onReturn(url, argArray)
@@ -121,6 +112,7 @@ class APIHelper(private val username: String, private val session: String) {
             if (method == METHOD_POST) {
                 url(urlFinal)
                 post(GetArgs(argArray).getForm(withSign))
+//                Log.d(tag, GetArgs(argArray).getString(true))
             } else {
                 url(urlFinal + "?" + GetArgs(argArray).getString(withSign))
             }

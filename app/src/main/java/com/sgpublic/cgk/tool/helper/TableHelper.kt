@@ -18,14 +18,10 @@ class TableHelper (val context: Context) {
         private const val tag: String = "TableHelper"
     }
 
-    fun getTable(config: ConfigManager, session: String, callback: Callback){
-        APIHelper(config.getString("username"), session).getTableRequest(
-            config.getLong("class_id"),
-            config.getInt("grade"),
+    fun getTable(config: ConfigManager, callback: Callback){
+        APIHelper(config.getString("access_token")).getTableRequest(
             config.getString("school_year"),
-            config.getInt("semester"),
-            config.getLong("faculty_id"),
-            config.getLong("specialty_id")
+            config.getInt("semester")
         ).enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 if (e is UnknownHostException) {
@@ -36,17 +32,21 @@ class TableHelper (val context: Context) {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val result = response.body?.string().toString()
-                try {
-                    val objects = JSONObject(result)
-                    if (objects.getInt("code") == 0){
-                        CacheManager(context).save(CacheManager.CACHE_TABLE, result)
-                        parsing(objects, config.getInt("week"), callback)
-                    } else {
-                        callback.onFailure(-404, objects.getString("message"))
+                if (response.code == 200){
+                    val result = response.body?.string().toString()
+                    try {
+                        val objects = JSONObject(result)
+                        if (objects.getInt("code") == 200){
+                            CacheManager(context).save(CacheManager.CACHE_TABLE, result)
+                            parsing(objects, config.getInt("week"), callback)
+                        } else {
+                            callback.onFailure(-404, objects.getString("message"))
+                        }
+                    } catch (e: JSONException) {
+                        callback.onFailure(-404, e.message, e)
                     }
-                } catch (e: JSONException){
-                    callback.onFailure(-404, e.message, e)
+                } else {
+                    callback.onFailure(-405, context.getString(R.string.error_server_error))
                 }
             }
         })

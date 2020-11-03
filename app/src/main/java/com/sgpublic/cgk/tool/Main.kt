@@ -94,19 +94,16 @@ class Main : BaseActivity(), TableHelper.Callback {
 
         mine_about.setOnClickListener {
             val intent = Intent(this@Main, About::class.java)
-            intent.putExtra("session", session)
             startActivity(intent)
         }
 
         mine_calendar.setOnClickListener {
             val intent = Intent(this@Main, Notices::class.java)
-            intent.putExtra("session", session)
             startActivity(intent)
         }
 
         mine_exam.setOnClickListener {
             val intent = Intent(this@Main, Exam::class.java)
-            intent.putExtra("session", session)
             startActivity(intent)
         }
 
@@ -134,7 +131,6 @@ class Main : BaseActivity(), TableHelper.Callback {
 
         mine_achievement.setOnClickListener {
             val intent = Intent(this@Main, Achievement::class.java)
-            intent.putExtra("session", session)
             startActivity(intent)
         }
 
@@ -152,10 +148,7 @@ class Main : BaseActivity(), TableHelper.Callback {
             TableHelper(this@Main)
                 .parsing(objects, ConfigManager(this@Main).getInt("week"), this)
         } else {
-            session?.let {
-                TableHelper(this@Main)
-                    .getTable(ConfigManager(this@Main), it, this)
-            }
+            TableHelper(this@Main).getTable(ConfigManager(this@Main), this)
         }
     }
 
@@ -324,10 +317,9 @@ class Main : BaseActivity(), TableHelper.Callback {
 
     companion object{
         @JvmStatic
-        fun startActivity(context: Context, session: String){
+        fun startActivity(context: Context){
             val intent = Intent().run {
                 setClass(context, Main::class.java)
-                putExtra("session", session)
             }
             context.startActivity(intent)
         }

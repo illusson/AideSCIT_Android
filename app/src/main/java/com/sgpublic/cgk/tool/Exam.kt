@@ -23,13 +23,12 @@ class Exam : BaseActivity(), ExamHelper.Callback {
 
     private fun getExam(objects: JSONObject? = null){
         exam_refresh.isRefreshing = true
-        val helper = ExamHelper(this@Exam, ConfigManager(this@Exam).getString("username"))
+        val helper = ExamHelper(this@Exam)
         if (objects != null) {
             helper.parsing(objects, this)
         } else {
-            session?.let {
-                helper.getExam(it, this)
-            }
+            helper.getExam(ConfigManager(this@Exam)
+                .getString("access_token"), this)
         }
     }
 

@@ -3,6 +3,7 @@ package com.sgpublic.cgk.tool.helper
 import android.annotation.SuppressLint
 import android.content.Context
 import com.sgpublic.cgk.tool.R
+import com.sgpublic.cgk.tool.manager.ConfigManager
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONException
@@ -12,7 +13,7 @@ import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HeaderInfoHelper(private val context: Context, private var username: String) {
+class HeaderInfoHelper(private val context: Context) {
     companion object{
         private const val tag: String = "HeaderInfoHelper"
         private var sentence: String? = null
@@ -21,11 +22,9 @@ class HeaderInfoHelper(private val context: Context, private var username: Strin
         private var e_day: IOException? = null
     }
 
-    constructor(context: Context) : this(context, "")
-
-    fun setup(callback: Callback?){
+    fun setup(access: String, callback: Callback?){
         if (sentence == null && e_sentence == null){
-            val call: Call = APIHelper(username).getSentenceRequest()
+            val call: Call = APIHelper(access).getSentenceRequest()
             call.enqueue(object : okhttp3.Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     e_sentence = e
@@ -38,7 +37,7 @@ class HeaderInfoHelper(private val context: Context, private var username: Strin
         }
 
         if (day == null && e_day == null){
-            val call: Call = APIHelper(username).getDayRequest()
+            val call: Call = APIHelper(access).getDayRequest()
             call.enqueue(object : okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
                     e_day = e

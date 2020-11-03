@@ -24,7 +24,6 @@ import java.io.*
 @SuppressLint("Registered")
 abstract class BaseActivity : SwipeBackActivity() {
     protected val tag: String = javaClass.simpleName
-    protected var session: String? = null
 
     private val edgeSize: Int = 200
 
@@ -39,10 +38,6 @@ abstract class BaseActivity : SwipeBackActivity() {
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
         swipeBackLayout.setEdgeSize(edgeSize)
-
-        intent.getStringExtra("session")?.let {
-            session = it
-        }
 
         setContentView(getContentView())
         onViewSetup()

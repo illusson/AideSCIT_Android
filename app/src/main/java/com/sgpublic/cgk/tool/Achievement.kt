@@ -13,6 +13,7 @@ import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
 import kotlinx.android.synthetic.main.activity_achievement.*
 import kotlinx.android.synthetic.main.item_achievement_passed.view.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
@@ -38,11 +39,13 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         achievement_refresh.isRefreshing = true
         val helper = AchievementHelper(this@Achievement, config.getString("username"))
         if (objects != null) {
-            helper.parsing(objects, this)
-        } else {
-            session?.let {
-                helper.getMark(year, semester, it, this)
+            try {
+                helper.parsing(objects.getJSONObject("achievement"), this)
+            } catch (e: JSONException){
+                onReadFinish()
             }
+        } else {
+            helper.getMark(ConfigManager(this@Achievement), this)
         }
     }
 
