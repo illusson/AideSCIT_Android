@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.Base64Helper
+import com.sgpublic.cgk.tool.manager.ConfigManager
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONException
@@ -45,24 +46,7 @@ class LoginHelper (val context: Context) {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    if (response.code == 200){
-                        val result = response.body?.string().toString()
-                        try {
-                            val objects = JSONObject(result)
-                            if (objects.getInt("code") == 200) {
-                                callback.onResult(
-                                    objects.getString("access_token"),
-                                    objects.getString("refresh_token")
-                                )
-                            } else {
-                                callback.onFailure(-104, objects.getString("message"))
-                            }
-                        } catch (e: JSONException){
-                            callback.onFailure(-103, e.message, e)
-                        }
-                    } else {
-                        callback.onFailure(-105, context.getString(R.string.error_server_error))
-                    }
+                    parse(response, callback)
                 }
             })
         } catch (e: java.lang.Exception) {
@@ -70,8 +54,48 @@ class LoginHelper (val context: Context) {
         }
     }
 
+    fun refreshToken(config: ConfigManager, callback: Callback) {
+        APIHelper(
+            config.getString("access_token"),
+            config.getString("refresh_token")
+        ).getRefreshTokenRequest().enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (e is UnknownHostException) {
+                    callback.onFailure(-101, context.getString(R.string.error_network), e)
+                } else {
+                    callback.onFailure(-102, e.message, e)
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                parse(response, callback)
+            }
+        })
+    }
+
+    private fun parse(response: Response, callback: Callback){
+        if (response.code == 200){
+            val result = response.body?.string().toString()
+            try {
+                val objects = JSONObject(result)
+                if (objects.getInt("code") == 200) {
+                    callback.onResult(
+                        objects.getString("access_token"),
+                        objects.getString("refresh_token")
+                    )
+                } else {
+                    callback.onFailure(-104, objects.getString("message"))
+                }
+            } catch (e: JSONException){
+                callback.onFailure(-103, e.message, e)
+            }
+        } else {
+            callback.onFailure(-105, context.getString(R.string.error_server_error))
+        }
+    }
+
     interface Callback {
         fun onFailure(code: Int, message: String?, e: Exception? = null) {}
-        fun onResult(access: String, refresh: String){}
+        fun onResult(access: String, refresh: String) {}
     }
 }

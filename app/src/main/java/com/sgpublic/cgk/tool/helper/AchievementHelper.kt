@@ -22,8 +22,8 @@ class AchievementHelper (private val context: Context, private val username: Str
 
     fun getMark(config: ConfigManager, callback: Callback){
         APIHelper(config.getString("access_token")).getAchievementRequest(
-            config.getString("school_year"),
-            config.getInt("semester")
+            config.getString("school_year_inquiry"),
+            config.getInt("semester_inquiry")
         ).enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 if (e is UnknownHostException) {

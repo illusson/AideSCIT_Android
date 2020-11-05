@@ -8,10 +8,7 @@ import androidx.core.content.ContextCompat
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.UserInfoData
-import com.sgpublic.cgk.tool.helper.HeaderInfoHelper
-import com.sgpublic.cgk.tool.helper.LoginHelper
-import com.sgpublic.cgk.tool.helper.UpdateHelper
-import com.sgpublic.cgk.tool.helper.UserInfoHelper
+import com.sgpublic.cgk.tool.helper.*
 import com.sgpublic.cgk.tool.manager.ConfigManager
 
 
@@ -145,7 +142,26 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
             grand = grand && permission == PackageManager.PERMISSION_GRANTED
         }
         isLogin = ConfigManager(this@Welcome).getString("access_token", "") != ""
-        onFinished(true)
+        val manager = ConfigManager(this@Welcome);
+        if (manager.getLong("token_expired", 0) < APIHelper.getTS()){
+            val helper = LoginHelper(this@Welcome)
+            helper.refreshToken(ConfigManager(this@Welcome), object : LoginHelper.Callback {
+                override fun onFailure(code: Int, message: String?, e: Exception?) {
+                    onFinished(true)
+                }
+
+                override fun onResult(access: String, refresh: String) {
+                    ConfigManager(this@Welcome)
+                        .putString("access_token", access)
+                        .putString("refresh_token", refresh)
+                        .putLong("token_expired", System.currentTimeMillis() + 2591990L)
+                        .apply()
+                    onFinished(true)
+                }
+            })
+        } else {
+            onFinished(true)
+        }
     }
 
     private fun onFinished(result: Boolean) {

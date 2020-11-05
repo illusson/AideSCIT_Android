@@ -18,6 +18,8 @@ class APIHelper(private val access: String, private val refresh: String) {
 
         const val METHOD_GET: Int = 0
         const val METHOD_POST: Int = 1
+
+        public fun getTS() = System.currentTimeMillis() / 1000
     }
 
     constructor() : this("", "")
@@ -29,6 +31,16 @@ class APIHelper(private val access: String, private val refresh: String) {
             "password" to passwordEncrypted,
             "ts" to getTS(),
             "username" to username
+        )
+        return onReturn(url, argArray)
+    }
+
+    fun getRefreshTokenRequest(): Call{
+        val url = "token.php"
+        val argArray: Map<String, Any> = mapOf(
+            "access_token" to access,
+            "refresh_token" to refresh,
+            "ts" to getTS()
         )
         return onReturn(url, argArray)
     }
@@ -183,6 +195,4 @@ class APIHelper(private val access: String, private val refresh: String) {
             }
         }
     }
-
-    private fun getTS() = System.currentTimeMillis() / 1000
 }
