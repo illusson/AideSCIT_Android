@@ -6,8 +6,10 @@ import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +18,9 @@ import androidx.appcompat.app.AlertDialog
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.TableData
+import com.sgpublic.cgk.tool.helper.APIHelper
 import com.sgpublic.cgk.tool.helper.HeaderInfoHelper
+import com.sgpublic.cgk.tool.helper.LoginHelper
 import com.sgpublic.cgk.tool.helper.TableHelper
 import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
@@ -107,6 +111,21 @@ class Main : BaseActivity(), TableHelper.Callback {
             startActivity(intent)
         }
 
+        mine_springboard.setOnClickListener {
+            mine_progress.visibility = View.VISIBLE
+            val access = ConfigManager(this@Main).getString("access_token", "");
+            LoginHelper(this@Main).springboard(access, object : LoginHelper.SpringboardCallback {
+                override fun onFailure(code: Int, message: String?, e: Exception?) {
+                    Log.d(tag, code.toString() + message)
+                    this@Main.springboard("http://218.6.163.95:8081/")
+                }
+
+                override fun onResult(location: String) {
+                    this@Main.springboard(location)
+                }
+            })
+        }
+
         mine_logout.setOnClickListener {
             val alert = AlertDialog.Builder(this@Main)
             alert.setTitle(R.string.title_check_logout)
@@ -142,11 +161,21 @@ class Main : BaseActivity(), TableHelper.Callback {
         timetable_refresh.setColorSchemeResources(R.color.colorAlert)
     }
 
+    private fun springboard(location: String){
+        Log.d(tag, location)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(location)
+        startActivity(intent)
+        runOnUiThread {
+            mine_progress.visibility = View.GONE
+        }
+    }
+
     private fun getTable(objects: JSONObject? = null){
         timetable_refresh.isRefreshing = true
         if (objects != null){
-            TableHelper(this@Main)
-                .parsing(objects, ConfigManager(this@Main).getInt("week"), this)
+            TableHelper(this@Main).parsing(objects, ConfigManager(this@Main)
+                .getInt("week"), this)
         } else {
             TableHelper(this@Main).getTable(ConfigManager(this@Main), this)
         }

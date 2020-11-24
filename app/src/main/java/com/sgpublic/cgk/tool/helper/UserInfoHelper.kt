@@ -1,12 +1,8 @@
 package com.sgpublic.cgk.tool.helper
 
 import android.content.Context
-import android.util.Log
 import com.sgpublic.cgk.tool.R
-import com.sgpublic.cgk.tool.data.UserInfoData
-import com.sgpublic.cgk.tool.manager.ConfigManager
 import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject

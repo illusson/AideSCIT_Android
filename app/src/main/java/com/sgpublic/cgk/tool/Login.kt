@@ -19,7 +19,6 @@ import com.facebook.rebound.SpringConfig
 import com.facebook.rebound.SpringSystem
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
-import com.sgpublic.cgk.tool.data.UserInfoData
 import com.sgpublic.cgk.tool.helper.LoginHelper
 import com.sgpublic.cgk.tool.helper.UserInfoHelper
 import com.sgpublic.cgk.tool.manager.ConfigManager
@@ -94,6 +93,7 @@ class Login : BaseActivity(), LoginHelper.Callback {
                 ConfigManager(this@Login)
                     .putString("access_token", access)
                     .putString("refresh_token", refresh)
+                    .putLong("token_expired", System.currentTimeMillis() + 2591990L)
                     .putString("name", name)
                     .putString("faculty_name", faculty)
                     .putString("specialty_name", specialty)

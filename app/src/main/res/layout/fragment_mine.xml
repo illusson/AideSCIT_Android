@@ -246,6 +246,29 @@
 
             </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ProgressBar
+                    android:id="@+id/mine_progress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:visibility="invisible"
+                    android:layout_gravity="end|center"
+                    android:layout_marginEnd="30dp" />
+                <TextView
+                    android:id="@+id/mine_springboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/title_springboard"
+                    android:textSize="16sp"
+                    android:textColor="@color/color_font_normal"/>
+            </FrameLayout>
+
             <TextView
                 android:id="@+id/mine_logout"
                 android:layout_width="match_parent"

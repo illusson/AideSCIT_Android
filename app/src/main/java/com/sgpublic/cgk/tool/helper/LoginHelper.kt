@@ -54,6 +54,38 @@ class LoginHelper (val context: Context) {
         }
     }
 
+    fun springboard(access: String, callback: SpringboardCallback){
+        val helper = APIHelper(ConfigManager(context)
+            .getString("access_token")).getSpringboardRequest()
+        helper.enqueue(object : okhttp3.Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                if (e is UnknownHostException) {
+                    callback.onFailure(-101, context.getString(R.string.error_network), e)
+                } else {
+                    callback.onFailure(-102, e.message, e)
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.code == 200){
+                    val result = response.body?.string().toString()
+                    try {
+                        val objects = JSONObject(result)
+                        if (objects.getInt("code") == 200) {
+                            callback.onResult(objects.getString("location"))
+                        } else {
+                            callback.onFailure(-104, objects.getString("message"))
+                        }
+                    } catch (e: JSONException){
+                        callback.onFailure(-103, e.message, e)
+                    }
+                } else {
+                    callback.onFailure(-105, context.getString(R.string.error_server_error))
+                }
+            }
+        })
+    }
+
     fun refreshToken(config: ConfigManager, callback: Callback) {
         APIHelper(
             config.getString("access_token"),
@@ -61,9 +93,9 @@ class LoginHelper (val context: Context) {
         ).getRefreshTokenRequest().enqueue(object : okhttp3.Callback {
             override fun onFailure(call: Call, e: IOException) {
                 if (e is UnknownHostException) {
-                    callback.onFailure(-101, context.getString(R.string.error_network), e)
+                    callback.onFailure(-111, context.getString(R.string.error_network), e)
                 } else {
-                    callback.onFailure(-102, e.message, e)
+                    callback.onFailure(-112, e.message, e)
                 }
             }
 
@@ -97,5 +129,10 @@ class LoginHelper (val context: Context) {
     interface Callback {
         fun onFailure(code: Int, message: String?, e: Exception? = null) {}
         fun onResult(access: String, refresh: String) {}
+    }
+
+    interface SpringboardCallback {
+        fun onFailure(code: Int, message: String?, e: Exception? = null) {}
+        fun onResult(location: String) {}
     }
 }

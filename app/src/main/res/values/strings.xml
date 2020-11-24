@@ -28,6 +28,7 @@
     <string name="title_category_expand">拓展功能</string>
     <string name="title_into_exam">考试安排查询</string>
     <string name="title_into_calendar">课表导入到日历</string>
+    <string name="title_springboard">前往教务系统</string>
     <string name="title_logout">退出登录</string>
     <string name="title_category_other">其他</string>
     <string name="title_about">关于</string>

@@ -40,7 +40,7 @@ class TableHelper (val context: Context) {
                             CacheManager(context).save(CacheManager.CACHE_TABLE, result)
                             parsing(objects, config.getInt("week"), callback)
                         } else {
-                            callback.onFailure(-404, objects.getString("message"))
+                            callback.onFailure(-403, objects.getString("message"))
                         }
                     } catch (e: JSONException) {
                         callback.onFailure(-404, e.message, e)
@@ -78,7 +78,6 @@ class TableHelper (val context: Context) {
                                 indexObject.getString("room")
                             ))
                             isEmpty ++
-                            continue
                         }
                     }
                     continue

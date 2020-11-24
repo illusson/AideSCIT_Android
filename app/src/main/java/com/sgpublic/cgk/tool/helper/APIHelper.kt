@@ -25,7 +25,7 @@ class APIHelper(private val access: String, private val refresh: String) {
     constructor() : this("", "")
     constructor(username: String) : this(username, "")
 
-    fun getLoginRequest(username: String, passwordEncrypted: String): Call{
+    fun getLoginRequest(username: String, passwordEncrypted: String): Call {
         val url = "login.php"
         val argArray: Map<String, Any> = mapOf(
             "password" to passwordEncrypted,
@@ -35,7 +35,16 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getRefreshTokenRequest(): Call{
+    fun getSpringboardRequest(): Call {
+        val url = "springboard.php"
+        val argArray: Map<String, Any> = mapOf(
+            "access_token" to access,
+            "ts" to getTS()
+        )
+        return onReturn(url, argArray)
+    }
+
+    fun getRefreshTokenRequest(): Call {
         val url = "token.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
@@ -45,7 +54,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getSentenceRequest(): Call{
+    fun getSentenceRequest(): Call {
         val url = "hitokoto.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,

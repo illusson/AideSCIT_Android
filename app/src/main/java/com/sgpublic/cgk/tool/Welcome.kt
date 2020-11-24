@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
-import com.sgpublic.cgk.tool.data.UserInfoData
 import com.sgpublic.cgk.tool.helper.*
 import com.sgpublic.cgk.tool.manager.ConfigManager
 
