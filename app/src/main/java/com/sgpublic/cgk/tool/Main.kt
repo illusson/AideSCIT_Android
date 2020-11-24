@@ -112,19 +112,21 @@ class Main : BaseActivity(), TableHelper.Callback {
         }
 
         mine_springboard.setOnClickListener {
-            mine_progress.visibility = View.VISIBLE
-            val access = ConfigManager(this@Main).getString("access_token", "");
-            LoginHelper(this@Main).springboard(access, object : LoginHelper.SpringboardCallback {
-                override fun onFailure(code: Int, message: String?, e: Exception?) {
-                    this@Main.springboard(
-                        "http://218.6.163.95:18080/zfca?yhlx=student&login=0122579031373493708&url=xs_main.aspx"
-                    )
-                }
+            if (mine_progress.visibility != View.VISIBLE){
+                mine_progress.visibility = View.VISIBLE
+                val access = ConfigManager(this@Main).getString("access_token", "");
+                LoginHelper(this@Main).springboard(access, object : LoginHelper.SpringboardCallback {
+                    override fun onFailure(code: Int, message: String?, e: Exception?) {
+                        this@Main.springboard(
+                            "http://218.6.163.95:18080/zfca?yhlx=student&login=0122579031373493708&url=xs_main.aspx"
+                        )
+                    }
 
-                override fun onResult(location: String) {
-                    this@Main.springboard(location)
-                }
-            })
+                    override fun onResult(location: String) {
+                        this@Main.springboard(location)
+                    }
+                })
+            }
         }
 
         mine_logout.setOnClickListener {

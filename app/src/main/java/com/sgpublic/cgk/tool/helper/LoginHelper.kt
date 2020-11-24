@@ -55,8 +55,8 @@ class LoginHelper (val context: Context) {
     }
 
     fun springboard(access: String, callback: SpringboardCallback){
-        val helper = APIHelper(access).getSpringboardRequest()
-        helper.enqueue(object : okhttp3.Callback{
+        val call = APIHelper(access).getSpringboardRequest()
+        call.enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 if (e is UnknownHostException) {
                     callback.onFailure(-101, context.getString(R.string.error_network), e)
