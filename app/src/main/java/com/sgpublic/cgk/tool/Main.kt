@@ -117,7 +117,9 @@ class Main : BaseActivity(), TableHelper.Callback {
             LoginHelper(this@Main).springboard(access, object : LoginHelper.SpringboardCallback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
                     Log.d(tag, code.toString() + message)
-                    this@Main.springboard("http://218.6.163.95:8081/")
+                    this@Main.springboard(
+                        "http://218.6.163.95:18080/zfca?yhlx=student&login=0122579031373493708&url=xs_main.aspx"
+                    )
                 }
 
                 override fun onResult(location: String) {
