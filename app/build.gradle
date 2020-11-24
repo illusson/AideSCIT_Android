@@ -19,8 +19,8 @@ android {
         applicationId "com.sgpublic.cgk.tool"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 20110501
-        versionName "1.1.0.201105"
+        versionCode 20112401
+        versionName "1.1.2.201124"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
