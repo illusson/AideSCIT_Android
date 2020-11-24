@@ -163,7 +163,6 @@ class Main : BaseActivity(), TableHelper.Callback {
     }
 
     private fun springboard(location: String){
-        Log.d(tag, location)
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(location)
         startActivity(intent)
