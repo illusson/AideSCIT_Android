@@ -146,7 +146,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
             val helper = LoginHelper(this@Welcome)
             helper.refreshToken(ConfigManager(this@Welcome), object : LoginHelper.Callback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
-                    onFinished(true)
+                    onFinished(false)
                 }
 
                 override fun onResult(access: String, refresh: String) {
