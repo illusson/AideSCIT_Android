@@ -1,16 +1,16 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.helper.HeaderInfoHelper
 import com.sgpublic.cgk.tool.helper.TableHelper
@@ -183,7 +183,8 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                     val preTimeSetDoing = preTimeSet
                     AlertDialog.Builder(this@Notices).run {
                         setTitle(R.string.title_calendar_pre_time_choose)
-                        setSingleChoiceItems(pre_time_description, preTimeSet
+                        setSingleChoiceItems(
+                            pre_time_description, preTimeSet
                         ) { _, which -> preTimeSet = which }
                         setPositiveButton(R.string.text_ok){ _, _ ->
                             notices_pre_time.text = preTimeArray[preTimeSet].toString()

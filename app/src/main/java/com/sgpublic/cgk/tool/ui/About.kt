@@ -1,15 +1,14 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.DownloadManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.MenuItem
 import android.view.View
+import com.sgpublic.cgk.tool.BuildConfig
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.helper.UpdateHelper
@@ -43,7 +42,7 @@ class About : BaseActivity(), UpdateHelper.Callback {
                         "感谢前辈们的辛勤付出。\n\n" +
                         "(排名不分先后)\n" +
                         "移动端维护：\n   夙戓\n" +
-                        "Web端维护：\n   litatno\n" +
+                        "Web端维护：\n   夙戓、litatno\n" +
                         "API维护：\n   十一、夙戓、litatno");
                 setPositiveButton(R.string.text_ok,null);
             }.show()

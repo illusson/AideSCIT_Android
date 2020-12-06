@@ -1,4 +1,4 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.content.Context
 import android.content.Intent
@@ -9,16 +9,17 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import androidx.appcompat.app.AlertDialog
+import com.sgpublic.cgk.tool.BuildConfig
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.TableData
-import com.sgpublic.cgk.tool.helper.APIHelper
 import com.sgpublic.cgk.tool.helper.HeaderInfoHelper
 import com.sgpublic.cgk.tool.helper.LoginHelper
 import com.sgpublic.cgk.tool.helper.TableHelper
@@ -28,6 +29,7 @@ import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.IUmengRegisterCallback
 import com.umeng.message.PushAgent
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mine.*
 import kotlinx.android.synthetic.main.fragment_timetable.*
@@ -112,8 +114,8 @@ class Main : BaseActivity(), TableHelper.Callback {
         }
 
         mine_springboard.setOnClickListener {
-            if (mine_progress.visibility != View.VISIBLE){
-                mine_progress.visibility = View.VISIBLE
+            if (mine_springboard_progress.visibility != View.VISIBLE){
+                setSpringBoardLoadingState(true)
                 val access = ConfigManager(this@Main).getString("access_token", "");
                 LoginHelper(this@Main).springboard(access, object : LoginHelper.SpringboardCallback {
                     override fun onFailure(code: Int, message: String?, e: Exception?) {
@@ -156,12 +158,32 @@ class Main : BaseActivity(), TableHelper.Callback {
             startActivity(intent)
         }
 
-        mine_room.setOnClickListener {
-            onToast(this@Main, R.string.text_coming)
+        mine_evaluate.setOnClickListener {
+            Evaluate.startActivity(this@Main)
         }
 
         timetable_refresh.setOnRefreshListener { getTable() }
         timetable_refresh.setColorSchemeResources(R.color.colorAlert)
+    }
+
+    private fun setSpringBoardLoadingState(isLoading: Boolean) {
+        runOnUiThread{
+            mine_springboard.isEnabled = false
+            mine_springboard_img.visibility = View.VISIBLE
+            mine_springboard_progress.visibility = View.VISIBLE
+            if (isLoading) {
+                mine_springboard_progress.animate().alpha(1f).setDuration(200).setListener(null)
+                mine_springboard_img.animate().alpha(0f).setDuration(200).setListener(null)
+                mine_springboard_img.visibility = View.INVISIBLE
+            } else {
+                mine_springboard_progress.animate().alpha(0f).setDuration(200).setListener(null)
+                mine_springboard_img.animate().alpha(1f).setDuration(200).setListener(null)
+                mine_springboard_progress.visibility = View.INVISIBLE
+            }
+            Handler().postDelayed({
+                mine_springboard.isEnabled = true
+            }, 500)
+        }
     }
 
     private fun springboard(location: String){
@@ -169,7 +191,7 @@ class Main : BaseActivity(), TableHelper.Callback {
         intent.data = Uri.parse(location)
         startActivity(intent)
         runOnUiThread {
-            mine_progress.visibility = View.GONE
+            setSpringBoardLoadingState(false)
         }
     }
 
@@ -250,50 +272,46 @@ class Main : BaseActivity(), TableHelper.Callback {
     }
 
     private fun initShortsCut() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            var info: ShortcutInfo
-            val mSystemService = getSystemService(ShortcutManager::class.java)
-            val dynamicShortcuts: MutableList<ShortcutInfo> =
-                ArrayList()
-            var intent = Intent(this, Achievement::class.java)
-            intent.action = Intent.ACTION_VIEW
-            info = ShortcutInfo.Builder(this, "Achievement")
-                .setShortLabel("成绩查询")
-                .setIcon(
-                    Icon.createWithResource(
-                        this,
-                        R.mipmap.ic_launcher
-                    )
+        var info: ShortcutInfo
+        val mSystemService = getSystemService(ShortcutManager::class.java)
+        val dynamicShortcuts: MutableList<ShortcutInfo> =
+            ArrayList()
+        var intent = Intent(this, Achievement::class.java)
+        intent.action = Intent.ACTION_VIEW
+        info = ShortcutInfo.Builder(this, "Achievement")
+            .setShortLabel("成绩查询")
+            .setIcon(
+                Icon.createWithResource(
+                    this,
+                    R.mipmap.ic_launcher
                 )
-                .setIntent(intent)
-                .build()
-            dynamicShortcuts.add(info)
-            intent = Intent(this, Exam::class.java)
-            intent.action = Intent.ACTION_VIEW
-            info = ShortcutInfo.Builder(this, "exam")
-                .setShortLabel("考试安排")
-                .setIcon(
-                    Icon.createWithResource(
-                        this,
-                        R.mipmap.ic_launcher
-                    )
+            )
+            .setIntent(intent)
+            .build()
+        dynamicShortcuts.add(info)
+        intent = Intent(this, Exam::class.java)
+        intent.action = Intent.ACTION_VIEW
+        info = ShortcutInfo.Builder(this, "exam")
+            .setShortLabel("考试安排")
+            .setIcon(
+                Icon.createWithResource(
+                    this,
+                    R.mipmap.ic_launcher
                 )
-                .setIntent(intent)
-                .build()
-            dynamicShortcuts.add(info)
-            if (mSystemService != null) {
-                mSystemService.dynamicShortcuts = dynamicShortcuts
-            }
+            )
+            .setIntent(intent)
+            .build()
+        dynamicShortcuts.add(info)
+        if (mSystemService != null) {
+            mSystemService.dynamicShortcuts = dynamicShortcuts
         }
     }
 
     private fun deleteShortCut() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            val mSystemService = getSystemService(ShortcutManager::class.java)
-            mSystemService?.let {
-                it.removeDynamicShortcuts(listOf("Achievement"))
-                it.removeDynamicShortcuts(listOf("exam"))
-            }
+        val mSystemService = getSystemService(ShortcutManager::class.java)
+        mSystemService?.let {
+            it.removeDynamicShortcuts(listOf("Achievement"))
+            it.removeDynamicShortcuts(listOf("exam"))
         }
     }
 

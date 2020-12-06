@@ -1,10 +1,11 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.helper.*

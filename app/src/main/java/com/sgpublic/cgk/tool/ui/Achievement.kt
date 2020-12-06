@@ -1,10 +1,11 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.FailedMarkData
 import com.sgpublic.cgk.tool.data.PassedMarkData
@@ -138,13 +139,15 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
                 yearSelected = year_index
             }
         }
-        val arrayAdapterYear: ArrayAdapter<String?> = ArrayAdapter(this@Achievement, R.layout.item_option, listYear)
+        val arrayAdapterYear: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
+            R.layout.item_option, listYear)
         achievement_year.adapter = arrayAdapterYear
         achievement_year.setSelection(yearSelected, true)
 
         val semesterStudent: Int = config.getInt("semester_inquiry", config.getInt("semester", 1)) - 1
         val listTerm: List<String?> = listOf("1", "2")
-        val arrayAdapterTerm: ArrayAdapter<String?> = ArrayAdapter(this@Achievement, R.layout.item_option, listTerm)
+        val arrayAdapterTerm: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
+            R.layout.item_option, listTerm)
         achievement_term.adapter = arrayAdapterTerm
         achievement_term.setSelection(semesterStudent, true)
 

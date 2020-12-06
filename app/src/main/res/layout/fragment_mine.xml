@@ -133,16 +133,31 @@
                         app:cardCornerRadius="30dp"
                         app:cardBackgroundColor="@color/color_random_1">
 
-                        <ImageView
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="15dp"
-                            android:src="@drawable/ic_more"
-                            app:tint="#FFFFFF" />
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:id="@+id/mine_springboard_img"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="15dp"
+                                android:src="@drawable/ic_jump"
+                                app:tint="#FFFFFF" />
+
+                            <ProgressBar
+                                android:id="@+id/mine_springboard_progress"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:visibility="invisible"
+                                android:layout_gravity="center"
+                                android:indeterminateTintMode="src_atop"
+                                android:indeterminateTint="#FFFFFF"
+                                android:alpha="0"/>
+                        </FrameLayout>
 
                         <LinearLayout
                             android:orientation="vertical"
-                            android:id="@+id/mine_room"
+                            android:id="@+id/mine_springboard"
                             android:background="?android:attr/selectableItemBackground"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
@@ -153,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="6dp"
-                        android:text="@string/title_more"
+                        android:text="@string/title_springboard"
                         android:textSize="14sp"
                         android:textColor="@color/color_mine_title" />
                 </LinearLayout>
@@ -189,6 +204,18 @@
                 android:paddingEnd="30dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:text="@string/title_into_exam"
+                android:textSize="16sp"
+                android:textColor="@color/color_font_normal"/>
+
+            <TextView
+                android:id="@+id/mine_evaluate"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/title_evaluate"
                 android:textSize="16sp"
                 android:textColor="@color/color_font_normal"/>
 
@@ -245,29 +272,6 @@
                     android:textSize="13sp"/>
 
             </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:id="@+id/mine_progress"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:visibility="invisible"
-                    android:layout_gravity="end|center"
-                    android:layout_marginEnd="30dp" />
-                <TextView
-                    android:id="@+id/mine_springboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:text="@string/title_springboard"
-                    android:textSize="16sp"
-                    android:textColor="@color/color_font_normal"/>
-            </FrameLayout>
 
             <TextView
                 android:id="@+id/mine_logout"

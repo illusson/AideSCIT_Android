@@ -1,9 +1,10 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.data.ExamData
 import com.sgpublic.cgk.tool.helper.ExamHelper

@@ -7,15 +7,15 @@
     <string name="shortcut_achievement_short">成绩</string>
 
     <string name="permission_title">欢迎使用工科教务</string>
-    <string name="permission_detail">为了向您提供正常的服务，工科教务将向您申请以下必要权限，如果您不授予这些权限，工科教务可能无法正常运行。</string>
-    <string name="permission_title_write_external">储存权限</string>
-    <string name="permission_content_write_external">用于保存日志信息以便版本维护</string>
+    <string name="permission_detail">为了向您提供正常的服务，工科教务将向您申请以下权限，您可以拒绝授权，但工科教务可能因此无法为您提供部分服务。</string>
     <string name="permission_title_write_calendar">访问日历</string>
     <string name="permission_content_write_calendar">用于将课表导入日历以提供课前提醒服务</string>
     <string name="permission_title_phone_state">读取手机信息</string>
     <string name="permission_content_phone_state">仅获取少量必要信息用于友盟+数据统计服务</string>
-    <string name="permission_granted">同意</string>
-    <string name="permission_denied">工科助手需要获得权限授权才能正常使用哦~</string>
+    <string name="permission_start">开始使用</string>
+    <string name="permission_text_denied">工科助手需要获得权限授权才能正常使用哦~</string>
+    <string name="permission_denied">未授权</string>
+    <string name="permission_granted">已授权</string>
 
     <string name="title_timetable">课表</string>
     <string name="title_mine">我的</string>
@@ -28,6 +28,7 @@
     <string name="title_category_expand">拓展功能</string>
     <string name="title_into_exam">考试安排查询</string>
     <string name="title_into_calendar">课表导入到日历</string>
+    <string name="title_evaluate">教学质量评价</string>
     <string name="title_springboard">前往教务系统</string>
     <string name="title_logout">退出登录</string>
     <string name="title_category_other">其他</string>
@@ -51,6 +52,11 @@
     <string name="text_exam_location">地点</string>
     <string name="text_exam_num">座位号</string>
     <string name="text_exam_empty">还没有考试安排哦~</string>
+
+    <string name="title_evaluate_pre">上一步</string>
+    <string name="title_evaluate_next">下一步 (%1$s/%2$s)</string>
+    <string name="title_evaluate_post">提交</string>
+    <string name="title_evaluate_teacher">提交</string>
 
     <string name="title_calendar_import">将课表导入日历</string>
     <string name="title_calendar_holiday">假期就别想着上课了，好好玩~</string>
@@ -129,6 +135,7 @@
 
     <string name="text_ok">确定</string>
     <string name="text_cancel">取消</string>
+    <string name="text_back">返回</string>
 
     <string name="text_check_cancel_login">你确定要退出吗？退出将无法继续使用“工科助手”。</string>
     <string name="title_check_cancel_login">确定退出？</string>

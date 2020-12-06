@@ -63,12 +63,12 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getDayRequest(): Call{
+    fun getDayRequest(): Call {
         val url = "day.php"
         return onReturn(url)
     }
 
-    fun getInfoRequest(): Call{
+    fun getInfoRequest(): Call {
         val url = "info.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
@@ -77,7 +77,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getTableRequest(year: String, semester: Int): Call{
+    fun getTableRequest(year: String, semester: Int): Call {
         val url = "table.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
@@ -88,7 +88,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getExamRequest(): Call{
+    fun getExamRequest(): Call {
         val url = "exam.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
@@ -97,13 +97,24 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getAchievementRequest(schoolYear: String, semester: Int): Call{
+    fun getAchievementRequest(schoolYear: String, semester: Int): Call {
         val url = "achievement.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
             "semester" to semester,
             "ts" to getTS(),
             "year" to schoolYear
+        )
+        return onReturn(url, argArray)
+    }
+
+    fun getEvaluateRequest(action: String = "check", index: Int = 0, data: String = ""): Call {
+        val url = "evaluate.php"
+        val argArray: Map<String, Any> = mapOf(
+            "access_token" to access,
+            "action" to "",
+            "index" to "",
+            "data" to "",
         )
         return onReturn(url, argArray)
     }

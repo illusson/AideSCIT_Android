@@ -52,8 +52,10 @@ abstract class BaseActivity : SwipeBackActivity() {
 
     protected open fun onViewSetup(){
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val modeState: Int = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val modeState: Int = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            this.window.setDecorFitsSystemWindows(modeState != Configuration.UI_MODE_NIGHT_YES)
+        } else {
             if (modeState == Configuration.UI_MODE_NIGHT_YES){
                 this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             } else {

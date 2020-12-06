@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".About">
+    tools:context=".ui.About">
 
     <ImageView
         android:id="@+id/about_back"

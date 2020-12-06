@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:allowBackup="false"
@@ -27,19 +26,20 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".Welcome">
+        <activity android:name=".ui.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main" />
-        <activity android:name=".Login" />
-        <activity android:name=".Achievement" />
-        <activity android:name=".About" />
-        <activity android:name=".Exam" />
-        <activity android:name=".Notices" />
+        <activity android:name=".ui.Main" />
+        <activity android:name=".ui.Login" />
+        <activity android:name=".ui.Achievement" />
+        <activity android:name=".ui.About" />
+        <activity android:name=".ui.Exam" />
+        <activity android:name=".ui.Notices" />
+        <activity android:name=".ui.Evaluate" />
 
         <!--魅族push应用定义消息receiver声明-->
         <receiver

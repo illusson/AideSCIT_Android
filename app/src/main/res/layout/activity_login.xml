@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    tools:context=".ui.Login">
     <FrameLayout
         android:id="@+id/login_content"
         android:layout_width="match_parent"
@@ -234,28 +234,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="@string/permission_title_write_external"
-                        android:textSize="18sp"
-                        android:textColor="@color/color_permission_title" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/permission_content_write_external"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_permission_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="45dp"
-                    android:layout_marginRight="45dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
                         android:text="@string/permission_title_write_calendar"
                         android:textSize="18sp"
                         android:textColor="@color/color_permission_title" />
@@ -283,7 +261,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="@string/permission_granted"
+                android:text="@string/permission_start"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp" />

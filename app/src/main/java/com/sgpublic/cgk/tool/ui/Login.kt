@@ -1,4 +1,4 @@
-package com.sgpublic.cgk.tool
+package com.sgpublic.cgk.tool.ui
 
 import android.Manifest
 import android.app.AlertDialog
@@ -17,6 +17,7 @@ import com.facebook.rebound.SimpleSpringListener
 import com.facebook.rebound.Spring
 import com.facebook.rebound.SpringConfig
 import com.facebook.rebound.SpringSystem
+import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
 import com.sgpublic.cgk.tool.helper.LoginHelper
@@ -130,7 +131,7 @@ class Login : BaseActivity(), LoginHelper.Callback {
                 setEditTextAction()
             }, 500)
         } else {
-            onToast(this@Login, R.string.permission_denied)
+            onToast(this@Login, R.string.permission_text_denied)
         }
     }
 

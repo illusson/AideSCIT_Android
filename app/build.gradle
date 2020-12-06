@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.sgpublic.cgk.tool"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 20112403
         versionName "1.1.2.201124"
