@@ -129,7 +129,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val client: OkHttpClient = OkHttpClient.Builder().run{
             readTimeout(5, TimeUnit.SECONDS)
             writeTimeout(5, TimeUnit.SECONDS)
-            connectTimeout(5, TimeUnit.SECONDS)
+            connectTimeout(10, TimeUnit.SECONDS)
+            callTimeout(5, TimeUnit.MINUTES)
             followRedirects(false)
             followSslRedirects(false)
             build()

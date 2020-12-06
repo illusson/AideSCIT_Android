@@ -56,7 +56,7 @@
     <string name="title_evaluate_pre">上一步</string>
     <string name="title_evaluate_next">下一步 (%1$s/%2$s)</string>
     <string name="title_evaluate_post">提交</string>
-    <string name="title_evaluate_teacher">提交</string>
+    <string name="title_evaluate_teacher">$1%s 教师</string>
 
     <string name="title_calendar_import">将课表导入日历</string>
     <string name="title_calendar_holiday">假期就别想着上课了，好好玩~</string>
