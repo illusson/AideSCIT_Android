@@ -151,7 +151,6 @@ class APIHelper(private val access: String, private val refresh: String) {
             if (method == METHOD_POST) {
                 url(urlFinal)
                 post(GetArgs(argArray).getForm(withSign))
-                Log.d(tag, GetArgs(argArray).getString(true))
             } else {
                 url(urlFinal + "?" + GetArgs(argArray).getString(withSign))
             }
