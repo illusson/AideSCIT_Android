@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -101,6 +102,9 @@ abstract class BaseActivity : SwipeBackActivity() {
     protected fun onToast(context: Context, content: String?) {
         runOnUiThread {
             Toast.makeText(context, content, Toast.LENGTH_SHORT).show()
+        }
+        if (BuildConfig.DEBUG){
+            Log.d(tag, content.toString())
         }
     }
     protected fun onToast(context: Context, content: Int) {

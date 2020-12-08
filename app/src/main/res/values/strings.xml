@@ -53,10 +53,16 @@
     <string name="text_exam_num">座位号</string>
     <string name="text_exam_empty">还没有考试安排哦~</string>
 
+    <string name="title_evaluate_other">其他评价与建议：</string>
+    <string name="title_evaluate_other_hint">限50字，可留空</string>
     <string name="title_evaluate_pre">上一步</string>
     <string name="title_evaluate_next">下一步 (%1$s/%2$s)</string>
     <string name="title_evaluate_post">提交</string>
-    <string name="title_evaluate_teacher">$1%s 教师</string>
+    <string name="title_evaluate_subject">%1$s 教师</string>
+    <string name="title_evaluate_same">请勿全部选择相同选项</string>
+    <string name="title_evaluate_get_failed">评价详情获取失败</string>
+    <string name="title_evaluate_post_failed">评价详情提交失败</string>
+    <string name="title_evaluate_post_success">提交成功</string>
 
     <string name="title_calendar_import">将课表导入日历</string>
     <string name="title_calendar_holiday">假期就别想着上课了，好好玩~</string>

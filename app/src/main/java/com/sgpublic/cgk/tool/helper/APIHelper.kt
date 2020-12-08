@@ -108,14 +108,20 @@ class APIHelper(private val access: String, private val refresh: String) {
         return onReturn(url, argArray)
     }
 
-    fun getEvaluateRequest(action: String = "check", index: Int = 0, data: String = ""): Call {
+    fun getEvaluateRequest(action: String = "check", index: Int = -1, data: String? = null): Call {
         val url = "evaluate.php"
-        val argArray: Map<String, Any> = mapOf(
+        val argArray: MutableMap<String, Any> = mutableMapOf(
             "access_token" to access,
-            "action" to "",
-            "index" to "",
-            "data" to "",
+            "action" to action
         )
+        data?.run {
+            argArray["data"] = this
+        }
+        if (index >= 0){
+            argArray["index"] = index
+        }
+        argArray["ts"] = getTS()
+
         return onReturn(url, argArray)
     }
 
@@ -145,7 +151,7 @@ class APIHelper(private val access: String, private val refresh: String) {
             if (method == METHOD_POST) {
                 url(urlFinal)
                 post(GetArgs(argArray).getForm(withSign))
-//                Log.d(tag, GetArgs(argArray).getString(true))
+                Log.d(tag, GetArgs(argArray).getString(true))
             } else {
                 url(urlFinal + "?" + GetArgs(argArray).getString(withSign))
             }

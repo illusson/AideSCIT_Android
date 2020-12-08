@@ -9,15 +9,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <ImageView
-            android:id="@+id/evaluate_avatar"
-            android:src="@drawable/drawable_avatar"
+        <FrameLayout
             android:layout_width="50dp"
             android:layout_height="75dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:id="@+id/evaluate_avatar_placeholder"
+                android:src="@drawable/drawable_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/evaluate_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="invisible"
+                android:alpha="0"
+                tools:ignore="ContentDescription"/>
+        </FrameLayout>
         <TextView
             android:id="@+id/evaluate_teacher_name"
             android:layout_width="wrap_content"
@@ -37,9 +49,20 @@
             android:textColor="@color/color_font_normal"/>
     </LinearLayout>
     <GridLayout
-        android:id="@+id/evaluate_list"
+        android:id="@+id/evaluate_question_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:columnCount="1" />
+    <EditText
+        android:id="@+id/evaluate_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:hint="@string/title_evaluate_pre"
+        android:maxLines="4"
+        android:maxLength="50"
+        tools:ignore="Autofill,TextFields" />
 </LinearLayout>

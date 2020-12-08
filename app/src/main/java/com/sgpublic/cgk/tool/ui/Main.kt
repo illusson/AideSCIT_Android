@@ -158,12 +158,23 @@ class Main : BaseActivity(), TableHelper.Callback {
             startActivity(intent)
         }
 
-        mine_evaluate.setOnClickListener {
-            Evaluate.startActivity(this@Main)
+        if (ConfigManager(this@Main).getInt("evaluate_count", 0) != 0){
+            mine_evaluate.setOnClickListener {
+                Evaluate.startActivity(this@Main)
+            }
+        } else {
+            mine_evaluate.visibility = View.GONE
         }
 
         timetable_refresh.setOnRefreshListener { getTable() }
         timetable_refresh.setColorSchemeResources(R.color.colorAlert)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mine_evaluate.visibility = if (ConfigManager(this@Main).getInt("evaluate_count", 0) > 0){
+            View.VISIBLE
+        } else { View.GONE }
     }
 
     private fun setSpringBoardLoadingState(isLoading: Boolean) {
@@ -373,7 +384,6 @@ class Main : BaseActivity(), TableHelper.Callback {
             context.startActivity(intent)
         }
     }
-
 
     private fun initSDK(context: Context) {
         UMConfigure.setLogEnabled(true)

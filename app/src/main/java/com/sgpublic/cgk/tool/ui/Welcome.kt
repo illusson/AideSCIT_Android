@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.ActivityCollector
@@ -14,7 +15,7 @@ import com.sgpublic.cgk.tool.manager.ConfigManager
 
 class Welcome : BaseActivity(), UpdateHelper.Callback {
     private val isFinished: MutableList<Boolean> = mutableListOf()
-    private var totalCount: Int = 5
+    private var totalCount: Int = 6
 
     private var grand = true
     private var isLogin = false
@@ -30,7 +31,11 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
             object : HeaderInfoHelper.Callback {
                 override fun onSetupFinish() {
                     UpdateHelper(this@Welcome).getUpdate(0, this@Welcome)
-                    checkLogin()
+                    if (checkLogin()){
+                        checkEvaluate()
+                    } else {
+                        totalCount = 5
+                    }
                     getSentence()
                     getWeek()
                     getSemesterInfo()
@@ -49,11 +54,31 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
 
     override fun onSetSwipeBackEnable() = false
 
-    private fun getSentence(){
-        helper.getSentence(object : HeaderInfoHelper.Callback{
+    private fun checkEvaluate(){
+        val helper = EvaluateHelper(this@Welcome, ConfigManager(this@Welcome).getString(
+            "access_token", ""
+        ))
+        helper.check(object : EvaluateHelper.CheckCallback {
             override fun onFailure(code: Int, message: String?, e: Exception?) {
-                saveExplosion(e, code)
-                onFinished(false)
+                ConfigManager(this@Welcome)
+                    .putInt("evaluate_count", 0)
+                    .apply()
+                onFinished(true)
+            }
+
+            override fun onResult(count: Int) {
+                ConfigManager(this@Welcome)
+                    .putInt("evaluate_count", count)
+                    .apply()
+                onFinished(true)
+            }
+        })
+    }
+
+    private fun getSentence(){
+        helper.getSentence(object : HeaderInfoHelper.Callback {
+            override fun onFailure(code: Int, message: String?, e: Exception?) {
+                onFinished(true)
             }
 
             override fun onSentenceResult(sentence: String, from: String) {
@@ -117,7 +142,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
     }
 
     private fun getSemesterInfo(){
-        helper.getSemesterInfo(object : HeaderInfoHelper.Callback{
+        helper.getSemesterInfo(object : HeaderInfoHelper.Callback {
             override fun onFailure(code: Int, message: String?, e: Exception?) {
                 saveExplosion(e, code)
                 onFinished(false)
@@ -133,7 +158,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
         })
     }
 
-    private fun checkLogin() {
+    private fun checkLogin(): Boolean {
         val permissions = intArrayOf(
             ContextCompat.checkSelfPermission(this@Welcome, Manifest.permission.WRITE_CALENDAR),
             ContextCompat.checkSelfPermission(this@Welcome, Manifest.permission.READ_CALENDAR)
@@ -141,9 +166,9 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
         for (permission in permissions) {
             grand = grand && permission == PackageManager.PERMISSION_GRANTED
         }
-        isLogin = ConfigManager(this@Welcome).getString("access_token", "") != ""
+        isLogin = ConfigManager(this@Welcome).getString("access_token", "null") != "null"
         val manager = ConfigManager(this@Welcome);
-        if (manager.getLong("token_expired", 0) < APIHelper.getTS()){
+        if (isLogin && manager.getLong("token_expired", 0) < APIHelper.getTS()){
             val helper = LoginHelper(this@Welcome)
             helper.refreshToken(ConfigManager(this@Welcome), object : LoginHelper.Callback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
@@ -162,6 +187,7 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
         } else {
             onFinished(true)
         }
+        return isLogin
     }
 
     private fun onFinished(result: Boolean) {

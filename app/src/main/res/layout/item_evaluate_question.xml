@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="在教学过程中是否认真负责，遵纪守时，注重为人师表？"
         android:textSize="18sp"
         android:textColor="@color/color_font_normal"/>
     <FrameLayout
@@ -27,23 +26,20 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:layout_weight="1"
-                android:text="工作敷衍,很差"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
             <TextView
                 android:id="@+id/item_evaluate_question_max"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:layout_weight="1"
-                android:text="是,很好"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
         </LinearLayout>
         <TextView
             android:id="@+id/item_evaluate_question_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="较好"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:textSize="16sp"/>
