@@ -3,8 +3,6 @@ package com.sgpublic.cgk.tool.base
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -35,9 +33,7 @@ abstract class BaseActivity : SwipeBackActivity() {
         ActivityCollector.addActivity(this)
 
         setSwipeBackEnable(onSetSwipeBackEnable())
-
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-
         swipeBackLayout.setEdgeSize(edgeSize)
 
         setContentView(getContentView())
@@ -52,18 +48,21 @@ abstract class BaseActivity : SwipeBackActivity() {
     protected abstract fun onSetSwipeBackEnable(): Boolean
 
     protected open fun onViewSetup(){
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        val modeState: Int = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            this.window.setDecorFitsSystemWindows(modeState != Configuration.UI_MODE_NIGHT_YES)
-        } else {
-            if (modeState == Configuration.UI_MODE_NIGHT_YES){
-                this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            } else {
-                this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        this.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
+//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//        val modeState: Int = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            this.window.setDecorFitsSystemWindows(modeState != Configuration.UI_MODE_NIGHT_YES)
+//        } else {
+//            if (modeState == Configuration.UI_MODE_NIGHT_YES){
+//                this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//            } else {
+//                this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//            }
+//        }
+//        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     override fun onResume() {

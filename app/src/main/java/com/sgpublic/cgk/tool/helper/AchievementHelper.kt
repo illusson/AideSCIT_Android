@@ -15,7 +15,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.net.UnknownHostException
 
-class AchievementHelper (private val context: Context, private val username: String) {
+class AchievementHelper (private val context: Context, private val username: String = "") {
     companion object {
         private const val tag: String = "AchievementHelper"
     }
@@ -65,6 +65,7 @@ class AchievementHelper (private val context: Context, private val username: Str
                     val passedData: JSONObject = passedObject.getJSONObject(passedIndex)
                     callback.onReadPassed(PassedMarkData(
                         passedData.getString("name"),
+                        passedData.getString("paper_score"),
                         passedData.getString("mark"),
                         passedData.getString("retake"),
                         passedData.getString("rebuild"),

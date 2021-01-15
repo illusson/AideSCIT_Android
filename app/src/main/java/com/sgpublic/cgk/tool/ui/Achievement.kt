@@ -1,5 +1,7 @@
 package com.sgpublic.cgk.tool.ui
 
+import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,13 +21,29 @@ import org.json.JSONObject
 import java.util.*
 
 class Achievement : BaseActivity(), AchievementHelper.Callback {
+    var hasLoaded: Int = 0
+
     var achievementFailedLoad: Boolean = false
     var achievementPassedLoad: Boolean = false
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         val objects: JSONObject? = CacheManager(this@Achievement).read(CacheManager.CACHE_ACHIEVEMENT)
         getAchievement(objects)
-        if (objects != null){
+        if (savedInstanceState != null){
+            hasLoaded = savedInstanceState.getInt("hasLoaded")
+            if (savedInstanceState.getInt("hasLoaded") > 1){
+                val helper = AchievementHelper(this@Achievement)
+                if (objects != null) {
+                    try {
+                        helper.parsing(objects.getJSONObject("achievement"), this)
+                    } catch (e: JSONException){
+                        onReadFinish()
+                    }
+                } else {
+                    helper.getMark(ConfigManager(this@Achievement), this)
+                }
+            }
+        } else if (objects != null){
             getAchievement()
         }
     }
@@ -81,15 +99,34 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
             .inflate(R.layout.item_achievement_passed, achievement_table_passed, false)
         itemAchievementPassed.apply {
             achievement_passed_name.text = data.name
+            if(achievement_passed_paper != null) {
+                achievement_passed_paper.text = data.paper
+            }
             achievement_passed_mark.text = data.mark
             achievement_passed_retake.text = data.retake
             achievement_passed_rebuild.text = data.rebuild
             achievement_passed_credit.text = data.credit
+            if (!judgePass(data.mark) && !judgePass(data.retake) && !judgePass(data.rebuild)){
+                achievement_passed_name.setTextColor(Color.RED)
+                if(achievement_passed_paper != null) {
+                    achievement_passed_paper.setTextColor(Color.RED)
+                }
+                achievement_passed_mark.setTextColor(Color.RED)
+                achievement_passed_retake.setTextColor(Color.RED)
+                achievement_passed_rebuild.setTextColor(Color.RED)
+                achievement_passed_credit.setTextColor(Color.RED)
+            }
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
         }
         runOnUiThread{
             achievement_table_passed.addView(itemAchievementPassed)
         }
+    }
+
+    private fun judgePass(string: String?): Boolean {
+        return if (string == null || string == ""){
+            false
+        } else string.toInt() >= 60
     }
 
     override fun onReadFailed(data: FailedMarkData) {
@@ -121,6 +158,7 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
                 achievement_table_failed_empty.visibility = View.INVISIBLE
             }
         }
+
     }
 
     override fun onViewSetup() {
@@ -154,6 +192,18 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         achievement_action.setOnClickListener { getAchievement() }
         achievement_refresh.setOnRefreshListener { getAchievement() }
         achievement_back.setOnClickListener { finish() }
+        achievement_landscape.setOnClickListener {
+            requestedOrientation = if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            } else {
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("hasLoaded", hasLoaded)
+        super.onSaveInstanceState(outState)
     }
 
     override fun getContentView() = R.layout.activity_achievement

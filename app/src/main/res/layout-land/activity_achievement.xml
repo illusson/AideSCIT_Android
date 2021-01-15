@@ -125,6 +125,15 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
+                            android:text="@string/text_achievement_paper"
+                            android:textSize="14sp"
+                            android:textColor="@color/color_table_title"
+                            android:textStyle="bold"
+                            android:gravity="center" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
                             android:text="@string/text_achievement_achievement"
                             android:textSize="14sp"
                             android:textColor="@color/color_table_title"
@@ -133,7 +142,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="4"
+                            android:layout_weight="3"
                             android:text="@string/text_achievement_achievement_make"
                             android:textSize="14sp"
                             android:textColor="@color/color_table_title"
@@ -142,7 +151,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="4"
+                            android:layout_weight="3"
                             android:text="@string/text_achievement_achievement_re"
                             android:textSize="14sp"
                             android:textColor="@color/color_table_title"

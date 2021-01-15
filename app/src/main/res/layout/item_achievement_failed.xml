@@ -20,6 +20,6 @@
         android:layout_weight="1"
         android:textSize="14sp"
         android:textColor="@color/color_table_content"
-        android:gravity="center"
+        android:textAlignment="center"
         android:padding="6dp" />
 </LinearLayout>
