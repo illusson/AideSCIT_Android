@@ -20,6 +20,7 @@ import com.facebook.rebound.SpringSystem
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.base.ActivityCollector
 import com.sgpublic.cgk.tool.base.BaseActivity
+import com.sgpublic.cgk.tool.helper.APIHelper
 import com.sgpublic.cgk.tool.helper.LoginHelper
 import com.sgpublic.cgk.tool.helper.UserInfoHelper
 import com.sgpublic.cgk.tool.manager.ConfigManager
@@ -28,6 +29,16 @@ import kotlinx.android.synthetic.main.activity_login.*
 class Login : BaseActivity(), LoginHelper.Callback {
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
+        ConfigManager(this@Login)
+            .putString("access_token", "")
+            .putString("refresh_token", "")
+            .putLong("token_expired", 0)
+            .putString("name", "")
+            .putString("faculty_name", "")
+            .putString("specialty_name", "")
+            .putString("class_name", "")
+            .putInt("grade", 0)
+            .apply()
         if (!intent.getBooleanExtra("grand", false)) {
             login_permission.visibility = View.VISIBLE
             login_content.visibility = View.GONE
@@ -94,7 +105,7 @@ class Login : BaseActivity(), LoginHelper.Callback {
                 ConfigManager(this@Login)
                     .putString("access_token", access)
                     .putString("refresh_token", refresh)
-                    .putLong("token_expired", System.currentTimeMillis() + 2591990L)
+                    .putLong("token_expired", APIHelper.getTS() + 2592000000L)
                     .putString("name", name)
                     .putString("faculty_name", faculty)
                     .putString("specialty_name", specialty)

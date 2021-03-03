@@ -19,15 +19,17 @@ android {
         applicationId "com.sgpublic.cgk.tool"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 21011501
-        versionName "1.3.0.210115"
+        versionCode 21030301
+        versionName "1.3.1.210303"
+
+        ndk.abiFilters 'armeabi-v7a', 'arm64-v8a'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.release
+            applicationIdSuffix ".debug"
         }
         release {
             minifyEnabled false
@@ -40,10 +42,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.core:core-ktx:1.3.2'

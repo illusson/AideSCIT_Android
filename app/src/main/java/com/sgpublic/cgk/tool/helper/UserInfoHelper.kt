@@ -3,6 +3,9 @@ package com.sgpublic.cgk.tool.helper
 import android.content.Context
 import android.util.Log
 import com.sgpublic.cgk.tool.R
+import com.sgpublic.cgk.tool.base.MyLog
+import com.sgpublic.cgk.tool.manager.CacheManager
+import com.sgpublic.cgk.tool.ui.Login
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONException
@@ -29,22 +32,30 @@ class UserInfoHelper(val context: Context, private val username: String, private
             override fun onResponse(call: Call, response: Response) {
                 if (response.code == 200){
                     val result: String = response.body?.string().toString()
+                    MyLog.d(UserInfoHelper::class.java, result);
                     try {
                         var objects = JSONObject(result)
-                        if (objects.getInt("code") == 200){
-                            objects = objects.getJSONObject("info")
-                            val facultyString = objects.getString("faculty")
-                            val specialtyString = objects.getString("specialty")
-                            val classString = objects.getString("class")
-                            callback.onResult(
-                                objects.getString("name"),
-                                facultyString,
-                                specialtyString,
-                                classString,
-                                objects.getInt("grade")
-                            )
-                        } else {
-                            callback.onFailure(-304, objects.getString("message"))
+                        when (objects.getInt("code")) {
+                            200 -> {
+                                objects = objects.getJSONObject("info")
+                                val facultyString = objects.getString("faculty")
+                                val specialtyString = objects.getString("specialty")
+                                val classString = objects.getString("class")
+                                callback.onResult(
+                                    objects.getString("name"),
+                                    facultyString,
+                                    specialtyString,
+                                    classString,
+                                    objects.getInt("grade")
+                                )
+                            }
+                            504 -> {
+                                callback.onFailure(-100, context.getString(R.string.error_login_expired))
+                                Login.startActivity(context, true)
+                            }
+                            else -> {
+                                callback.onFailure(-304, objects.getString("message"))
+                            }
                         }
                     } catch (e: JSONException) {
                         callback.onFailure(-303, e.message, e)

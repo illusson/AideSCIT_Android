@@ -1,6 +1,7 @@
 package com.sgpublic.cgk.tool.helper
 
 import android.util.Log
+import com.sgpublic.cgk.tool.BuildConfig
 import com.sgpublic.cgk.tool.manager.Security
 import okhttp3.Call
 import okhttp3.FormBody
@@ -12,23 +13,29 @@ import java.util.concurrent.TimeUnit
 
 class APIHelper(private val access: String, private val refresh: String) {
     companion object {
-        private const val tag: String = "APIHelper"
-
-        private const val API_HOST: String = "https://tool.eclass.sgpublic.xyz/api"
+        private const val API_HOST: String = "https://tool.eclass.sgpublic.xyz"
+        private const val PLATFORM: String = "android"
 
         const val METHOD_GET: Int = 0
         const val METHOD_POST: Int = 1
 
-        public fun getTS() = System.currentTimeMillis() / 1000
+        fun getTS() = System.currentTimeMillis() / 1000
     }
 
     constructor() : this("", "")
     constructor(username: String) : this(username, "")
 
+    fun getKeyRequest(): Call {
+        val url = "getKey.php"
+        return onReturn(url)
+    }
+
     fun getLoginRequest(username: String, passwordEncrypted: String): Call {
         val url = "login.php"
         val argArray: Map<String, Any> = mapOf(
+            "app_key" to Security.APP_KEY,
             "password" to passwordEncrypted,
+            "platform" to PLATFORM,
             "ts" to getTS(),
             "username" to username
         )
@@ -39,6 +46,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "springboard.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "ts" to getTS()
         )
         return onReturn(url, argArray)
@@ -48,6 +57,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "token.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "refresh_token" to refresh,
             "ts" to getTS()
         )
@@ -58,6 +69,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "hitokoto.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "ts" to getTS()
         )
         return onReturn(url, argArray)
@@ -72,6 +85,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "info.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "ts" to getTS()
         )
         return onReturn(url, argArray)
@@ -81,6 +96,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "table.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "semester" to semester,
             "ts" to getTS(),
             "year" to year
@@ -92,6 +109,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "exam.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "ts" to getTS()
         )
         return onReturn(url, argArray)
@@ -101,6 +120,8 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "achievement.php"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
+            "app_key" to Security.APP_KEY,
+            "platform" to PLATFORM,
             "semester" to semester,
             "ts" to getTS(),
             "year" to schoolYear
@@ -112,7 +133,9 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "evaluate.php"
         val argArray: MutableMap<String, Any> = mutableMapOf(
             "access_token" to access,
-            "action" to action
+            "app_key" to Security.APP_KEY,
+            "action" to action,
+            "platform" to PLATFORM
         )
         data?.run {
             argArray["data"] = this
@@ -141,10 +164,9 @@ class APIHelper(private val access: String, private val refresh: String) {
             followSslRedirects(false)
             build()
         }
-        val urlFinal = if (url.startsWith("http")){
-            url
-        } else {
-            val apiVersion = if (com.sgpublic.cgk.tool.BuildConfig.DEBUG) "v2" else "v1"
+        val urlFinal = if (url.startsWith("http")){ url } else {
+            //debug & api/v1
+            val apiVersion = if (BuildConfig.DEBUG) "debug" else "api/v1"
             "$API_HOST/$apiVersion/$url"
         }
         val request: Request = Request.Builder().run {
@@ -201,7 +223,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         }
 
         private fun getSign(): String {
-            val content = string + Security.SECRET_KEY
+            val content = string + Security.APP_SECRET
             try {
                 val instance:MessageDigest = MessageDigest.getInstance("MD5")
                 val digest:ByteArray = instance.digest(content.toByteArray())

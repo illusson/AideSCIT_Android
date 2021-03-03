@@ -15,7 +15,10 @@ import com.sgpublic.cgk.tool.helper.AchievementHelper
 import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
 import kotlinx.android.synthetic.main.activity_achievement.*
+import kotlinx.android.synthetic.main.item_achievement_failed.*
+import kotlinx.android.synthetic.main.item_achievement_failed.view.*
 import kotlinx.android.synthetic.main.item_achievement_passed.view.*
+import kotlinx.android.synthetic.main.item_achievement_passed.view.achievement_passed_name
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -99,18 +102,14 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
             .inflate(R.layout.item_achievement_passed, achievement_table_passed, false)
         itemAchievementPassed.apply {
             achievement_passed_name.text = data.name
-            if(achievement_passed_paper != null) {
-                achievement_passed_paper.text = data.paper
-            }
+            achievement_passed_paper.text = data.paper
             achievement_passed_mark.text = data.mark
             achievement_passed_retake.text = data.retake
             achievement_passed_rebuild.text = data.rebuild
             achievement_passed_credit.text = data.credit
             if (!judgePass(data.mark) && !judgePass(data.retake) && !judgePass(data.rebuild)){
                 achievement_passed_name.setTextColor(Color.RED)
-                if(achievement_passed_paper != null) {
-                    achievement_passed_paper.setTextColor(Color.RED)
-                }
+                achievement_passed_paper.setTextColor(Color.RED)
                 achievement_passed_mark.setTextColor(Color.RED)
                 achievement_passed_retake.setTextColor(Color.RED)
                 achievement_passed_rebuild.setTextColor(Color.RED)
@@ -126,7 +125,7 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
     private fun judgePass(string: String?): Boolean {
         return if (string == null || string == ""){
             false
-        } else string.toInt() >= 60
+        } else string.toFloat() >= 60
     }
 
     override fun onReadFailed(data: FailedMarkData) {
@@ -135,10 +134,10 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         }
 
         val itemAchievementFailed: View = LayoutInflater.from(this@Achievement)
-            .inflate(R.layout.item_achievement_passed, achievement_table_failed, false)
+            .inflate(R.layout.item_achievement_failed, achievement_table_failed, false)
         itemAchievementFailed.apply {
-            achievement_passed_name.text = data.name
-            achievement_passed_mark.text = data.mark
+            grade_failed_name.text = data.name
+            grade_failed_mark.text = data.mark
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
         }
         runOnUiThread{

@@ -5,6 +5,8 @@ import android.util.Log
 import com.sgpublic.cgk.tool.R
 import com.sgpublic.cgk.tool.data.EvaluationData
 import com.sgpublic.cgk.tool.data.EvaluationQuestionData
+import com.sgpublic.cgk.tool.manager.CacheManager
+import com.sgpublic.cgk.tool.ui.Login
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONArray
@@ -34,10 +36,17 @@ class EvaluateHelper(private val context: Context, private val access_token: Str
                     val result = response.body?.string().toString()
                     try {
                         val objects = JSONObject(result)
-                        if (objects.getInt("code") == 200){
-                            callback.onResult(objects.getInt("count"))
-                        } else {
-                            callback.onFailure(-704, objects.getString("message"))
+                        when (objects.getInt("code")) {
+                            200 -> {
+                                callback.onResult(objects.getInt("count"))
+                            }
+                            504 -> {
+                                callback.onFailure(-100, context.getString(R.string.error_login_expired))
+                                Login.startActivity(context, true)
+                            }
+                            else -> {
+                                callback.onFailure(-704, objects.getString("message"))
+                            }
                         }
                     } catch (e: JSONException){
                         callback.onFailure(-704, e.message, e)
@@ -65,10 +74,17 @@ class EvaluateHelper(private val context: Context, private val access_token: Str
                     val result = response.body?.string().toString()
                     try {
                         val objects = JSONObject(result)
-                        if (objects.getInt("code") == 200){
-                            parsing(objects.getJSONObject("evaluate"), callback)
-                        } else {
-                            callback.onFailure(-714, objects.getString("message"))
+                        when (objects.getInt("code")) {
+                            200 -> {
+                                parsing(objects.getJSONObject("evaluate"), callback)
+                            }
+                            504 -> {
+                                callback.onFailure(-100, context.getString(R.string.error_login_expired))
+                                Login.startActivity(context, true)
+                            }
+                            else -> {
+                                callback.onFailure(-714, objects.getString("message"))
+                            }
                         }
                     } catch (e: JSONException){
                         callback.onFailure(-714, e.message, e)
@@ -133,10 +149,17 @@ class EvaluateHelper(private val context: Context, private val access_token: Str
                     val result = response.body?.string().toString()
                     try {
                         val objects = JSONObject(result)
-                        if (objects.getInt("code") == 200){
-                            callback.onResult()
-                        } else {
-                            callback.onFailure(-724, objects.getString("message"))
+                        when (objects.getInt("code")) {
+                            200 -> {
+                                callback.onResult()
+                            }
+                            504 -> {
+                                callback.onFailure(-100, context.getString(R.string.error_login_expired))
+                                Login.startActivity(context, true)
+                            }
+                            else -> {
+                                callback.onFailure(-724, objects.getString("message"))
+                            }
                         }
                     } catch (e: JSONException){
                         callback.onFailure(-724, e.message, e)

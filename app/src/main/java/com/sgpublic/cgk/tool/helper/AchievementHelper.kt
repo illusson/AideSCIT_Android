@@ -3,10 +3,12 @@ package com.sgpublic.cgk.tool.helper
 import android.content.Context
 import android.util.Log
 import com.sgpublic.cgk.tool.R
+import com.sgpublic.cgk.tool.base.MyLog
 import com.sgpublic.cgk.tool.data.FailedMarkData
 import com.sgpublic.cgk.tool.data.PassedMarkData
 import com.sgpublic.cgk.tool.manager.CacheManager
 import com.sgpublic.cgk.tool.manager.ConfigManager
+import com.sgpublic.cgk.tool.ui.Login
 import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONArray
@@ -36,13 +38,21 @@ class AchievementHelper (private val context: Context, private val username: Str
             override fun onResponse(call: Call, response: Response) {
                 if (response.code == 200){
                     val result = response.body?.string().toString()
+                    MyLog.d(AchievementHelper::class.java, result)
                     try {
                         val objects = JSONObject(result)
-                        if (objects.getInt("code") == 200){
-                            CacheManager(context).save(CacheManager.CACHE_ACHIEVEMENT, result)
-                            parsing(objects.getJSONObject("achievement"), callback)
-                        } else {
-                            callback.onFailure(-504, objects.getString("message"))
+                        when (objects.getInt("code")) {
+                            200 -> {
+                                CacheManager(context).save(CacheManager.CACHE_ACHIEVEMENT, result)
+                                parsing(objects.getJSONObject("achievement"), callback)
+                            }
+                            504 -> {
+                                callback.onFailure(-100, context.getString(R.string.error_login_expired))
+                                Login.startActivity(context, true)
+                            }
+                            else -> {
+                                callback.onFailure(-504, objects.getString("message"))
+                            }
                         }
                     } catch (e: JSONException){
                         callback.onFailure(-504, e.message, e)

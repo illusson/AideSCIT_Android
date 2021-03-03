@@ -199,6 +199,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="0dp"

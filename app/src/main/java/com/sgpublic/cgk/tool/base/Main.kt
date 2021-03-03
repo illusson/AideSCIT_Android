@@ -21,6 +21,8 @@ class Main : Application() {
         super.onCreate()
         if (!BuildConfig.DEBUG){
             initSDK(this)
+        } else {
+            MyLog.setup()
         }
     }
 
