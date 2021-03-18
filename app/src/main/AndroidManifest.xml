@@ -1,58 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.sgpublic.cgk.tool">
+    package="com.sgpublic.scit.tool">
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<!--    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />-->
+<!--    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />-->
+<!--    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />-->
+<!--    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />-->
+<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:name=".base.Main"
+        android:name="com.sgpublic.scit.tool.base.Main"
         android:networkSecurityConfig="@xml/network_config"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.Welcome">
+        <activity android:name="com.sgpublic.scit.tool.activity.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.Main" />
-        <activity android:name=".ui.Login" />
-        <activity android:name=".ui.Achievement" />
-        <activity android:name=".ui.About" />
-        <activity android:name=".ui.Exam" />
-        <activity android:name=".ui.Notices" />
-        <activity android:name=".ui.Evaluate" />
+        <activity android:name="com.sgpublic.scit.tool.activity.Main" />
+        <activity android:name="com.sgpublic.scit.tool.activity.Login" />
+        <activity android:name="com.sgpublic.scit.tool.activity.Achievement" />
+        <activity android:name="com.sgpublic.scit.tool.activity.About" />
+        <activity android:name="com.sgpublic.scit.tool.activity.Exam" />
+        <activity android:name="com.sgpublic.scit.tool.activity.Notices" />
+        <activity android:name="com.sgpublic.scit.tool.activity.Evaluate" />
+        <activity android:name="com.sgpublic.scit.tool.activity.License" />
+        <activity android:name="com.sgpublic.scit.tool.activity.WebView" />
 
         <!--魅族push应用定义消息receiver声明-->
-        <receiver
-            android:name=".base.MeizuReceiver"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
-                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
-                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
-                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
-                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
-                <category android:name="com.sgpublic.cgk.tool" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name="com.sgpublic.scit.tool.base.MeizuReceiver"-->
+<!--            tools:ignore="ExportedReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />-->
+<!--                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />-->
+<!--                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />-->
+<!--                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />-->
+<!--                <action android:name="com.meizu.c2dm.intent.RECEIVE" />-->
+<!--                <category android:name="com.sgpublic.cgk.tool" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+
+        <!--适配华为（huawei）刘海屏-->
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true"/>
+        <!--适配小米（xiaomi）刘海屏-->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
     </application>
 </manifest>

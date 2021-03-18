@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".ui.About">
+    tools:context=".activity.About">
 
     <ImageView
         android:id="@+id/about_back"
@@ -54,22 +54,17 @@
         android:paddingStart="40dp"
         android:paddingEnd="40dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/color_mine_parting" />
-
-        <TextView
-            android:id="@+id/about_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:gravity="center_vertical"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:text="@string/title_feedback"
-            android:textSize="16sp"
-            android:textColor="@color/color_font_normal"/>
+<!--        <TextView-->
+<!--            android:id="@+id/about_feedback"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="55dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:paddingStart="30dp"-->
+<!--            android:paddingEnd="30dp"-->
+<!--            android:background="?android:attr/selectableItemBackground"-->
+<!--            android:text="@string/title_feedback"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textColor="@color/color_font_normal"/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,7 +89,7 @@
                 android:paddingEnd="30dp"
                 android:gravity="center_vertical"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="@string/title_update"
+                android:text="@string/title_about_update"
                 android:textSize="16sp"
                 android:textColor="@color/color_font_normal"/>
         </FrameLayout>
@@ -112,9 +107,26 @@
             android:gravity="center_vertical"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
-            android:text="@string/title_developer"
+            android:text="@string/title_about_developer"
             android:textColor="@color/color_font_normal"
             android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_mine_parting" />
+
+        <TextView
+            android:id="@+id/about_license"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/title_about_license"
+            android:textSize="16sp"
+            android:textColor="@color/color_font_normal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,12 +135,21 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/about_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:text="@string/app_author"
+        android:layout_marginBottom="10dp"
+        android:text="@string/title_about_agreement"
         android:textSize="12sp"
         android:textColor="#999999"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:text="@string/app_author"
+        android:textSize="12sp"
+        android:textColor="#999999"/>
 </LinearLayout>

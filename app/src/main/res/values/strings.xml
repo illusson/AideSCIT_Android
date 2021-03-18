@@ -1,25 +1,38 @@
 <resources>
     <string name="app_name">工科助手</string>
     <string name="app_introduction">你的忠实仆从，遂幻工作室出品</string>
-    <string name="app_author">Copyright © 2019&#8211;2020 遂幻工作室</string>
+    <string name="app_author">Copyright © 2019&#8211;2021 遂幻工作室</string>
+
+    <string name="title_agreement">协议与政策</string>
+    <string name="text_agreement_summary">同意<a href="http://tool.eclass.sgpublic.xyz/about/protocol.html">《用户服务协议》</a>和<a href="http://tool.eclass.sgpublic.xyz/about/privacy.html">《隐私政策》</a></string>
+    <string name="text_agreement_content_1">感谢您信任并使用工科助手，在使用工科助手服务前，请仔细阅读<a href="http://tool.eclass.sgpublic.xyz/about/protocol.html">《用户服务协议》</a>和<a href="http://tool.eclass.sgpublic.xyz/about/privacy.html">《隐私政策》</a>的全部内容，以了解用户权益义务和个人信息处理规则。</string>
+    <string name="text_agreement_content_2">点击同意即代表您和您的监护人已阅读并同意全部条款。</string>
+    <string name="text_agreement_agree">同意</string>
+    <string name="text_agreement_disagree">不同意并退出APP</string>
 
     <string name="shortcut_achievement_long">成绩查询</string>
     <string name="shortcut_achievement_short">成绩</string>
 
-    <string name="permission_title">欢迎使用工科教务</string>
-    <string name="permission_detail">为了向您提供正常的服务，工科教务将向您申请以下权限，您可以拒绝授权，但工科教务可能因此无法为您提供部分服务。</string>
-    <string name="permission_title_write_calendar">访问日历</string>
-    <string name="permission_content_write_calendar">用于将课表导入日历以提供课前提醒服务</string>
-    <string name="permission_title_phone_state">读取手机信息</string>
-    <string name="permission_content_phone_state">仅获取少量必要信息用于友盟+数据统计服务</string>
-    <string name="permission_start">开始使用</string>
-    <string name="permission_text_denied">工科助手需要获得权限授权才能正常使用哦~</string>
+    <string name="title_notices_permission">权限申请</string>
+    <string name="text_notices_permission">工科助手需要申请日历读写权限用于将课表导入日历以提供课前提醒服务</string>
+    <string name="title_notices_permission_denied">未授权，该功能无法使用</string>
+    <string name="text_notices_permission_current">无法获取日历信息</string>
+    <string name="text_notices_permission_denied">您未授权日历读写权限，我们将无法正常将课表导入日历</string>
+    <string name="text_notices_permission_denied_ask">工科助手请求日历读写权限用于将课表导入日历以提供课前提醒服务。请在【设置-应用-工科助手-权限】中开启日历读写权限，以正常使用该功能。</string>
+    <string name="text_notices_permission_start">去授权</string>
+    <string name="text_notices_permission_setting">去设置</string>
+    <string name="text_notices_permission_cancel">暂不授权</string>
+    <string name="text_notices_permission_force">仍然继续</string>
     <string name="permission_denied">未授权</string>
     <string name="permission_granted">已授权</string>
 
+    <string name="title_home">首页</string>
     <string name="title_timetable">课表</string>
+    <string name="title_news">资讯</string>
     <string name="title_mine">我的</string>
     <string name="title_exam">考试安排</string>
+
+    <string name="text_table_week_index">第 %1$d 周</string>
 
     <string name="title_room">空闲教室</string>
     <string name="title_achievement">成绩</string>
@@ -34,6 +47,9 @@
     <string name="title_category_other">其他</string>
     <string name="title_about">关于</string>
     <string name="title_more">更多</string>
+
+    <string name="text_home_task_header">%1$d年%2$d月%3$d %4$s</string>
+    <string name="text_home_task_right_now">还剩 %1$d 分钟开始 | %2$s</string>
 
     <string name="title_achievement_search">成绩查询</string>
     <string name="title_achievement_re">至今未过的课程</string>
@@ -113,9 +129,11 @@
     <string name="text_hello_afternoon">下午好</string>
     <string name="text_hello_dinner">晚上好</string>
 
-    <string name="title_feedback">问题反馈</string>
-    <string name="title_update">检查更新</string>
-    <string name="title_developer">开发者</string>
+    <string name="title_about_feedback">问题反馈</string>
+    <string name="title_about_update">检查更新</string>
+    <string name="title_about_developer">开发者</string>
+    <string name="title_about_agreement"><a href="http://tool.eclass.sgpublic.xyz/about/protocol.html">《用户服务协议》</a> | <a href="http://tool.eclass.sgpublic.xyz/about/privacy.html">《隐私政策》</a></string>
+    <string name="title_about_license">开源许可</string>
 
     <string name="title_update_get">有更新版本</string>
     <string name="title_update_already">已是最新版本</string>
@@ -131,6 +149,7 @@
     <string name="text_password_edit">输入密码</string>
     <string name="text_login_empty">账号或密码为空</string>
     <string name="text_login_failure">登录失败</string>
+    <string name="text_login_agreement">请先勾选下方的“同意《用户协议》和《隐私协议》”</string>
 
     <string name="title_check_logout">确定退出登录？</string>
     <string name="text_check_logout">您确定要退出登录吗？退出登录将无法继续使用“工科助手”。</string>
@@ -147,9 +166,16 @@
     <string name="text_check_cancel_login">你确定要退出吗？退出将无法继续使用“工科助手”。</string>
     <string name="title_check_cancel_login">确定退出？</string>
 
-    <string name="error_network">请检查网络连接</string>
     <string name="error_setup_failed">应用初始化失败，网络连接异常或服务器维护中</string>
     <string name="error_setup_timeout">应用初始化超时，网络连接异常或服务器维护中</string>
     <string name="error_server_error">服务器内部出错</string>
     <string name="error_login_expired">登录状态失效，请重新登录</string>
+    <string name="error_network">网络似乎开小差了呢(￣△￣；)</string>
+    <string name="error_setup">初始化失败(°Д°≡°Д°)</string>
+    <string name="error_news_load">数据加载出错(°ー°〃)</string>
+    <string name="error_update">检查更新出错(*Φ皿Φ*)</string>
+    <string name="error_null">内容不见了呢 _(´ཀ`」 ∠)__</string>
+    <string name="error_empty">竟然什么都没有？Σ( ° △ °|||)︴</string>
+    <string name="error_loading_more">正在加载更多数据～(￣▽￣～)~</string>
+    <string name="error_no_more">死鬼，这里是人家的底线了呢(*/ω＼*)</string>
 </resources>

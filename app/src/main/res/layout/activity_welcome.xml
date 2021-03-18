@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Welcome">
+    tools:context=".activity.Welcome">
 
     <LinearLayout
         android:orientation="vertical"
@@ -36,6 +36,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/welcome_about"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="100dp"

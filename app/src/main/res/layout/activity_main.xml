@@ -1,39 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWindowBackground"
     android:fitsSystemWindows="true">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
-
     <FrameLayout
+        android:id="@+id/main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="56dp"
-        android:fitsSystemWindows="true">
-        <include
-            android:id="@+id/layout_mine"
-            layout="@layout/fragment_mine"
+        android:layout_height="match_parent">
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_fragment_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        <include
-            android:id="@+id/layout_timetable"
-            layout="@layout/fragment_timetable"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_fragment_table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_fragment_news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_fragment_mine"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.wonderkiln.blurkit.BlurLayout
+        android:id="@+id/nav_view"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_gravity="bottom"
+        app:blurRadius="25"
+        app:fps="60"
+        app:downscaleFactor="0.5">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_gradient" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+            <LinearLayout
+                android:id="@+id/nav_home"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+                <ImageView
+                    android:id="@+id/nav_home_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_home"
+                    android:layout_gravity="center_horizontal"
+                    app:tint="@color/colorPrimary"
+                    android:contentDescription="@string/title_home"
+                    tools:ignore="NestedWeights" />
+                <TextView
+                    android:id="@+id/nav_home_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_home"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/nav_table"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+                <ImageView
+                    android:id="@+id/nav_table_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_timetable"
+                    android:layout_gravity="center_horizontal"
+                    app:tint="@color/colorPrimary"
+                    android:contentDescription="@string/title_timetable"
+                    tools:ignore="NestedWeights" />
+                <TextView
+                    android:id="@+id/nav_table_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_timetable"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/nav_news"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+                <ImageView
+                    android:id="@+id/nav_news_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_news"
+                    android:layout_gravity="center_horizontal"
+                    app:tint="@color/colorPrimary"
+                    android:contentDescription="@string/title_timetable"
+                    tools:ignore="NestedWeights" />
+                <TextView
+                    android:id="@+id/nav_news_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_news"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/nav_mine"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+                <ImageView
+                    android:id="@+id/nav_mine_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_mine"
+                    android:layout_gravity="center_horizontal"
+                    app:tint="@color/colorPrimary"
+                    android:contentDescription="@string/title_timetable"
+                    tools:ignore="NestedWeights" />
+                <TextView
+                    android:id="@+id/nav_mine_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_mine"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.wonderkiln.blurkit.BlurLayout>
+</FrameLayout>
