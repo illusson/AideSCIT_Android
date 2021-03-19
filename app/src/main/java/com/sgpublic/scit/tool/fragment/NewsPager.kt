@@ -160,7 +160,9 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
                 summary.setPadding(dip2px(20.0F), dip2px(20.0F), dip2px(20.0F), dip2px(20.0F))
                 itemNews.itemNewsSummaries.addView(summary)
             }
-
+            itemNews.root.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             itemNews.root.setOnClickListener {
                 WebView.startActivity(contest, dataIndex.type, dataIndex.id)
             }
