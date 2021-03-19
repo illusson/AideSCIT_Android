@@ -1,6 +1,5 @@
 package com.sgpublic.scit.tool.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +10,25 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.sgpublic.scit.tool.manager.ConfigManager
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
 
-abstract class BaseFragment(val contest: AppCompatActivity) : Fragment() {
-    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(getContentView(), container, false)
+abstract class BaseFragment<T: ViewBinding>(val contest: AppCompatActivity) : Fragment() {
+    private var _binding: T? = null
+    protected val binding: T get() = _binding!!
+
+    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = getContentView(inflater, container)
+        return binding.root
+    }
+
+    final override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -40,7 +49,7 @@ abstract class BaseFragment(val contest: AppCompatActivity) : Fragment() {
         contest.finish()
     }
 
-    protected fun <T : View?> findViewById(@IdRes res: Int): T? {
+    protected fun <T: View?> findViewById(@IdRes res: Int): T? {
         return view?.findViewById<T>(res)
     }
 
@@ -48,15 +57,15 @@ abstract class BaseFragment(val contest: AppCompatActivity) : Fragment() {
 
     protected open fun initViewAtTop(view: View){
         var statusbarheight = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
-            statusbarheight = resources.getDimensionPixelSize(resourceId);
+            statusbarheight = resources.getDimensionPixelSize(resourceId)
         }
         val params: LinearLayout.LayoutParams = view.layoutParams as LinearLayout.LayoutParams
         params.topMargin = statusbarheight
     }
 
-    protected abstract fun getContentView(): Int
+    protected abstract fun getContentView(inflater: LayoutInflater, container: ViewGroup?): T
 
     protected open fun onViewSetup(){ }
 

@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.data.ExamData
+import com.sgpublic.scit.tool.databinding.ActivityExamBinding
+import com.sgpublic.scit.tool.databinding.ItemExamBinding
 import com.sgpublic.scit.tool.helper.ExamHelper
 import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_exam.*
-import kotlinx.android.synthetic.main.item_exam.view.*
 import org.json.JSONObject
 
-class Exam : BaseActivity(), ExamHelper.Callback {
+class Exam : BaseActivity<ActivityExamBinding>(), ExamHelper.Callback {
     var examLoad: Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ class Exam : BaseActivity(), ExamHelper.Callback {
     }
 
     private fun getExam(objects: JSONObject? = null){
-        exam_refresh.isRefreshing = true
+        binding.examRefresh.isRefreshing = true
         val helper = ExamHelper(this@Exam)
         if (objects != null) {
             helper.parsing(objects, this)
@@ -37,16 +37,16 @@ class Exam : BaseActivity(), ExamHelper.Callback {
         saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
         runOnUiThread {
-            exam_refresh.isRefreshing = false
+            binding.examRefresh.isRefreshing = false
         }
     }
 
     override fun onReadStart() {
         examLoad = false
         runOnUiThread {
-            exam_table.visibility = View.INVISIBLE
-            exam_table_empty.visibility = View.VISIBLE
-            exam_table.removeAllViews()
+            binding.examTable.visibility = View.INVISIBLE
+            binding.examTableEmpty.visibility = View.VISIBLE
+            binding.examTable.removeAllViews()
         }
     }
 
@@ -55,26 +55,24 @@ class Exam : BaseActivity(), ExamHelper.Callback {
             examLoad = true
         }
 
-        val itemExam: View = LayoutInflater.from(this@Exam)
-            .inflate(R.layout.item_exam, exam_table, false)
+        val itemExam: ItemExamBinding = ItemExamBinding.inflate(layoutInflater)
         itemExam.apply {
-            exam_name.text = data.name
-            exam_time.text = data.time
-            exam_location.text = data.location
-            exam_num.text = data.set
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            examName.text = data.name
+            examTime.text = data.time
+            examLocation.text = data.location
+            examNum.text = data.set
         }
         runOnUiThread{
-            exam_table.addView(itemExam)
+            binding.examTable.addView(itemExam.root)
         }
     }
 
     override fun onReadFinish() {
-        exam_refresh.isRefreshing = false
+        binding.examRefresh.isRefreshing = false
         if (examLoad){
             runOnUiThread {
-                exam_table.visibility = View.VISIBLE
-                exam_table_empty.visibility = View.INVISIBLE
+                binding.examTable.visibility = View.VISIBLE
+                binding.examTableEmpty.visibility = View.INVISIBLE
             }
         }
     }
@@ -82,12 +80,12 @@ class Exam : BaseActivity(), ExamHelper.Callback {
     override fun onViewSetup() {
         super.onViewSetup()
 
-        initViewAtTop(exam_toolbar)
-        exam_refresh.setOnRefreshListener { getExam() }
-        exam_back.setOnClickListener { finish() }
+        initViewAtTop(binding.examToolbar)
+        binding.examRefresh.setOnRefreshListener { getExam() }
+        binding.examBack.setOnClickListener { finish() }
     }
 
-    override fun getContentView() = R.layout.activity_exam
+    override fun getContentView() = ActivityExamBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = true
 }

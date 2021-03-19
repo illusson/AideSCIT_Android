@@ -17,13 +17,14 @@ import com.facebook.rebound.SpringSystem
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
+import com.sgpublic.scit.tool.databinding.ActivityLoginBinding
 import com.sgpublic.scit.tool.helper.APIHelper
 import com.sgpublic.scit.tool.helper.LoginHelper
 import com.sgpublic.scit.tool.helper.UserInfoHelper
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_login.*
+import java.util.*
 
-class Login : BaseActivity(), LoginHelper.Callback {
+class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         ConfigManager(this@Login)
@@ -42,19 +43,19 @@ class Login : BaseActivity(), LoginHelper.Callback {
 
     override fun onViewSetup() {
         super.onViewSetup()
-        login_username.setText(ConfigManager(this@Login).getString("username"))
-        login_password.setText(ConfigManager(this@Login).getString("password"))
+        binding.loginUsername.setText(ConfigManager(this@Login).getString("username"))
+        binding.loginPassword.setText(ConfigManager(this@Login).getString("password"))
 
-        login_action_cover.setOnClickListener { onAction() }
+        binding.loginActionCover.setOnClickListener { onAction() }
 
-        login_password_clear.setOnClickListener { onPasswordClear() }
+        binding.loginPasswordClear.setOnClickListener { onPasswordClear() }
 
-        login_password_visible.setOnClickListener { onPasswordVisible() }
+        binding.loginPasswordVisible.setOnClickListener { onPasswordVisible() }
 
-        login_username_clear.setOnClickListener { onUsernameClear() }
+        binding.loginUsernameClear.setOnClickListener { onUsernameClear() }
 
-        login_agreement_check.movementMethod = LinkMovementMethod.getInstance()
-        initViewAtBottom(login_agreement_check_base)
+        binding.loginAgreementCheck.movementMethod = LinkMovementMethod.getInstance()
+        initViewAtBottom(binding.loginAgreementCheckBase)
 
 //        login_button_access.setOnClickListener {
 //            ActivityCompat.requestPermissions(
@@ -69,18 +70,18 @@ class Login : BaseActivity(), LoginHelper.Callback {
     }
 
     private fun onAction(){
-        if (!login_agreement_check.isChecked){
+        if (!binding.loginAgreementCheck.isChecked){
             onToast(R.string.text_login_agreement)
             return
         }
-        if (login_username.text.toString() == "" || login_password.text.toString() == "") {
+        if (binding.loginUsername.text.toString() == "" || binding.loginPassword.text.toString() == "") {
             onToast(R.string.text_login_empty)
             return
         }
         setLoadingState(true)
         LoginHelper(this@Login).login(
-            login_username.text.toString(),
-            login_password.text.toString(),
+            binding.loginUsername.text.toString(),
+            binding.loginPassword.text.toString(),
             this
         )
     }
@@ -91,7 +92,9 @@ class Login : BaseActivity(), LoginHelper.Callback {
     }
 
     override fun onResult(access: String, refresh: String) {
-        val helper = UserInfoHelper(this@Login, login_username.text.toString(), login_username.text.toString());
+        val helper = UserInfoHelper(
+            this@Login, binding.loginUsername.text.toString(), binding.loginUsername.text.toString()
+        )
         helper.getUserInfo(access, object : UserInfoHelper.Callback{
             override fun onFailure(code: Int, message: String?, e: Exception?) {
                 setLoadingState(false)
@@ -157,12 +160,12 @@ class Login : BaseActivity(), LoginHelper.Callback {
     }
 
     private fun onPasswordClear() {
-        login_password.setText("")
+        binding.loginPassword.setText("")
     }
 
     private fun onUsernameClear() {
-        login_username.setText("")
-        login_password.setText("")
+        binding.loginUsername.setText("")
+        binding.loginPassword.setText("")
         ConfigManager(this@Login)
             .putString("username", "")
             .putString("password", "")
@@ -170,62 +173,62 @@ class Login : BaseActivity(), LoginHelper.Callback {
     }
 
     private fun onPasswordVisible() {
-        if (login_password.inputType == 129) {
-            login_password.inputType = 1
-            login_password_visible.setImageResource(R.drawable.pass_visible)
+        if (binding.loginPassword.inputType == 129) {
+            binding.loginPassword.inputType = 1
+            binding.loginPasswordVisible.setImageResource(R.drawable.pass_visible)
         } else {
-            login_password.inputType = 129
-            login_password_visible.setImageResource(R.drawable.pass_invisible)
+            binding.loginPassword.inputType = 129
+            binding.loginPasswordVisible.setImageResource(R.drawable.pass_invisible)
         }
     }
 
     private fun setEditTextAction() {
-        login_username.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            if (login_username.text.toString() != "" && hasFocus) {
-                login_username_clear.visibility = View.VISIBLE
+        binding.loginUsername.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if (binding.loginUsername.text.toString() != "" && hasFocus) {
+                binding.loginUsernameClear.visibility = View.VISIBLE
             } else {
-                login_username_clear.visibility = View.INVISIBLE
+                binding.loginUsernameClear.visibility = View.INVISIBLE
             }
         }
-        login_username.addTextChangedListener(object : TextWatcher {
+        binding.loginUsername.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                if (login_username.text.toString() != "") {
-                    login_username_clear.visibility = View.VISIBLE
+                if (binding.loginUsername.text.toString() != "") {
+                    binding.loginUsernameClear.visibility = View.VISIBLE
                 } else {
-                    login_username_clear.visibility = View.INVISIBLE
+                    binding.loginUsernameClear.visibility = View.INVISIBLE
                 }
             }
 
             override fun afterTextChanged(editable: Editable) {}
         })
-        login_password.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+        binding.loginPassword.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                login_password_visible.visibility = View.VISIBLE
+                binding.loginPasswordVisible.visibility = View.VISIBLE
             } else {
-                login_password_visible.visibility = View.INVISIBLE
+                binding.loginPasswordVisible.visibility = View.INVISIBLE
             }
-            if (login_password.text.toString() != "" && hasFocus) {
-                login_password_clear.visibility = View.VISIBLE
+            if (binding.loginPassword.text.toString() != "" && hasFocus) {
+                binding.loginPasswordClear.visibility = View.VISIBLE
             } else {
-                login_password_clear.visibility = View.INVISIBLE
+                binding.loginPasswordClear.visibility = View.INVISIBLE
             }
         }
-        login_password.addTextChangedListener(object : TextWatcher {
+        binding.loginPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                if (login_password.text.toString() != "") {
-                    login_password_clear.visibility = View.VISIBLE
+                if (binding.loginPassword.text.toString() != "") {
+                    binding.loginPasswordClear.visibility = View.VISIBLE
                 } else {
-                    login_password_clear.visibility = View.INVISIBLE
+                    binding.loginPasswordClear.visibility = View.INVISIBLE
                 }
             }
 
             override fun afterTextChanged(editable: Editable) {}
         })
-        login_password.setOnEditorActionListener { _, _, _ ->
+        binding.loginPassword.setOnEditorActionListener { _, _, _ ->
             onAction()
             false
         }
@@ -233,72 +236,82 @@ class Login : BaseActivity(), LoginHelper.Callback {
 
     private fun setLoadingState(isLoading: Boolean) {
         runOnUiThread{
-            login_loading.isEnabled = false
-            login_action_cover.isEnabled = false
-            login_loading.visibility = View.VISIBLE
-            login_action.visibility = View.VISIBLE
+            binding.loginLoading.isEnabled = false
+            binding.loginActionCover.isEnabled = false
+            binding.loginLoading.visibility = View.VISIBLE
+            binding.loginAction.visibility = View.VISIBLE
             if (isLoading) {
-                login_loading.animate().alpha(1f).setDuration(200).setListener(null)
-                login_action.animate().alpha(0f).setDuration(200).setListener(null)
-                login_action.visibility = View.INVISIBLE
+                binding.loginLoading.animate().alpha(1f).setDuration(200).setListener(null)
+                binding.loginAction.animate().alpha(0f).setDuration(200).setListener(null)
+                binding.loginAction.visibility = View.INVISIBLE
             } else {
-                login_loading.animate().alpha(0f).setDuration(200).setListener(null)
-                login_action.animate().alpha(1f).setDuration(200).setListener(null)
-                login_loading.visibility = View.INVISIBLE
+                binding.loginLoading.animate().alpha(0f).setDuration(200).setListener(null)
+                binding.loginAction.animate().alpha(1f).setDuration(200).setListener(null)
+                binding.loginLoading.visibility = View.INVISIBLE
             }
-            Handler().postDelayed({
-                login_loading.isEnabled = true
-                login_action_cover.isEnabled = true
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    binding.loginLoading.isEnabled = true
+                    binding.loginActionCover.isEnabled = true
+                }
             }, 500)
         }
     }
 
     private fun setAnimation() {
-        Handler().postDelayed({
-            val springSystem: SpringSystem = SpringSystem.create()
-            val spring: Spring = springSystem.createSpring()
-            spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
-            spring.addListener(object : SimpleSpringListener() {
-                override fun onSpringUpdate(spring: Spring) {
-                    val value = spring.currentValue.toFloat()
-                    val scale = 1f + value * 0.5f
-                    login_username_base.y = dip2px(800F) - scale
-                }
-            })
-            spring.endValue = dip2px(1200F).toDouble()
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                val springSystem: SpringSystem = SpringSystem.create()
+                val spring: Spring = springSystem.createSpring()
+                spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
+                spring.addListener(object : SimpleSpringListener() {
+                    override fun onSpringUpdate(spring: Spring) {
+                        val value = spring.currentValue.toFloat()
+                        val scale = 1f + value * 0.5f
+                        binding.loginUsernameBase.y = dip2px(800F) - scale
+                    }
+                })
+                spring.endValue = dip2px(1200F).toDouble()
+            }
         }, 500)
-        Handler().postDelayed({
-            val springSystem: SpringSystem = SpringSystem.create()
-            val spring: Spring = springSystem.createSpring()
-            spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
-            spring.addListener(object : SimpleSpringListener() {
-                override fun onSpringUpdate(spring: Spring) {
-                    val value = spring.currentValue.toFloat()
-                    val scale = 1f + value * 0.5f
-                    login_password_base.y = dip2px(870F) - scale
-                }
-            })
-            spring.endValue = dip2px(1200F).toDouble()
-        }, 650)
-        Handler().postDelayed({
-            val springSystem: SpringSystem = SpringSystem.create()
-            val spring: Spring = springSystem.createSpring()
-            spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
-            spring.addListener(object : SimpleSpringListener() {
-                override fun onSpringUpdate(spring: Spring) {
-                    val value = spring.currentValue.toFloat()
-                    val scale = 1f + value * 0.5f
-                    login_action_base.y = dip2px(980F) - scale
-                }
-            })
-            spring.endValue = dip2px(1200F).toDouble()
-        }, 800)
-        Handler().postDelayed({
-            setAnimateState(true, 300, login_agreement_check)
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                val springSystem: SpringSystem = SpringSystem.create()
+                val spring: Spring = springSystem.createSpring()
+                spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
+                spring.addListener(object : SimpleSpringListener() {
+                    override fun onSpringUpdate(spring: Spring) {
+                        val value = spring.currentValue.toFloat()
+                        val scale = 1f + value * 0.5f
+                        binding.loginPasswordBase.y = dip2px(870F) - scale
+                    }
+                })
+                spring.endValue = dip2px(1200F).toDouble()
+            }
+        }, 500)
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                val springSystem: SpringSystem = SpringSystem.create()
+                val spring: Spring = springSystem.createSpring()
+                spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
+                spring.addListener(object : SimpleSpringListener() {
+                    override fun onSpringUpdate(spring: Spring) {
+                        val value = spring.currentValue.toFloat()
+                        val scale = 1f + value * 0.5f
+                        binding.loginActionBase.y = dip2px(980F) - scale
+                    }
+                })
+                spring.endValue = dip2px(1200F).toDouble()
+            }
+        }, 500)
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                setAnimateState(true, 300, binding.loginAgreementCheck)
+            }
         }, 1400)
     }
 
-    override fun getContentView() = R.layout.activity_login
+    override fun getContentView() = ActivityLoginBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = false
 

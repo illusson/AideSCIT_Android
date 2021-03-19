@@ -1,25 +1,21 @@
 package com.sgpublic.scit.tool.activity
 
 import android.os.Bundle
-import android.widget.ListView
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.Toolbar
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.data.LicenseListData
+import com.sgpublic.scit.tool.databinding.ActivityLicenseBinding
 import com.sgpublic.scit.tool.ui.LicenseListAdapter
-import kotlinx.android.synthetic.main.activity_about.*
-import kotlinx.android.synthetic.main.activity_license.*
 import java.util.*
 
-class License : BaseActivity() {
+class License : BaseActivity<ActivityLicenseBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        initViewAtTop(licence_toolbar)
-        license_back.setOnClickListener { finish() }
+        initViewAtTop(binding.licenceToolbar)
+        binding.licenseBack.setOnClickListener { finish() }
         loadLicense()
     }
 
-    override fun getContentView(): Int = R.layout.activity_license
+    override fun getContentView() = ActivityLicenseBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable(): Boolean = true
 
@@ -89,7 +85,7 @@ class License : BaseActivity() {
                 "https://github.com/square/okhttp"
             )
         )
-        license_list.adapter = LicenseListAdapter(
+        binding.licenseList.adapter = LicenseListAdapter(
             this@License, R.layout.item_license_list, arrayList
         )
     }

@@ -8,7 +8,9 @@ import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -17,13 +19,13 @@ import com.kongzue.dialogx.dialogs.MessageDialog
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.activity.*
 import com.sgpublic.scit.tool.base.BaseFragment
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.databinding.FragmentMineBinding
 import com.sgpublic.scit.tool.helper.LoginHelper
 import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.fragment_mine.*
+import java.util.*
 
-class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
+class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(contest) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -31,16 +33,16 @@ class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
 
     override fun onViewSetup() {
         super.onViewSetup()
-        initViewAtTop(mine_toolbar)
+        initViewAtTop(binding.mineToolbar)
 
-        mine_username.text = ConfigManager(contest).getString("name", "此人没有留下姓名……")
+        binding.mineUsername.text = ConfigManager(contest).getString("name", "此人没有留下姓名……")
 
-        mine_about.setOnClickListener {
+        binding.mineAbout.setOnClickListener {
             val intent = Intent(contest, About::class.java)
             startActivity(intent)
         }
 
-        mine_calendar.setOnClickListener {
+        binding.mineCalendar.setOnClickListener {
             if (checkSelfPermission()) {
                 val intent = Intent(contest, Notices::class.java)
                 startActivity(intent)
@@ -66,15 +68,15 @@ class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
             }
         }
 
-        mine_exam.setOnClickListener {
+        binding.mineExam.setOnClickListener {
             val intent = Intent(contest, Exam::class.java)
             startActivity(intent)
         }
 
-        mine_springboard.setOnClickListener {
-            if (mine_springboard_progress.visibility != View.VISIBLE){
+        binding.mineSpringboard.setOnClickListener {
+            if (binding.mineSpringboardProgress.visibility != View.VISIBLE){
                 setSpringBoardLoadingState(true)
-                val access = ConfigManager(contest).getString("access_token", "");
+                val access = ConfigManager(contest).getString("access_token", "")
                 LoginHelper(contest).springboard(access, object : LoginHelper.SpringboardCallback {
                     override fun onFailure(code: Int, message: String?, e: Exception?) {
                         springboard(
@@ -89,7 +91,7 @@ class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
             }
         }
 
-        mine_logout.setOnClickListener {
+        binding.mineLogout.setOnClickListener {
             val alert = AlertDialog.Builder(contest)
             alert.setTitle(R.string.title_check_logout)
             alert.setMessage(R.string.text_check_logout)
@@ -111,17 +113,17 @@ class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
             alert.show()
         }
 
-        mine_achievement.setOnClickListener {
+        binding.mineAchievement.setOnClickListener {
             val intent = Intent(contest, Achievement::class.java)
             startActivity(intent)
         }
 
         if (ConfigManager(contest).getInt("evaluate_count", 0) != 0){
-            mine_evaluate.setOnClickListener {
+            binding.mineEvaluate.setOnClickListener {
                 Evaluate.startActivity(contest)
             }
         } else {
-            mine_evaluate.visibility = View.GONE
+            binding.mineEvaluate.visibility = View.GONE
         }
     }
 
@@ -242,7 +244,7 @@ class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
 
     override fun onResume() {
         super.onResume()
-        mine_evaluate.visibility = if (ConfigManager(contest).getInt("evaluate_count", 0) > 0){
+        binding.mineEvaluate.visibility = if (ConfigManager(contest).getInt("evaluate_count", 0) > 0){
             View.VISIBLE
         } else { View.GONE }
     }
@@ -294,23 +296,27 @@ class Mine(contest: AppCompatActivity) : BaseFragment(contest) {
 
     private fun setSpringBoardLoadingState(isLoading: Boolean) {
         runOnUiThread{
-            mine_springboard.isEnabled = false
-            mine_springboard_img.visibility = View.VISIBLE
-            mine_springboard_progress.visibility = View.VISIBLE
+            binding.mineSpringboard.isEnabled = false
+            binding.mineSpringboardImg.visibility = View.VISIBLE
+            binding.mineSpringboardProgress.visibility = View.VISIBLE
             if (isLoading) {
-                mine_springboard_progress.animate().alpha(1f).setDuration(200).setListener(null)
-                mine_springboard_img.animate().alpha(0f).setDuration(200).setListener(null)
-                mine_springboard_img.visibility = View.INVISIBLE
+                binding.mineSpringboardProgress.animate().alpha(1f).setDuration(200).setListener(null)
+                binding.mineSpringboardImg.animate().alpha(0f).setDuration(200).setListener(null)
+                binding.mineSpringboardImg.visibility = View.INVISIBLE
             } else {
-                mine_springboard_progress.animate().alpha(0f).setDuration(200).setListener(null)
-                mine_springboard_img.animate().alpha(1f).setDuration(200).setListener(null)
-                mine_springboard_progress.visibility = View.INVISIBLE
+                binding.mineSpringboardProgress.animate().alpha(0f).setDuration(200).setListener(null)
+                binding.mineSpringboardImg.animate().alpha(1f).setDuration(200).setListener(null)
+                binding.mineSpringboardProgress.visibility = View.INVISIBLE
             }
-            Handler().postDelayed({
-                mine_springboard.isEnabled = true
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    binding.mineSpringboard.isEnabled = true
+                }
             }, 500)
         }
     }
     
-    override fun getContentView(): Int = R.layout.fragment_mine
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): FragmentMineBinding {
+        return FragmentMineBinding.inflate(inflater, container, false)
+    }
 }

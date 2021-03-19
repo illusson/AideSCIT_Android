@@ -16,25 +16,21 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.viewbinding.ViewBinding
 import com.sgpublic.scit.tool.BuildConfig
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.base.BaseFragment
+import com.sgpublic.scit.tool.databinding.ActivityMainBinding
 import com.sgpublic.scit.tool.fragment.Home
 import com.sgpublic.scit.tool.fragment.Mine
 import com.sgpublic.scit.tool.fragment.News
 import com.sgpublic.scit.tool.fragment.Table
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_mine.*
-import kotlinx.android.synthetic.main.fragment_table.*
-import kotlinx.android.synthetic.main.item_timetable.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Main : BaseActivity() {
+class Main : BaseActivity<ActivityMainBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         replaceFragment(R.id.main_fragment_home, Home(this@Main))
         selectNavigation(0)
@@ -60,23 +56,23 @@ class Main : BaseActivity() {
 
     override fun onViewSetup() {
         super.onViewSetup()
-        nav_home.setOnClickListener {
+        binding.navHome.setOnClickListener {
             replaceFragment(R.id.main_fragment_home, Home(this@Main))
             selectNavigation(0)
         }
-        nav_table.setOnClickListener {
+        binding.navTable.setOnClickListener {
             replaceFragment(R.id.main_fragment_table, Table(this@Main))
             selectNavigation(1)
         }
-        nav_news.setOnClickListener {
+        binding.navNews.setOnClickListener {
             replaceFragment(R.id.main_fragment_news, News(this@Main))
             selectNavigation(2)
         }
-        nav_mine.setOnClickListener {
+        binding.navMine.setOnClickListener {
             replaceFragment(R.id.main_fragment_mine, Mine(this@Main))
             selectNavigation(3)
         }
-        initViewAtBottom(nav_view)
+        initViewAtBottom(binding.navView)
     }
 
     private fun selectNavigation(index: Int){
@@ -85,14 +81,14 @@ class Main : BaseActivity() {
         } else {
             supportFragmentManager.findFragmentById(R.id.main_fragment_home)?.onResume()
         }
-        nav_home_image.setColorFilter(getSelectedColor(index == 0))
-        nav_home_title.setTextColor(getSelectedColor(index == 0))
-        nav_table_image.setColorFilter(getSelectedColor(index == 1))
-        nav_table_title.setTextColor(getSelectedColor(index == 1))
-        nav_news_image.setColorFilter(getSelectedColor(index == 2))
-        nav_news_title.setTextColor(getSelectedColor(index == 2))
-        nav_mine_image.setColorFilter(getSelectedColor(index == 3))
-        nav_mine_title.setTextColor(getSelectedColor(index == 3))
+        binding.navHomeImage.setColorFilter(getSelectedColor(index == 0))
+        binding.navHomeTitle.setTextColor(getSelectedColor(index == 0))
+        binding.navTableImage.setColorFilter(getSelectedColor(index == 1))
+        binding.navTableTitle.setTextColor(getSelectedColor(index == 1))
+        binding.navNewsImage.setColorFilter(getSelectedColor(index == 2))
+        binding.navNewsTitle.setTextColor(getSelectedColor(index == 2))
+        binding.navMineImage.setColorFilter(getSelectedColor(index == 3))
+        binding.navMineTitle.setTextColor(getSelectedColor(index == 3))
     }
 
     private fun getSelectedColor(isSelected: Boolean): Int {
@@ -102,10 +98,10 @@ class Main : BaseActivity() {
             getColor(R.color.color_font_dark)
         }
     }
-    
-    private fun replaceFragment(@IdRes id: Int, fragment: BaseFragment){
-        for (i in 0 until main_fragment.childCount){
-            val mView = main_fragment.getChildAt(i)
+
+    private fun <T: ViewBinding> replaceFragment(@IdRes id: Int, fragment: BaseFragment<T>){
+        for (i in 0 until binding.mainFragment.childCount){
+            val mView = binding.mainFragment.getChildAt(i)
             if (mView.visibility == View.VISIBLE && mView.id == id){
                 break
             }
@@ -119,7 +115,7 @@ class Main : BaseActivity() {
             }
         }
 
-        val mFragment: BaseFragment? = supportFragmentManager.findFragmentById(id) as BaseFragment?
+        val mFragment: BaseFragment<*>? = supportFragmentManager.findFragmentById(id) as BaseFragment<*>?
         if (mFragment != null){
             return
         }
@@ -180,7 +176,7 @@ class Main : BaseActivity() {
         }
     }
 
-    override fun getContentView() = R.layout.activity_main
+    override fun getContentView() = ActivityMainBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = false
 

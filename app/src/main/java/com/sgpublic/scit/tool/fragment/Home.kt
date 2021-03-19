@@ -9,6 +9,8 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.sgpublic.scit.tool.R
@@ -16,6 +18,8 @@ import com.sgpublic.scit.tool.activity.WebView
 import com.sgpublic.scit.tool.base.BaseFragment
 import com.sgpublic.scit.tool.data.BannerItem
 import com.sgpublic.scit.tool.data.NewsData
+import com.sgpublic.scit.tool.databinding.FragmentHomeBinding
+import com.sgpublic.scit.tool.databinding.ItemHomeTaskBinding
 import com.sgpublic.scit.tool.helper.HeaderInfoHelper
 import com.sgpublic.scit.tool.helper.NewsHelper
 import com.sgpublic.scit.tool.helper.TableHelper
@@ -25,20 +29,18 @@ import com.sgpublic.scit.tool.manager.ConfigManager
 import com.sgpublic.scit.tool.ui.NewsBannerAdapter
 import com.zhpan.bannerview.BannerViewPager
 import com.zhpan.bannerview.constants.IndicatorGravity
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.item_home_task.view.*
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callback {
+class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(contest), NewsHelper.Callback {
     private var homeBanner: BannerViewPager<BannerItem, NewsBannerAdapter>? = null
     private var timeChangeReceiver: TimeChangeReceiver? = null
 
     private var week: Int = 0
 
-    private var taskBase1 = home_task_1
-    private var taskBase2 = home_task_2
+    private lateinit var taskBase1: LinearLayout
+    private lateinit var taskBase2: LinearLayout
     private lateinit var startDate: Date
 
     private var callbackTable = object : TableHelper.Callback {
@@ -76,7 +78,9 @@ class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callb
         }
     }
 
-    override fun getContentView(): Int = R.layout.fragment_home
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
+        return FragmentHomeBinding.inflate(inflater, container, false)
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -96,18 +100,20 @@ class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callb
 
     override fun onViewSetup() {
         super.onViewSetup()
-        initViewAtTop(home_hello)
+        initViewAtTop(binding.homeHello)
+        taskBase1 = binding.homeTask1
+        taskBase2 = binding.homeTask2
 
         val date: Int = HeaderInfoHelper(contest).getDate()
         val time: Int = HeaderInfoHelper(contest).getTime()
 
         if (ConfigManager(contest).getInt("week") == 0) {
-            home_hello.text = java.lang.String.format(
+            binding.homeHello.text = java.lang.String.format(
                 this.getString(R.string.text_hello_holiday),
                 this.getString(time), this.getString(date)
             )
         } else {
-            home_hello.text = java.lang.String.format(
+            binding.homeHello.text = java.lang.String.format(
                 this.getString(R.string.text_hello),
                 this.getString(time),
                 ConfigManager(contest).getInt("week").toString(),
@@ -115,15 +121,15 @@ class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callb
             )
         }
 
-        home_content.text = ConfigManager(contest)
+        binding.homeContent.text = ConfigManager(contest)
             .getString("sentence", "祝你一天好心情哦~")
 
-        home_from.text = ConfigManager(contest)
+        binding.homeFrom.text = ConfigManager(contest)
             .getString("from")
 
         homeBanner = findViewById<BannerViewPager<BannerItem, NewsBannerAdapter>>(R.id.home_banner)
 
-        home_refresh.setOnRefreshListener {
+        binding.homeRefresh.setOnRefreshListener {
             NewsHelper(contest).getHeadline(this)
         }
     }
@@ -146,17 +152,17 @@ class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callb
         runOnUiThread {
             homeBanner!!.create(banners)
             homeBanner!!.visibility = View.VISIBLE
-            home_refresh.isRefreshing = false
+            binding.homeRefresh.isRefreshing = false
         }
     }
     
     private fun onTaskLoad(){
-        if (taskBase1 == home_task_1){
-            taskBase1 = home_task_2
-            taskBase2 = home_task_1
+        if (taskBase1 == binding.homeTask1){
+            taskBase1 = binding.homeTask2
+            taskBase2 = binding.homeTask1
         } else {
-            taskBase1 = home_task_1
-            taskBase2 = home_task_2
+            taskBase1 = binding.homeTask1
+            taskBase2 = binding.homeTask2
         }
         runOnUiThread {
             taskBase1.removeAllViews()
@@ -234,24 +240,24 @@ class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callb
                     time[Calendar.MILLISECOND] = 0
                     val classEnd = time
 
-                    val item = LayoutInflater.from(contest).inflate(R.layout.item_home_task, taskBase1, false)
+                    val item = ItemHomeTaskBinding.inflate(layoutInflater)
                     time = Calendar.getInstance()
 
-                    item.item_task_start.text = scheduleIndex[class_index][0].replace("/", "：").subSequence(1, 6)
-                    item.item_task_end.text = scheduleIndex[class_index][1].replace("/", "：").subSequence(1, 6)
-                    item.item_task_title.text = classData.getString("name")
-                    item.item_task_location.text = classData.getString("room")
+                    item.itemTaskStart.text = scheduleIndex[class_index][0].replace("/", "：").subSequence(1, 6)
+                    item.itemTaskEnd.text = scheduleIndex[class_index][1].replace("/", "：").subSequence(1, 6)
+                    item.itemTaskTitle.text = classData.getString("name")
+                    item.itemTaskLocation.text = classData.getString("room")
                     if (time.before(classEnd) && time.after(classStart)){
-                        item.item_task_base.setCardBackgroundColor(contest.getColor(R.color.color_task_doing))
+                        item.itemTaskBase.setCardBackgroundColor(contest.getColor(R.color.color_task_doing))
                     } else if (time.after(classEnd)){
-                        item.item_task_base.setCardBackgroundColor(contest.getColor(R.color.color_task_waiting))
-                        item.item_task_base.alpha = 0.3F
+                        item.itemTaskBase.setCardBackgroundColor(contest.getColor(R.color.color_task_waiting))
+                        item.itemTaskBase.alpha = 0.3F
                     } else if (time.before(classStart) && classStart.timeInMillis - time.timeInMillis <= 600000L) {
-                        item.item_task_base.setCardBackgroundColor(contest.getColor(R.color.color_task_right_now))
-                        item.item_task_location.text = String.format(getString(R.string.text_home_task_right_now),
-                            (classStart.timeInMillis - time.timeInMillis) / 60 / 1000, item.item_task_location.text)
+                        item.itemTaskBase.setCardBackgroundColor(contest.getColor(R.color.color_task_right_now))
+                        item.itemTaskLocation.text = String.format(getString(R.string.text_home_task_right_now),
+                            (classStart.timeInMillis - time.timeInMillis) / 60 / 1000, item.itemTaskLocation.text)
                     } else {
-                        item.item_task_base.setCardBackgroundColor(contest.getColor(R.color.color_task_waiting))
+                        item.itemTaskBase.setCardBackgroundColor(contest.getColor(R.color.color_task_waiting))
                     }
 
                     runOnUiThread {
@@ -267,7 +273,7 @@ class Home(contest: AppCompatActivity) : BaseFragment(contest), NewsHelper.Callb
                             header.textSize = 17F
                             taskBase1.addView(header)
                         }
-                        taskBase1.addView(item)
+                        taskBase1.addView(item.root)
                     }
                 }
             }

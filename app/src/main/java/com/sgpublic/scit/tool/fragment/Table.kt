@@ -9,16 +9,15 @@ import android.widget.GridLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseFragment
-import com.sgpublic.scit.tool.base.MyLog
 import com.sgpublic.scit.tool.data.TableData
+import com.sgpublic.scit.tool.databinding.FragmentTableBinding
+import com.sgpublic.scit.tool.databinding.ItemTimetableBinding
 import com.sgpublic.scit.tool.helper.TableHelper
 import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.fragment_table.*
-import kotlinx.android.synthetic.main.item_timetable.view.*
 import org.json.JSONObject
 
-class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Callback {
+class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(contest), TableHelper.Callback {
     private var showTable: Boolean = false
 
     private var week: Int = 0
@@ -29,33 +28,33 @@ class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Cal
     override fun onViewSetup() {
         super.onViewSetup()
 
-        timetable_refresh.setOnRefreshListener { getTable() }
-        timetable_refresh.setColorSchemeResources(R.color.colorAlert)
-        initViewAtTop(table_toolbar)
+        binding.timetableRefresh.setOnRefreshListener { getTable() }
+        binding.timetableRefresh.setColorSchemeResources(R.color.colorAlert)
+        initViewAtTop(binding.tableToolbar)
 
-        table_pre.setOnClickListener {
+        binding.tablePre.setOnClickListener {
             week--
             getTable(CacheManager(contest).read(CacheManager.CACHE_TABLE))
 
             if (week <= 1) {
-                table_pre.isClickable = false
-                table_pre.alpha = 0.4F
+                binding.tablePre.isClickable = false
+                binding.tablePre.alpha = 0.4F
             } else if (week < 18) {
-                table_next.isClickable = true
-                table_next.alpha = 1.0F
+                binding.tableNext.isClickable = true
+                binding.tableNext.alpha = 1.0F
             }
         }
 
-        table_next.setOnClickListener {
+        binding.tableNext.setOnClickListener {
             week++
             getTable(CacheManager(contest).read(CacheManager.CACHE_TABLE))
 
             if (week >= 18) {
-                table_next.isClickable = false
-                table_next.alpha = 0.4F
+                binding.tableNext.isClickable = false
+                binding.tableNext.alpha = 0.4F
             } else if (week > 1) {
-                table_pre.isClickable = true
-                table_pre.alpha = 1.0F
+                binding.tablePre.isClickable = true
+                binding.tablePre.alpha = 1.0F
             }
         }
     }
@@ -72,8 +71,8 @@ class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Cal
     }
 
     private fun getTable(objects: JSONObject? = null){
-        table_pre.isEnabled = false
-        table_next.isEnabled = false
+        binding.tablePre.isEnabled = false
+        binding.tableNext.isEnabled = false
         if (objects != null){
             Thread {
                 TableHelper(contest).parsing(objects, week, this)
@@ -81,23 +80,23 @@ class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Cal
         } else {
             TableHelper(contest).getTable(ConfigManager(contest), week, this)
         }
-        table_week.text = String.format(getString(R.string.text_table_week_index), week)
+        binding.tableWeek.text = String.format(getString(R.string.text_table_week_index), week)
     }
 
     override fun onReadStart() {
         showTable = false
         runOnUiThread {
-            timetable_grid.visibility = View.INVISIBLE
-            timetable_grid_morning.removeAllViews()
-            timetable_grid_noon.removeAllViews()
-            timetable_grid_evening.removeAllViews()
+            binding.timetableGrid.visibility = View.INVISIBLE
+            binding.timetableGridMorning.removeAllViews()
+            binding.timetableGridNoon.removeAllViews()
+            binding.timetableGridEvening.removeAllViews()
         }
     }
 
     override fun onFailure(code: Int, message: String?, e: Exception?) {
         saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
-        timetable_refresh.isRefreshing = false
+        binding.timetableRefresh.isRefreshing = false
     }
 
     override fun onRead(dayIndex: Int, classIndex: Int, data: TableData?) {
@@ -106,25 +105,22 @@ class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Cal
         }
 
         val parent: ViewGroup = when {
-            classIndex < 2 -> timetable_grid_morning
-            classIndex < 4 -> timetable_grid_noon
-            else -> timetable_grid_evening
+            classIndex < 2 -> binding.timetableGridMorning
+            classIndex < 4 -> binding.timetableGridNoon
+            else -> binding.timetableGridEvening
         }
         val itemTimetable: View
         if (data != null){
-            itemTimetable = LayoutInflater.from(contest).inflate(
-                R.layout.item_timetable,
-                parent,
-                false
-            )
-            itemTimetable.apply {
-                lesson_name.text = data.name
-                lesson_name.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                lesson_location.text = data.room
-                lesson_teacher.text = data.teacher
+            val itemTimetableBinding = ItemTimetableBinding.inflate(layoutInflater)
+            itemTimetableBinding.apply {
+                lessonName.text = data.name
+                lessonName.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                lessonLocation.text = data.room
+                lessonTeacher.text = data.teacher
             }
 
-            itemTimetable.setOnClickListener{}
+            itemTimetableBinding.root.setOnClickListener{}
+            itemTimetable = itemTimetableBinding.root
         } else {
             itemTimetable = View(contest)
         }
@@ -144,15 +140,15 @@ class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Cal
     override fun onReadFinish(isEmpty: Boolean) {
         runOnUiThread {
             if (isEmpty) {
-                timetable_grid.visibility = View.GONE
-                timetable_empty.visibility = View.VISIBLE
+                binding.timetableGrid.visibility = View.GONE
+                binding.timetableEmpty.visibility = View.VISIBLE
             } else if (showTable) {
-                timetable_grid.visibility = View.VISIBLE
-                timetable_empty.visibility = View.GONE
+                binding.timetableGrid.visibility = View.VISIBLE
+                binding.timetableEmpty.visibility = View.GONE
             }
-            table_pre.isEnabled = true
-            table_next.isEnabled = true
-            timetable_refresh.isRefreshing = false
+            binding.tablePre.isEnabled = true
+            binding.tableNext.isEnabled = true
+            binding.timetableRefresh.isRefreshing = false
         }
     }
 
@@ -163,7 +159,7 @@ class Table(contest: AppCompatActivity) : BaseFragment(contest), TableHelper.Cal
         super.onSaveInstanceState(outState)
     }
 
-    private fun getLoadState() = timetable_refresh.isRefreshing
-
-    override fun getContentView(): Int = R.layout.fragment_table
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): FragmentTableBinding {
+        return FragmentTableBinding.inflate(inflater, container, false)
+    }
 }

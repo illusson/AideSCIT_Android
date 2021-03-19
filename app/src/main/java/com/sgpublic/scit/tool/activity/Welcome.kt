@@ -3,12 +3,9 @@ package com.sgpublic.scit.tool.activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.text.method.LinkMovementMethod
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
-import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.interfaces.OnBindView
 import com.kongzue.dialogx.interfaces.OnDialogButtonClickListener
@@ -16,13 +13,12 @@ import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.databinding.ActivityWelcomeBinding
 import com.sgpublic.scit.tool.helper.*
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_welcome.*
 import java.util.*
 
-class Welcome : BaseActivity(), UpdateHelper.Callback {
+class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
     private val isFinished: MutableList<Boolean> = mutableListOf()
     private var totalCount: Int = 3
 
@@ -35,25 +31,27 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
         if (ConfigManager(this@Welcome).getBoolean("agreement_shown")){
             appSetup()
         } else {
-            Handler().postDelayed({
-                MessageDialog.build()
-                    .setCustomView(object : OnBindView<MessageDialog>(R.layout.dialog_agreement) {
-                        override fun onBind(dialog: MessageDialog?, v: View?) {
-                            v?.findViewById<TextView>(R.id.dialog_agreement_content_1)?.movementMethod = LinkMovementMethod.getInstance()
-                        }
-                    })
-                    .setCancelable(false)
-                    .setOkButton(R.string.text_agreement_agree, OnDialogButtonClickListener { dialog, _ ->
-                        dialog.dismiss()
-                        appSetup()
-                        return@OnDialogButtonClickListener true
-                    })
-                    .setCancelButton(R.string.text_agreement_disagree, OnDialogButtonClickListener{ _, _ ->
-                        finish()
-                        return@OnDialogButtonClickListener true
-                    })
-                    .show()
-            }, 500L)
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    MessageDialog.build()
+                        .setCustomView(object : OnBindView<MessageDialog>(R.layout.dialog_agreement) {
+                            override fun onBind(dialog: MessageDialog?, v: View?) {
+                                v?.findViewById<TextView>(R.id.dialog_agreement_content_1)?.movementMethod = LinkMovementMethod.getInstance()
+                            }
+                        })
+                        .setCancelable(false)
+                        .setOkButton(R.string.text_agreement_agree, OnDialogButtonClickListener { dialog, _ ->
+                            dialog.dismiss()
+                            appSetup()
+                            return@OnDialogButtonClickListener true
+                        })
+                        .setCancelButton(R.string.text_agreement_disagree, OnDialogButtonClickListener{ _, _ ->
+                            finish()
+                            return@OnDialogButtonClickListener true
+                        })
+                        .show()
+                }
+            }, 500)
         }
     }
 
@@ -69,10 +67,10 @@ class Welcome : BaseActivity(), UpdateHelper.Callback {
 
     override fun onViewSetup() {
         super.onViewSetup()
-        initViewAtBottom(welcome_about)
+        initViewAtBottom(binding.welcomeAbout)
     }
 
-    override fun getContentView() = R.layout.activity_welcome
+    override fun getContentView() = ActivityWelcomeBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = false
 

@@ -8,22 +8,21 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
+import com.sgpublic.scit.tool.databinding.ActivityNoticesBinding
 import com.sgpublic.scit.tool.helper.HeaderInfoHelper
 import com.sgpublic.scit.tool.helper.TableHelper
 import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.CalendarManager
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_notices.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback {
+class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, HeaderInfoHelper.Callback {
     companion object{
         private val pre_time_description: Array<CharSequence> = arrayOf(
             "5 分钟", "10 分钟", "15 分钟", "20 分钟"
@@ -45,8 +44,8 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         if (!checkSelfPermission()){
             onToast(R.string.text_notices_permission_current)
-            notices_state.text = getText(R.string.text_notices_permission_current)
-            notices_state.setTextColor(Color.RED)
+            binding.noticesState.text = getText(R.string.text_notices_permission_current)
+            binding.noticesState.setTextColor(Color.RED)
             return
         }
         setup = Thread {
@@ -91,9 +90,9 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
 
     private fun addCalendarAccount(){
         if (manager.addCalendarAccount() == -1L) {
-            notices_state.setText(R.string.text_load_failed)
-            notices_insert.isEnabled = false
-            notices_delete.isEnabled = false
+            binding.noticesState.setText(R.string.text_load_failed)
+            binding.noticesInsert.isEnabled = false
+            binding.noticesDelete.isEnabled = false
             onToast(R.string.text_calendar_setup_failure)
         }
     }
@@ -104,24 +103,24 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
             val alpha: Float = if (is_doing) 0.3F else 1.0F
 
             val noticesClick: ProgressBar = if (click_index == 0) {
-                notices_insert_doing
+                binding.noticesInsertDoing
             } else {
-                notices_delete_doing
+                binding.noticesDeleteDoing
             }
             noticesClick.visibility = if (is_doing) View.VISIBLE else View.INVISIBLE
 
-            notices_insert.isClickable = !is_doing
-            notices_insert.alpha = alpha
-            notices_delete.isClickable = !is_doing
-            notices_delete.alpha = alpha
-            notices_pre_base.isClickable = !is_doing
-            notices_pre_switch.isClickable = !is_doing
-            notices_pre_base.alpha = alpha
-            notices_pre_time_base.isClickable = !is_doing
-            notices_pre_time_base.alpha = alpha
-            notices_newest_base.isClickable = !is_doing
-            notices_newest_switch.isClickable = !is_doing
-            notices_newest_base.alpha = alpha
+            binding.noticesInsert.isClickable = !is_doing
+            binding.noticesInsert.alpha = alpha
+            binding.noticesDelete.isClickable = !is_doing
+            binding.noticesDelete.alpha = alpha
+            binding.noticesPreBase.isClickable = !is_doing
+            binding.noticesPreBase.isClickable = !is_doing
+            binding.noticesPreBase.alpha = alpha
+            binding.noticesPreTimeBase.isClickable = !is_doing
+            binding.noticesPreTimeBase.alpha = alpha
+            binding.noticesNewestBase.isClickable = !is_doing
+            binding.noticesNewestSwitch.isClickable = !is_doing
+            binding.noticesNewestBase.alpha = alpha
 
             if (!is_doing) {
                 checkInsert()
@@ -136,40 +135,40 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         if (insertCount == 0) {
             stateText = getText(R.string.text_calendar_count_empty).toString()
             stateColor = Color.RED
-            notices_insert.setText(R.string.text_calendar_insert_new)
-            notices_delete.isEnabled = false
-            notices_delete.alpha = 0.3F
+            binding.noticesInsert.setText(R.string.text_calendar_insert_new)
+            binding.noticesDelete.isEnabled = false
+            binding.noticesDelete.alpha = 0.3F
         } else {
             stateText = java.lang.String.format(
                 getString(R.string.text_calendar_count),
                 insertCount
             )
             stateColor = Color.GREEN
-            notices_insert.setText(R.string.text_calendar_insert_re)
-            notices_delete.isEnabled = true
-            notices_delete.alpha = 1.0F
+            binding.noticesInsert.setText(R.string.text_calendar_insert_re)
+            binding.noticesDelete.isEnabled = true
+            binding.noticesDelete.alpha = 1.0F
         }
-        notices_state.text = stateText
-        notices_state.setTextColor(stateColor)
+        binding.noticesState.text = stateText
+        binding.noticesState.setTextColor(stateColor)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onViewSetup() {
         super.onViewSetup()
 
-        notices_newest_base.setOnClickListener(this)
-        notices_pre_base.setOnClickListener(this)
-        notices_pre_time_base.setOnClickListener(this)
-        notices_insert.setOnClickListener(this)
-        notices_pre_switch.setOnCheckedChangeListener { _, isChecked ->
-            notices_pre_time_base.alpha = if (isChecked) 1.0F else 0.3F
-            notices_pre_time_base.isClickable = isChecked
+        binding.noticesNewestBase.setOnClickListener(this)
+        binding.noticesPreBase.setOnClickListener(this)
+        binding.noticesPreTimeBase.setOnClickListener(this)
+        binding.noticesInsert.setOnClickListener(this)
+        binding.noticesPreSwitch.setOnCheckedChangeListener { _, isChecked ->
+            binding.noticesPreTimeBase.alpha = if (isChecked) 1.0F else 0.3F
+            binding.noticesPreTimeBase.isClickable = isChecked
         }
-        notices_delete.setOnClickListener(this)
-        notices_back.setOnClickListener(this)
-        notices_pre_time.text = "15"
-        initViewAtBottom(notices_delete_base)
-        initViewAtTop(notices_toolbar)
+        binding.noticesDelete.setOnClickListener(this)
+        binding.noticesBack.setOnClickListener(this)
+        binding.noticesPreTime.text = "15"
+        initViewAtBottom(binding.noticesDeleteBase)
+        initViewAtTop(binding.noticesToolbar)
     }
 
     override fun onClick(v: View?) {
@@ -177,10 +176,10 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
             when (it.id) {
                 R.id.notices_back -> { onBackPressed() }
                 R.id.notices_newest_base -> {
-                    notices_newest_switch.isChecked = !notices_newest_switch.isChecked
+                    binding.noticesNewestSwitch.isChecked = !binding.noticesNewestSwitch.isChecked
                 }
                 R.id.notices_pre_base -> {
-                    notices_pre_switch.isChecked = !notices_pre_switch.isChecked
+                    binding.noticesPreSwitch.isChecked = !binding.noticesPreSwitch.isChecked
                 }
                 R.id.notices_pre_time_base -> {
                     val preTimeSetDoing = preTimeSet
@@ -190,7 +189,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                             pre_time_description, preTimeSet
                         ) { _, which -> preTimeSet = which }
                         setPositiveButton(R.string.text_ok){ _, _ ->
-                            notices_pre_time.text = preTimeArray[preTimeSet].toString()
+                            binding.noticesPreTime.text = preTimeArray[preTimeSet].toString()
                         }
                         setNegativeButton(R.string.text_cancel){ _, _ ->
                             preTimeSet = preTimeSetDoing
@@ -206,7 +205,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                         addCalendarAccount()
                     }
                     if (manager.checkCalendarAccount() > 0) {
-                        getTable(notices_newest_switch.isChecked)
+                        getTable(binding.noticesNewestSwitch.isChecked)
                     } else { null }
                 }
                 R.id.notices_delete -> {
@@ -243,9 +242,9 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
 
     private fun doDelete(){
         setSwipeBackEnable(false)
-        notices_state.setTextColor(Color.RED)
+        binding.noticesState.setTextColor(Color.RED)
         setOnActionMode(true, 1)
-        notices_state.setText(R.string.text_calendar_doing_delete)
+        binding.noticesState.setText(R.string.text_calendar_doing_delete)
         Thread {
             manager.deleteCalendarEvent()
             runOnUiThread{
@@ -259,13 +258,13 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         Thread {
             runOnUiThread {
                 setSwipeBackEnable(false)
-                notices_state.setText(R.string.text_calendar_doing_delete)
-                notices_state.setTextColor(Color.RED)
+                binding.noticesState.setText(R.string.text_calendar_doing_delete)
+                binding.noticesState.setTextColor(Color.RED)
                 setOnActionMode(true, 0)
             }
             manager.deleteCalendarEvent()
             manager.setPreRemindTime(
-                if (notices_pre_switch.isChecked) preTimeArray[preTimeSet] else 0
+                if (binding.noticesPreSwitch.isChecked) preTimeArray[preTimeSet] else 0
             )
 
             var insertedIndex = 0
@@ -297,13 +296,13 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                     for (class_index in 0 .. 4) {
                         val classTable = tableArray.getJSONArray(day_index - 1)
                             .getJSONObject(class_index)
-                        val classLocationCount = classTable.getInt("count")
-                        if (classLocationCount == 0) {
+                        val classLocationCount = classTable.getJSONArray("data")
+                        if (classLocationCount.length() == 0) {
                             continue
                         }
-                        for (class_count in 0 until classLocationCount) {
+                        for (class_count in 0 until classLocationCount.length()) {
                             classCountIndex++
-                            val classData = classTable.getJSONArray("data").getJSONObject(class_count)
+                            val classData = classLocationCount.getJSONObject(class_count)
                             val classRange = classData.getJSONArray("range")
                             var rangeJudge = false
                             for (indexRange in 0 until classRange.length()){
@@ -322,7 +321,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
                                     getString(R.string.text_calendar_doing),
                                     insertedIndex
                                 )
-                                notices_state.text = stateText
+                                binding.noticesState.text = stateText
                             }
 
                             manager.addCalendarEvent(
@@ -369,7 +368,7 @@ class Notices : BaseActivity(), View.OnClickListener, HeaderInfoHelper.Callback 
         }
     }
 
-    override fun getContentView() = R.layout.activity_notices
+    override fun getContentView() = ActivityNoticesBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = true
 }

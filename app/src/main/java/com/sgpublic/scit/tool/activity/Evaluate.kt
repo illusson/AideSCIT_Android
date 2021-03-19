@@ -18,18 +18,17 @@ import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.data.EvaluationData
 import com.sgpublic.scit.tool.data.EvaluationQuestionData
+import com.sgpublic.scit.tool.databinding.ActivityEvaluateBinding
+import com.sgpublic.scit.tool.databinding.ItemEvaluateBinding
+import com.sgpublic.scit.tool.databinding.ItemEvaluateQuestionBinding
 import com.sgpublic.scit.tool.helper.EvaluateHelper
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_evaluate.*
-import kotlinx.android.synthetic.main.activity_evaluate.evaluate_list
-import kotlinx.android.synthetic.main.activity_notices.*
-import kotlinx.android.synthetic.main.item_evaluate.*
-import kotlinx.android.synthetic.main.item_evaluate.view.*
-import kotlinx.android.synthetic.main.item_evaluate_question.view.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
 
-class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
+class Evaluate : BaseActivity<ActivityEvaluateBinding>(), EvaluateHelper.GetCallback {
     private var isLoading: Boolean = false
     private lateinit var helper: EvaluateHelper
 
@@ -60,13 +59,13 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
         ))
         setProgressState()
 
-        evaluate_pre.setOnClickListener {
+        binding.evaluatePre.setOnClickListener {
             if (!isLoading){
                 getEvaluation(index - 2)
             }
         }
 
-        evaluate_next.setOnClickListener {
+        binding.evaluateNext.setOnClickListener {
             if (!isLoading){
                 setOnLoadState(true)
 
@@ -115,8 +114,8 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
             }
         }
 
-        evaluate_refresh.setOnRefreshListener {
-            evaluate_refresh.isRefreshing = false
+        binding.evaluateRefresh.setOnRefreshListener {
+            binding.evaluateRefresh.isRefreshing = false
         }
     }
 
@@ -129,14 +128,13 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
 
     override fun onResult(data: ArrayList<EvaluationData>) {
         runOnUiThread {
-            evaluate_list.removeAllViews()
-            evaluate_list.rowCount = data.size
+            binding.evaluateList.removeAllViews()
+            binding.evaluateList.rowCount = data.size
         }
         selections.clear()
         var dataIndex = 0
         data.forEach { indexData ->
-            val itemEvaluate: View = LayoutInflater.from(this@Evaluate)
-                .inflate(R.layout.item_evaluate, evaluate_list, false)
+            val itemEvaluate: ItemEvaluateBinding = ItemEvaluateBinding.inflate(layoutInflater)
             val selection: ArrayList<Int> = ArrayList()
             itemEvaluate.apply {
                 indexData.avatar?.let {
@@ -148,59 +146,60 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
                             }
 
                             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                                evaluate_avatar_placeholder.animate().alpha(0f).setDuration(400)
+                                evaluateAvatarPlaceholder.animate().alpha(0f).setDuration(400)
                                     .setListener(null)
-                                Handler().postDelayed({
-                                    evaluate_avatar_placeholder.visibility = View.GONE
-                                    evaluate_avatar.visibility = View.VISIBLE
-                                    evaluate_avatar.animate().alpha(1f).setDuration(400)
-                                        .setListener(null)
+                                Timer().schedule(object : TimerTask() {
+                                    override fun run() {
+                                        evaluateAvatarPlaceholder.visibility = View.GONE
+                                        evaluateAvatar.visibility = View.VISIBLE
+                                        evaluateAvatar.animate().alpha(1f).setDuration(400)
+                                            .setListener(null)
+                                    }
                                 }, 400)
                                 return false
                             }
                         })
-                        .into(evaluate_avatar)
+                        .into(evaluateAvatar)
                 }
-                evaluate_teacher_name.text = indexData.teacher
-                evaluate_teacher_subject.text = String.format(getString(
+                evaluateTeacherName.text = indexData.teacher
+                evaluateTeacherSubject.text = String.format(getString(
                     R.string.title_evaluate_subject
                 ), indexData.subject)
                 val questions: ArrayList<EvaluationQuestionData> = indexData.questions
                 var itemIndex = 0
                 questions.forEach { indexQuestion ->
-                    val itemQuestion: View = LayoutInflater.from(this@Evaluate)
-                        .inflate(R.layout.item_evaluate_question, evaluate_question_list, false)
+                    val itemQuestion: ItemEvaluateQuestionBinding = ItemEvaluateQuestionBinding.inflate(layoutInflater)
                     itemQuestion.apply {
-                        item_evaluate_question_text.text = indexQuestion.text
-                        item_evaluate_question_max.text = indexQuestion.options.last()
-                        item_evaluate_question_min.text = indexQuestion.options.first()
-                        item_evaluate_question_chose.max = indexQuestion.options.size - 1
-                        item_evaluate_question_chose.progress = indexQuestion.selected
+                        itemEvaluateQuestionText.text = indexQuestion.text
+                        itemEvaluateQuestionMax.text = indexQuestion.options.last()
+                        itemEvaluateQuestionMin.text = indexQuestion.options.first()
+                        itemEvaluateQuestionChose.max = indexQuestion.options.size - 1
+                        itemEvaluateQuestionChose.progress = indexQuestion.selected
 
                         val selected = if (indexQuestion.selected != 0) {
                             indexQuestion.selected
                         } else { 1 }
                         selection.add(selected)
-                        item_evaluate_question_select.text = indexQuestion.options[selected - 1]
+                        itemEvaluateQuestionSelect.text = indexQuestion.options[selected - 1]
 
                         val tId = dataIndex
                         val oId = itemIndex
-                        item_evaluate_question_chose.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                        itemEvaluateQuestionChose.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                                item_evaluate_question_select.text = indexQuestion.options[progress]
+                                itemEvaluateQuestionSelect.text = indexQuestion.options[progress]
                                 selections[tId][oId] = progress
                             }
 
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                                evaluate_refresh.isEnabled = false
+                                binding.evaluateRefresh.isEnabled = false
                             }
 
                             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                                evaluate_refresh.isEnabled = true
+                                binding.evaluateRefresh.isEnabled = true
                             }
                         })
                     }
-                    evaluate_question_list.addView(itemQuestion)
+                    evaluateQuestionList.addView(itemQuestion.root)
                     itemIndex++
                 }
             }
@@ -209,10 +208,10 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
             val params = GridLayout.LayoutParams()
             params.rowSpec = GridLayout.spec(dataIndex)
             params.columnSpec = GridLayout.spec(0)
-            itemEvaluate.layoutParams = params
+            itemEvaluate.root.layoutParams = params
 
             runOnUiThread {
-                evaluate_list.addView(itemEvaluate)
+                binding.evaluateList.addView(itemEvaluate.root)
             }
             setOnLoadState(false)
             dataIndex++
@@ -240,16 +239,16 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
 
     private fun setOnLoadState(isLoading: Boolean){
         this@Evaluate.isLoading = isLoading
-        setEnable(evaluate_next, !isLoading)
-        setEnable(evaluate_pre, !isLoading && index > 1)
+        setEnable(binding.evaluateNext, !isLoading)
+        setEnable(binding.evaluatePre, !isLoading && index > 1)
         runOnUiThread {
-            evaluate_refresh.isRefreshing = isLoading
+            binding.evaluateRefresh.isRefreshing = isLoading
         }
     }
 
     private fun setProgressState(){
         if (index == total) {
-            evaluate_next.text = getString(R.string.title_evaluate_post)
+            binding.evaluateNext.text = getString(R.string.title_evaluate_post)
         } else {
             val indexString: String
             val totalString: String
@@ -261,14 +260,14 @@ class Evaluate : BaseActivity(), EvaluateHelper.GetCallback {
                 totalString = total.toString()
             }
             runOnUiThread {
-                evaluate_next.text = String.format(getString(
+                binding.evaluateNext.text = String.format(getString(
                     R.string.title_evaluate_next
                 ), indexString, totalString)
             }
         }
     }
 
-    override fun getContentView(): Int = R.layout.activity_evaluate
+    override fun getContentView() = ActivityEvaluateBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable(): Boolean = false
 

@@ -11,19 +11,17 @@ import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.data.FailedMarkData
 import com.sgpublic.scit.tool.data.PassedMarkData
+import com.sgpublic.scit.tool.databinding.ActivityAchievementBinding
+import com.sgpublic.scit.tool.databinding.ItemAchievementFailedBinding
+import com.sgpublic.scit.tool.databinding.ItemAchievementPassedBinding
 import com.sgpublic.scit.tool.helper.AchievementHelper
 import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.ConfigManager
-import kotlinx.android.synthetic.main.activity_achievement.*
-import kotlinx.android.synthetic.main.item_achievement_failed.*
-import kotlinx.android.synthetic.main.item_achievement_failed.view.*
-import kotlinx.android.synthetic.main.item_achievement_passed.view.*
-import kotlinx.android.synthetic.main.item_achievement_passed.view.achievement_passed_name
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
-class Achievement : BaseActivity(), AchievementHelper.Callback {
+class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelper.Callback {
     var hasLoaded: Int = 0
 
     var achievementFailedLoad: Boolean = false
@@ -52,13 +50,13 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
     }
 
     private fun getAchievement(objects: JSONObject? = null){
-        val year = achievement_year.selectedItem.toString()
-        val semester = achievement_term.selectedItem.toString().toInt()
-        val config = ConfigManager(this@Achievement);
+        val year = binding.achievementYear.selectedItem.toString()
+        val semester = binding.achievementTerm.selectedItem.toString().toInt()
+        val config = ConfigManager(this@Achievement)
         config.putString("school_year_inquiry", year)
             .putInt("semester_inquiry", semester)
             .apply()
-        achievement_refresh.isRefreshing = true
+        binding.achievementRefresh.isRefreshing = true
         val helper = AchievementHelper(this@Achievement)
         if (objects != null) {
             try {
@@ -75,7 +73,7 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
         runOnUiThread {
-            achievement_refresh.isRefreshing = false
+            binding.achievementRefresh.isRefreshing = false
         }
     }
 
@@ -83,13 +81,13 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         achievementFailedLoad = false
         achievementPassedLoad = false
         runOnUiThread{
-            achievement_table_failed.removeAllViews()
-            achievement_table_failed.visibility = View.INVISIBLE
-            achievement_table_failed_empty.visibility = View.VISIBLE
+            binding.achievementTableFailed.removeAllViews()
+            binding.achievementTableFailed.visibility = View.INVISIBLE
+            binding.achievementTableFailedEmpty.visibility = View.VISIBLE
 
-            achievement_table_passed.removeAllViews()
-            achievement_table_passed.visibility = View.INVISIBLE
-            achievement_table_passed_empty.visibility = View.VISIBLE
+            binding.achievementTablePassed.removeAllViews()
+            binding.achievementTablePassed.visibility = View.INVISIBLE
+            binding.achievementTablePassedEmpty.visibility = View.VISIBLE
         }
     }
 
@@ -98,27 +96,26 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
             achievementPassedLoad = true
         }
 
-        val itemAchievementPassed: View = LayoutInflater.from(this@Achievement)
-            .inflate(R.layout.item_achievement_passed, achievement_table_passed, false)
-        itemAchievementPassed.apply {
-            achievement_passed_name.text = data.name
-            achievement_passed_paper.text = data.paper
-            achievement_passed_mark.text = data.mark
-            achievement_passed_retake.text = data.retake
-            achievement_passed_rebuild.text = data.rebuild
-            achievement_passed_credit.text = data.credit
+        ItemAchievementPassedBinding.inflate(layoutInflater)
+        val itemPassed: ItemAchievementPassedBinding = ItemAchievementPassedBinding.inflate(layoutInflater)
+        itemPassed.apply {
+            achievementPassedName.text = data.name
+            achievementPassedPaper.text = data.paper
+            achievementPassedMark.text = data.mark
+            achievementPassedRetake.text = data.retake
+            achievementPassedRebuild.text = data.rebuild
+            achievementPassedCredit.text = data.credit
             if (!judgePass(data.mark) && !judgePass(data.retake) && !judgePass(data.rebuild)){
-                achievement_passed_name.setTextColor(Color.RED)
-                achievement_passed_paper.setTextColor(Color.RED)
-                achievement_passed_mark.setTextColor(Color.RED)
-                achievement_passed_retake.setTextColor(Color.RED)
-                achievement_passed_rebuild.setTextColor(Color.RED)
-                achievement_passed_credit.setTextColor(Color.RED)
+                achievementPassedName.setTextColor(Color.RED)
+                achievementPassedPaper.setTextColor(Color.RED)
+                achievementPassedMark.setTextColor(Color.RED)
+                achievementPassedRetake.setTextColor(Color.RED)
+                achievementPassedRebuild.setTextColor(Color.RED)
+                achievementPassedCredit.setTextColor(Color.RED)
             }
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
         }
         runOnUiThread{
-            achievement_table_passed.addView(itemAchievementPassed)
+            binding.achievementTablePassed.addView(itemPassed.root)
         }
     }
 
@@ -133,28 +130,26 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
             achievementFailedLoad = true
         }
 
-        val itemAchievementFailed: View = LayoutInflater.from(this@Achievement)
-            .inflate(R.layout.item_achievement_failed, achievement_table_failed, false)
-        itemAchievementFailed.apply {
-            grade_failed_name.text = data.name
-            grade_failed_mark.text = data.mark
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        val itemFailed: ItemAchievementFailedBinding = ItemAchievementFailedBinding.inflate(layoutInflater)
+        itemFailed.apply {
+            gradeFailedName.text = data.name
+            gradeFailedMark.text = data.mark
         }
         runOnUiThread{
-            achievement_table_failed.addView(itemAchievementFailed)
+            binding.achievementTableFailed.addView(itemFailed.root)
         }
     }
 
     override fun onReadFinish() {
         runOnUiThread {
-            achievement_refresh.isRefreshing = false
+            binding.achievementRefresh.isRefreshing = false
             if (achievementPassedLoad){
-                achievement_table_passed.visibility = View.VISIBLE
-                achievement_table_passed_empty.visibility = View.INVISIBLE
+                binding.achievementTablePassed.visibility = View.VISIBLE
+                binding.achievementTablePassedEmpty.visibility = View.INVISIBLE
             }
             if (achievementFailedLoad){
-                achievement_table_failed.visibility = View.VISIBLE
-                achievement_table_failed_empty.visibility = View.INVISIBLE
+                binding.achievementTableFailed.visibility = View.VISIBLE
+                binding.achievementTableFailedEmpty.visibility = View.INVISIBLE
             }
         }
 
@@ -162,7 +157,7 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
 
     override fun onViewSetup() {
         super.onViewSetup()
-        initViewAtTop(achievement_toolbar)
+        initViewAtTop(binding.achievementToolbar)
 
         val listYear: MutableList<String?> = ArrayList()
         val config = ConfigManager(this@Achievement)
@@ -179,20 +174,20 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         }
         val arrayAdapterYear: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
             R.layout.item_option, listYear)
-        achievement_year.adapter = arrayAdapterYear
-        achievement_year.setSelection(yearSelected, true)
+        binding.achievementYear.adapter = arrayAdapterYear
+        binding.achievementYear.setSelection(yearSelected, true)
 
         val semesterStudent: Int = config.getInt("semester_inquiry", config.getInt("semester", 1)) - 1
         val listTerm: List<String?> = listOf("1", "2")
         val arrayAdapterTerm: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
             R.layout.item_option, listTerm)
-        achievement_term.adapter = arrayAdapterTerm
-        achievement_term.setSelection(semesterStudent, true)
+        binding.achievementTerm.adapter = arrayAdapterTerm
+        binding.achievementTerm.setSelection(semesterStudent, true)
 
-        achievement_action.setOnClickListener { getAchievement() }
-        achievement_refresh.setOnRefreshListener { getAchievement() }
-        achievement_back.setOnClickListener { finish() }
-        achievement_landscape.setOnClickListener {
+        binding.achievementAction.setOnClickListener { getAchievement() }
+        binding.achievementRefresh.setOnRefreshListener { getAchievement() }
+        binding.achievementBack.setOnClickListener { finish() }
+        binding.achievementLandscape.setOnClickListener {
             requestedOrientation = if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             } else {
@@ -206,7 +201,7 @@ class Achievement : BaseActivity(), AchievementHelper.Callback {
         super.onSaveInstanceState(outState)
     }
 
-    override fun getContentView() = R.layout.activity_achievement
+    override fun getContentView() = ActivityAchievementBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = true
 }

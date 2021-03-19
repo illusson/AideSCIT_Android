@@ -3,14 +3,13 @@ package com.sgpublic.scit.tool.fragment
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.TextViewCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -23,22 +22,24 @@ import com.sgpublic.scit.tool.activity.WebView
 import com.sgpublic.scit.tool.base.BaseFragment
 import com.sgpublic.scit.tool.base.MyLog
 import com.sgpublic.scit.tool.data.NewsData
+import com.sgpublic.scit.tool.databinding.ItemNewsBinding
+import com.sgpublic.scit.tool.databinding.PagerNewsBinding
 import com.sgpublic.scit.tool.helper.NewsHelper
 import com.sgpublic.scit.tool.widget.ObservableScrollView
-import kotlinx.android.synthetic.main.item_news.view.*
-import kotlinx.android.synthetic.main.pager_news.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class NewsPager(contest: AppCompatActivity, private val name: String, private val tid: Int) : BaseFragment(contest) {
+class NewsPager(contest: AppCompatActivity, private val name: String, private val tid: Int) : BaseFragment<PagerNewsBinding>(contest) {
     private var listPageSize = 0
     private var hasNext = false
     private var loading = false
 
     private val sortData: ArrayList<CharSequence> = arrayListOf()
 
-    override fun getContentView(): Int = R.layout.pager_news
+    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): PagerNewsBinding {
+        return PagerNewsBinding.inflate(inflater, container, false)
+    }
 
     override fun getTitle() = name
 
@@ -47,13 +48,13 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
 
         listPageSize = 0
 
-        sort_refresh.setOnRefreshListener {
+        binding.sortRefresh.setOnRefreshListener {
             listPageSize = 0
-            sort_grid_index.removeAllViews()
+            binding.sortGridIndex.removeAllViews()
             getGridData()
         }
 
-        sort_refresh.isRefreshing = true
+        binding.sortRefresh.isRefreshing = true
 
         if (savedInstanceState != null) {
             hasNext = savedInstanceState.getBoolean("sortHasNext")
@@ -65,7 +66,7 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
 
     override fun onViewSetup() {
         super.onViewSetup()
-        sort_scroll.setOnScrollToBottomListener(sort_scroll_content, object : ObservableScrollView.ScrollToBottomListener{
+        binding.sortScroll.setOnScrollToBottomListener(binding.sortScrollContent, object : ObservableScrollView.ScrollToBottomListener{
             override fun onScrollToBottom() {
                 if (!loading){
                     getGridData()
@@ -75,10 +76,10 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
     }
 
     private fun getGridData() {
-        sort_refresh.isRefreshing = true
+        binding.sortRefresh.isRefreshing = true
         NewsHelper(contest).getNewsByType(tid, listPageSize, object : NewsHelper.Callback {
             override fun onFailure(code: Int, message: String?, e: Exception?) {
-                sort_refresh.isRefreshing = false
+                binding.sortRefresh.isRefreshing = false
                 onToast(R.string.error_news_load, message, code)
             }
 
@@ -94,26 +95,24 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
 
     private fun loadGirdData(dataArray: ArrayList<NewsData>) {
         if (hasNext) {
-            sort_grid_end.setText(R.string.error_loading_more)
-            sort_scroll.setOnScrollToBottomListener(
-                sort_scroll_content, object : ObservableScrollView.ScrollToBottomListener {
+            binding.sortGridEnd.setText(R.string.error_loading_more)
+            binding.sortScroll.setOnScrollToBottomListener(
+                binding.sortScrollContent, object : ObservableScrollView.ScrollToBottomListener {
                     override fun onScrollToBottom() {
                         getGridData()
                     }
                 })
         } else {
-            sort_grid_end.setText(R.string.error_no_more)
-            sort_scroll.setOnScrollToBottomListener(null)
+            binding.sortGridEnd.setText(R.string.error_no_more)
+            binding.sortScroll.setOnScrollToBottomListener(null)
         }
 
         for (i in 0 until dataArray.size) {
-            val itemNews = LayoutInflater
-                .from(contest)
-                .inflate(R.layout.item_news, sort_grid_index, false)
+            val itemNews = ItemNewsBinding.inflate(layoutInflater)
 
             val dataIndex: NewsData = dataArray[i]
-            itemNews.item_news_title.text = dataIndex.title
-            itemNews.item_news_create_time.text = dataIndex.createTime
+            itemNews.itemNewsTitle.text = dataIndex.title
+            itemNews.itemNewsCreateTime.text = dataIndex.createTime
 
             if (dataIndex.images.size > 0){
                 val requestOptions: RequestOptions = RequestOptions()
@@ -140,10 +139,10 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
                     runOnUiThread {
                         glide.into(imageView)
                     }
-                    itemNews.item_news_summaries.addView(imageView)
+                    itemNews.itemNewsSummaries.addView(imageView)
                 }
             } else {
-                itemNews.item_news_summaries.layoutParams = LinearLayout.LayoutParams(
+                itemNews.itemNewsSummaries.layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
                 )
                 val summary = TextView(contest)
@@ -159,19 +158,19 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
                 summary.setBackgroundColor(contest.getColor(R.color.colorCompat))
                 summary.setTextColor(contest.getColor(R.color.colorPrimary))
                 summary.setPadding(dip2px(20.0F), dip2px(20.0F), dip2px(20.0F), dip2px(20.0F))
-                itemNews.item_news_summaries.addView(summary)
+                itemNews.itemNewsSummaries.addView(summary)
             }
 
-            itemNews.setOnClickListener {
+            itemNews.root.setOnClickListener {
                 WebView.startActivity(contest, dataIndex.type, dataIndex.id)
             }
             runOnUiThread {
-                sort_grid_index.addView(itemNews)
+                binding.sortGridIndex.addView(itemNews.root)
             }
         }
 
         saveInstance(dataArray)
-        sort_refresh.isRefreshing = false
+        binding.sortRefresh.isRefreshing = false
         listPageSize++
     }
 

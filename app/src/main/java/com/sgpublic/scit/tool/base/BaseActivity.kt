@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.viewbinding.ViewBinding
+import com.sgpublic.scit.tool.databinding.ActivityAboutBinding
 import com.sgpublic.scit.tool.manager.ConfigManager
 import com.yanzhenjie.sofia.Sofia
 import me.imid.swipebacklayout.lib.SwipeBackLayout
@@ -21,10 +23,13 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
+import java.util.*
 
 
 @SuppressLint("Registered")
-abstract class BaseActivity : SwipeBackActivity() {
+abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
+    protected lateinit var binding: T
+
     private val edgeSize: Int = 200
     protected var rootViewBottom: Int = 0
 
@@ -35,25 +40,26 @@ abstract class BaseActivity : SwipeBackActivity() {
         ActivityCollector.addActivity(this)
 
         setSwipeBackEnable(onSetSwipeBackEnable())
-        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
         swipeBackLayout.setEdgeSize(edgeSize)
 
-        setContentView(getContentView())
+        binding = getContentView()
+        setContentView(binding.root)
         onViewSetup()
         onActivityCreated(savedInstanceState)
     }
 
     protected abstract fun onActivityCreated(savedInstanceState: Bundle?)
 
-    protected abstract fun getContentView(): Int
+    protected abstract fun getContentView(): T
 
     protected abstract fun onSetSwipeBackEnable(): Boolean
 
     protected open fun initViewAtTop(view: View){
         var statusbarheight = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
-            statusbarheight = resources.getDimensionPixelSize(resourceId);
+            statusbarheight = resources.getDimensionPixelSize(resourceId)
         }
         val params: LinearLayout.LayoutParams = view.layoutParams as LinearLayout.LayoutParams
         params.topMargin = statusbarheight
@@ -133,9 +139,11 @@ abstract class BaseActivity : SwipeBackActivity() {
             } else {
                 view.animate().alphaBy(1f).alpha(0f).setDuration(duration.toLong())
                     .setListener(null)
-                Handler().postDelayed({
-                    view.visibility = View.GONE
-                    callback?.run()
+                Timer().schedule(object : TimerTask() {
+                    override fun run() {
+                        view.visibility = View.GONE
+                        callback?.run()
+                    }
                 }, duration.toLong())
             }
         }

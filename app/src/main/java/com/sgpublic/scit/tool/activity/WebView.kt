@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_webview.*
+import com.sgpublic.scit.tool.databinding.ActivityWebviewBinding
 
-class WebView : BaseActivity() {
+class WebView : BaseActivity<ActivityWebviewBinding>() {
     companion object {
         fun startActivity(context: Context, tid: Int, nid: Int){
             val intents = Intent(context, WebView::class.java)
@@ -23,14 +23,14 @@ class WebView : BaseActivity() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        initViewAtTop(web_toolbar)
+        initViewAtTop(binding.webToolbar)
         val url = intent.getStringExtra("url")
         url?.let {
-            web_view.loadUrl(it)
+            binding.webView.loadUrl(it)
         }
     }
 
-    override fun getContentView(): Int = R.layout.activity_webview
+    override fun getContentView() = ActivityWebviewBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable(): Boolean = true
 }

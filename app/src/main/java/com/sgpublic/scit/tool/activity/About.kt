@@ -5,27 +5,28 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import com.sgpublic.scit.tool.BuildConfig
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
+import com.sgpublic.scit.tool.databinding.ActivityAboutBinding
 import com.sgpublic.scit.tool.helper.UpdateHelper
-import kotlinx.android.synthetic.main.activity_about.*
 
-class About : BaseActivity(), UpdateHelper.Callback {
+class About : BaseActivity<ActivityAboutBinding>(), UpdateHelper.Callback {
     @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        initViewAtTop(about_back)
-        about_back.setOnClickListener { finish() }
+        initViewAtTop(binding.aboutBack)
+        binding.aboutBack.setOnClickListener { finish() }
 
-        about_update.setOnClickListener {
-            about_progress.visibility = View.VISIBLE
+        binding.aboutUpdate.setOnClickListener {
+            binding.aboutProgress.visibility = View.VISIBLE
             UpdateHelper(this@About).getUpdate(0, this)
         }
 
-        about_version.text = "V${BuildConfig.VERSION_NAME}"
+        binding.aboutVersion.text = "V${BuildConfig.VERSION_NAME}"
 
 //        about_feedback.setOnClickListener {
 //            val intent = Intent(Intent.ACTION_VIEW)
@@ -33,7 +34,7 @@ class About : BaseActivity(), UpdateHelper.Callback {
 //            startActivity(intent)
 //        }
 
-        about_developer.setOnClickListener {
+        binding.aboutDeveloper.setOnClickListener {
             AlertDialog.Builder(this@About).run {
                 setTitle("鸣谢")
                 setMessage("(排名不分先后)\n" +
@@ -45,21 +46,21 @@ class About : BaseActivity(), UpdateHelper.Callback {
             }.show()
         }
 
-        about_license.setOnClickListener {
+        binding.aboutLicense.setOnClickListener {
             val intent = Intent(this@About, License::class.java)
             startActivity(intent)
         }
 
-        about_agreement.movementMethod = LinkMovementMethod.getInstance()
+        binding.aboutAgreement.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onUpdateFailure(code: Int, message: String?, e: Throwable?) {
-        about_progress.visibility = View.INVISIBLE
+        binding.aboutProgress.visibility = View.INVISIBLE
         onToast(R.string.title_update_error, message, code)
     }
 
     override fun onUpToDate() {
-        about_progress.visibility = View.INVISIBLE
+        binding.aboutProgress.visibility = View.INVISIBLE
         onToast(R.string.title_update_already)
     }
 
@@ -93,12 +94,12 @@ class About : BaseActivity(), UpdateHelper.Callback {
             }
         }
         runOnUiThread {
-            about_progress.visibility = View.INVISIBLE
+            binding.aboutProgress.visibility = View.INVISIBLE
             builder.show()
         }
     }
 
-    override fun getContentView() = R.layout.activity_about
+    override fun getContentView() = ActivityAboutBinding.inflate(layoutInflater)
 
     override fun onSetSwipeBackEnable() = true
 
