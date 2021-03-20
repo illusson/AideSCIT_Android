@@ -35,8 +35,8 @@ class BlurHelper : BitmapTransformation() {
         return "BlurTransformation(radius=$radius, sampling=$sampling)"
     }
 
-    override fun equals(o: Any?): Boolean {
-        return o is BlurHelper && o.radius == radius && o.sampling == sampling
+    override fun equals(other: Any?): Boolean {
+        return other is BlurHelper && other.radius == radius && other.sampling == sampling
     }
 
     override fun hashCode(): Int {

@@ -204,7 +204,7 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
 
             override fun afterTextChanged(editable: Editable) {}
         })
-        binding.loginPassword.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+        binding.loginPassword.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.loginPasswordVisible.visibility = View.VISIBLE
             } else {
