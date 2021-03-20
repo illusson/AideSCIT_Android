@@ -6,6 +6,7 @@
     <color name="colorAlert">#0097FE</color>
     <color name="colorCompat">#E9F5FF</color>
     <color name="colorWindowBackground">#FFFFFF</color>
+    <color name="colorWindowBackgroundDark">#F0F0F0</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorBlurAlphaStart">#D0FAFAFA</color>
     <color name="colorBlurAlphaEnd">#EEFAFAFA</color>

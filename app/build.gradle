@@ -24,8 +24,8 @@ android {
         applicationId "com.sgpublic.scit.tool"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 210319
-        versionName "2.0.0 Build 4"
+        versionCode 210320
+        versionName "2.0.0 Build 5"
 
         renderscriptTargetApi 26
         renderscriptSupportModeEnabled true
@@ -76,6 +76,7 @@ dependencies {
     implementation "com.ogaclejapan.smarttablayout:library:2.0.0@aar"
     implementation 'com.github.kongzue.dialogx:DialogX:0.0.33'
     implementation 'com.github.kongzue.dialogx:DialogXMIUIStyle:0.0.33'
+    implementation 'com.scwang.wave:MultiWaveHeader:1.0.0-andx'
 
 //    //友盟统计基础SDK
 //    implementation "com.umeng.umsdk:common:9.1.0"

@@ -104,6 +104,7 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
             override fun onResult(name: String, faculty: String, specialty: String, userClass: String, grade: Int) {
                 ConfigManager(this@Login)
                     .putBoolean("is_login", true)
+                    .putString("username", binding.loginUsername.text.toString())
                     .putString("access_token", access)
                     .putString("refresh_token", refresh)
                     .putLong("token_expired", APIHelper.getTS() + 2592000000L)
@@ -236,8 +237,10 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
 
     private fun setLoadingState(isLoading: Boolean) {
         runOnUiThread{
-            binding.loginLoading.isEnabled = false
-            binding.loginActionCover.isEnabled = false
+            binding.loginUsername.isEnabled = !isLoading
+            binding.loginPassword.isEnabled = !isLoading
+            binding.loginLoading.isEnabled = !isLoading
+            binding.loginActionCover.isEnabled = !isLoading
             binding.loginLoading.visibility = View.VISIBLE
             binding.loginAction.visibility = View.VISIBLE
             if (isLoading) {
@@ -249,64 +252,74 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
                 binding.loginAction.animate().alpha(1f).setDuration(200).setListener(null)
                 binding.loginLoading.visibility = View.INVISIBLE
             }
-            Timer().schedule(object : TimerTask() {
-                override fun run() {
-                    binding.loginLoading.isEnabled = true
-                    binding.loginActionCover.isEnabled = true
-                }
-            }, 500)
+//            Timer().schedule(object : TimerTask() {
+//                override fun run() {
+//                    runOnUiThread {
+//                        binding.loginLoading.isEnabled = true
+//                        binding.loginActionCover.isEnabled = true
+//                    }
+//                }
+//            }, 500)
         }
     }
 
     private fun setAnimation() {
         Timer().schedule(object : TimerTask() {
             override fun run() {
-                val springSystem: SpringSystem = SpringSystem.create()
-                val spring: Spring = springSystem.createSpring()
-                spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
-                spring.addListener(object : SimpleSpringListener() {
-                    override fun onSpringUpdate(spring: Spring) {
-                        val value = spring.currentValue.toFloat()
-                        val scale = 1f + value * 0.5f
-                        binding.loginUsernameBase.y = dip2px(800F) - scale
-                    }
-                })
-                spring.endValue = dip2px(1200F).toDouble()
+                runOnUiThread {
+                    val springSystem: SpringSystem = SpringSystem.create()
+                    val spring: Spring = springSystem.createSpring()
+                    spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
+                    spring.addListener(object : SimpleSpringListener() {
+                        override fun onSpringUpdate(spring: Spring) {
+                            val value = spring.currentValue.toFloat()
+                            val scale = 1f + value * 0.5f
+                            binding.loginUsernameBase.y = dip2px(800F) - scale
+                        }
+                    })
+                    spring.endValue = dip2px(1200F).toDouble()
+                }
             }
         }, 500)
         Timer().schedule(object : TimerTask() {
             override fun run() {
-                val springSystem: SpringSystem = SpringSystem.create()
-                val spring: Spring = springSystem.createSpring()
-                spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
-                spring.addListener(object : SimpleSpringListener() {
-                    override fun onSpringUpdate(spring: Spring) {
-                        val value = spring.currentValue.toFloat()
-                        val scale = 1f + value * 0.5f
-                        binding.loginPasswordBase.y = dip2px(870F) - scale
-                    }
-                })
-                spring.endValue = dip2px(1200F).toDouble()
+                runOnUiThread {
+                    val springSystem: SpringSystem = SpringSystem.create()
+                    val spring: Spring = springSystem.createSpring()
+                    spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
+                    spring.addListener(object : SimpleSpringListener() {
+                        override fun onSpringUpdate(spring: Spring) {
+                            val value = spring.currentValue.toFloat()
+                            val scale = 1f + value * 0.5f
+                            binding.loginPasswordBase.y = dip2px(870F) - scale
+                        }
+                    })
+                    spring.endValue = dip2px(1200F).toDouble()
+                }
             }
-        }, 500)
+        }, 650)
         Timer().schedule(object : TimerTask() {
             override fun run() {
-                val springSystem: SpringSystem = SpringSystem.create()
-                val spring: Spring = springSystem.createSpring()
-                spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
-                spring.addListener(object : SimpleSpringListener() {
-                    override fun onSpringUpdate(spring: Spring) {
-                        val value = spring.currentValue.toFloat()
-                        val scale = 1f + value * 0.5f
-                        binding.loginActionBase.y = dip2px(980F) - scale
-                    }
-                })
-                spring.endValue = dip2px(1200F).toDouble()
+                runOnUiThread {
+                    val springSystem: SpringSystem = SpringSystem.create()
+                    val spring: Spring = springSystem.createSpring()
+                    spring.springConfig = SpringConfig.fromOrigamiTensionAndFriction(10.0, 5.0)
+                    spring.addListener(object : SimpleSpringListener() {
+                        override fun onSpringUpdate(spring: Spring) {
+                            val value = spring.currentValue.toFloat()
+                            val scale = 1f + value * 0.5f
+                            binding.loginActionBase.y = dip2px(980F) - scale
+                        }
+                    })
+                    spring.endValue = dip2px(1200F).toDouble()
+                }
             }
-        }, 500)
+        }, 800)
         Timer().schedule(object : TimerTask() {
             override fun run() {
-                setAnimateState(true, 300, binding.loginAgreementCheck)
+                runOnUiThread {
+                    setAnimateState(true, 300, binding.loginAgreementCheck)
+                }
             }
         }, 1400)
     }

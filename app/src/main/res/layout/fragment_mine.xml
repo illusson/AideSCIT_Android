@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/colorWindowBackgroundDark"
+    android:paddingBottom="10dp"
+    android:scrollbars="none"
+    android:overScrollMode="never"
     android:fitsSystemWindows="true">
-
-    <TextView
-        android:id="@+id/mine_toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/title_mine"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@color/color_font_normal"/>
-
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:scrollbars="none"
-        android:overScrollMode="never">
+        android:layout_height="wrap_content">
+        <com.scwang.wave.MultiWaveHeader
+            android:id="@+id/mine_toolbar_base"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:mwhWaveHeight="16dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
+            <GridLayout
+                android:id="@+id/mine_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="?android:selectableItemBackground"
+                android:padding="20dp"
+                android:columnCount="2"
+                android:rowCount="2">
                 <androidx.cardview.widget.CardView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
+                    android:layout_column="0"
+                    android:layout_row="0"
+                    android:layout_rowSpan="2"
                     app:cardElevation="0dp"
                     app:cardCornerRadius="25dp">
                     <ImageView
@@ -53,149 +51,39 @@
                     android:id="@+id/mine_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="22dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_column="1"
+                    android:layout_row="0"
                     android:text="@string/text_loading"
-                    android:textColor="@color/color_font_normal"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/color_mine_parting" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:text="@string/title_category_quick"
-                android:textColor="@color/color_mine_category"
-                android:textSize="13sp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="center_horizontal"
-                        app:cardElevation="0dp"
-                        app:cardCornerRadius="30dp"
-                        app:cardBackgroundColor="@color/color_random_5">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="15dp"
-                            android:src="@drawable/ic_achievement"
-                            app:tint="#FFFFFF" />
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/mine_achievement"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-                    </androidx.cardview.widget.CardView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/title_achievement"
-                        android:textSize="14sp"
-                        android:textColor="@color/color_mine_title" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="center_horizontal"
-                        app:cardElevation="0dp"
-                        app:cardCornerRadius="30dp"
-                        app:cardBackgroundColor="@color/color_random_1">
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <ImageView
-                                android:id="@+id/mine_springboard_img"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:padding="15dp"
-                                android:src="@drawable/ic_jump"
-                                app:tint="#FFFFFF" />
-
-                            <ProgressBar
-                                android:id="@+id/mine_springboard_progress"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:visibility="invisible"
-                                android:layout_gravity="center"
-                                android:indeterminateTintMode="src_atop"
-                                android:indeterminateTint="#FFFFFF"
-                                android:alpha="0"/>
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/mine_springboard"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-                    </androidx.cardview.widget.CardView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/title_springboard"
-                        android:textSize="14sp"
-                        android:textColor="@color/color_mine_title" />
-                </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/color_mine_parting" />
-
+                    android:textColor="@color/colorWindowBackground"
+                    android:textSize="17sp"
+                    android:textStyle="bold"/>
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:text="@string/title_category_usual"
-                    android:textColor="@color/color_mine_category"
-                    android:textSize="13sp"/>
-
-            </LinearLayout>
-
+                    android:id="@+id/mine_uid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_column="1"
+                    android:layout_row="1"
+                    android:text="@string/text_loading"
+                    android:textColor="@color/colorBlurAlphaStart"
+                    android:textSize="15sp"/>
+            </GridLayout>
+            <TextView
+                android:id="@+id/mine_achievement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center_vertical"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@color/colorWindowBackground"
+                android:text="@string/title_achievement"
+                android:textSize="16sp"
+                android:textColor="@color/color_font_normal"/>
             <TextView
                 android:id="@+id/mine_exam"
                 android:layout_width="match_parent"
@@ -203,11 +91,11 @@
                 android:gravity="center_vertical"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@color/colorWindowBackground"
                 android:text="@string/title_into_exam"
                 android:textSize="16sp"
                 android:textColor="@color/color_font_normal"/>
-
             <TextView
                 android:id="@+id/mine_evaluate"
                 android:layout_width="match_parent"
@@ -215,32 +103,11 @@
                 android:gravity="center_vertical"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@color/colorWindowBackground"
                 android:text="@string/title_evaluate"
                 android:textSize="16sp"
                 android:textColor="@color/color_font_normal"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/color_mine_parting" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:text="@string/title_category_expand"
-                    android:textColor="@color/color_mine_category"
-                    android:textSize="13sp"/>
-
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/mine_calendar"
                 android:layout_width="match_parent"
@@ -248,56 +115,50 @@
                 android:gravity="center_vertical"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@color/colorWindowBackground"
                 android:text="@string/title_into_calendar"
                 android:textSize="16sp"
                 android:textColor="@color/color_font_normal"/>
-
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/color_mine_parting" />
-
+                android:background="@color/colorWindowBackground">
                 <TextView
+                    android:id="@+id/mine_springboard"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:text="@string/title_category_other"
-                    android:textColor="@color/color_mine_category"
-                    android:textSize="13sp"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/mine_logout"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:gravity="center_vertical"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:text="@string/title_logout"
-                android:textSize="16sp"
-                android:textColor="@color/color_font_normal"/>
-
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/title_springboard"
+                    android:textSize="16sp"
+                    android:textColor="@color/color_font_normal"/>
+                <ProgressBar
+                    android:id="@+id/mine_springboard_progress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:visibility="invisible"
+                    android:layout_marginEnd="30dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:indeterminateTintMode="src_atop"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:alpha="0"/>
+            </FrameLayout>
             <TextView
                 android:id="@+id/mine_about"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@color/colorWindowBackground"
                 android:text="@string/title_about"
                 android:textSize="16sp"
                 android:textColor="@color/color_font_normal"/>
-
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </FrameLayout>
+</ScrollView>

@@ -36,6 +36,7 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
         initViewAtTop(binding.mineToolbar)
 
         binding.mineUsername.text = ConfigManager(contest).getString("name", "此人没有留下姓名……")
+        binding.mineUid.text = String.format(getString(R.string.text_uid), ConfigManager(contest).getString("username", "（未知）"))
 
         binding.mineAbout.setOnClickListener {
             val intent = Intent(contest, About::class.java)
@@ -51,12 +52,10 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
                     .setTitle(R.string.title_notices_permission)
                     .setMessage(R.string.text_notices_permission)
                     .setOkButton(R.string.text_notices_permission_start) { _, _ ->
-                        ActivityCompat.requestPermissions(
-                            contest, arrayOf(
+                        ActivityCompat.requestPermissions(contest, arrayOf(
                                 Manifest.permission.WRITE_CALENDAR,
                                 Manifest.permission.READ_CALENDAR
-                            ), 1
-                        )
+                        ), 1)
                         return@setOkButton false
                     }
                     .setCancelButton(R.string.text_notices_permission_cancel){ dialog, _ ->
@@ -66,6 +65,11 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
                     }
                     .show()
             }
+        }
+
+        binding.mineToolbar.setOnClickListener {
+            val intent = Intent(contest, MyInfo::class.java)
+            startActivity(intent)
         }
 
         binding.mineExam.setOnClickListener {
@@ -89,28 +93,6 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
                     }
                 })
             }
-        }
-
-        binding.mineLogout.setOnClickListener {
-            val alert = AlertDialog.Builder(contest)
-            alert.setTitle(R.string.title_check_logout)
-            alert.setMessage(R.string.text_check_logout)
-            alert.setPositiveButton(R.string.text_ok) { _, _ ->
-                ConfigManager(contest)
-                    .putBoolean("is_login", false)
-                    .apply()
-                deleteShortCut()
-
-                CacheManager(contest)
-                    .save(CacheManager.CACHE_ACHIEVEMENT, "")
-                    .save(CacheManager.CACHE_EXAM, "")
-                    .save(CacheManager.CACHE_TABLE, "")
-
-                Login.startActivity(contest)//, true)
-                finish()
-            }
-            alert.setNegativeButton(R.string.text_cancel, null)
-            alert.show()
         }
 
         binding.mineAchievement.setOnClickListener {
@@ -277,14 +259,6 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
         }
     }
 
-    private fun deleteShortCut() {
-        val mSystemService = contest.getSystemService(ShortcutManager::class.java)
-        mSystemService?.let {
-            it.removeDynamicShortcuts(listOf("Achievement"))
-            it.removeDynamicShortcuts(listOf("exam"))
-        }
-    }
-
     private fun springboard(location: String){
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(location)
@@ -296,21 +270,19 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
 
     private fun setSpringBoardLoadingState(isLoading: Boolean) {
         runOnUiThread{
-            binding.mineSpringboard.isEnabled = false
-            binding.mineSpringboardImg.visibility = View.VISIBLE
+            binding.mineSpringboard.isClickable = false
             binding.mineSpringboardProgress.visibility = View.VISIBLE
             if (isLoading) {
                 binding.mineSpringboardProgress.animate().alpha(1f).setDuration(200).setListener(null)
-                binding.mineSpringboardImg.animate().alpha(0f).setDuration(200).setListener(null)
-                binding.mineSpringboardImg.visibility = View.INVISIBLE
             } else {
                 binding.mineSpringboardProgress.animate().alpha(0f).setDuration(200).setListener(null)
-                binding.mineSpringboardImg.animate().alpha(1f).setDuration(200).setListener(null)
                 binding.mineSpringboardProgress.visibility = View.INVISIBLE
             }
             Timer().schedule(object : TimerTask() {
                 override fun run() {
-                    binding.mineSpringboard.isEnabled = true
+                    runOnUiThread {
+                        binding.mineSpringboard.isClickable = true
+                    }
                 }
             }, 500)
         }

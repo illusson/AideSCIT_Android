@@ -39,26 +39,10 @@ class License : BaseActivity<ActivityLicenseBinding>() {
         )
         arrayList.add(
             LicenseListData(
-                "rebound",
-                "A Java library that models spring dynamics and adds real world physics to your app.",
-                "facebookarchive",
-                "https://github.com/facebookarchive/rebound"
-            )
-        )
-        arrayList.add(
-            LicenseListData(
-                "SmartTabLayout",
-                "A custom ViewPager title strip which gives continuous feedback to the user when scrolling",
-                "ogaclejapan",
-                "https://github.com/ogaclejapan/SmartTabLayout"
-            )
-        )
-        arrayList.add(
-            LicenseListData(
-                "SwipeBackLayout",
-                "An Android library that help you to build app with swipe back gesture.",
-                "ikew0ng",
-                "https://github.com/ikew0ng/SwipeBackLayout"
+                "DialogX",
+                "\uD83D\uDCACDialogX对话框组件库，更加方便易用，可自定义程度更高，扩展性更强，轻松实现各种对话框、菜单和提示效果，更有iOS、MIUI等主题扩展可选",
+                "kongzue",
+                "https://github.com/kongzue/DialogX"
             )
         )
         arrayList.add(
@@ -79,10 +63,50 @@ class License : BaseActivity<ActivityLicenseBinding>() {
         )
         arrayList.add(
             LicenseListData(
+                "MultiWaveHeader",
+                "Wave,水波,Android 炫酷的多重水波纹 MultiWaveHeader",
+                "scwang90",
+                "https://github.com/scwang90/MultiWaveHeader"
+            )
+        )
+        arrayList.add(
+            LicenseListData(
                 "okhttp",
                 "Square’s meticulous HTTP client for Java and Kotlin.",
                 "square",
                 "https://github.com/square/okhttp"
+            )
+        )
+        arrayList.add(
+            LicenseListData(
+                "Sofia",
+                "Android沉浸式效果的实现，状态栏和导航栏均支持设置颜色、渐变色、图片、透明度、内容入侵和状态栏深色字体；兼容竖屏、横屏，当屏幕旋转时会自动适配。",
+                "yanzhenjie",
+                "https://github.com/yanzhenjie/Sofia"
+            )
+        )
+        arrayList.add(
+            LicenseListData(
+                "rebound",
+                "A Java library that models spring dynamics and adds real world physics to your app.",
+                "facebookarchive",
+                "https://github.com/facebookarchive/rebound"
+            )
+        )
+        arrayList.add(
+            LicenseListData(
+                "SmartTabLayout",
+                "A custom ViewPager title strip which gives continuous feedback to the user when scrolling",
+                "ogaclejapan",
+                "https://github.com/ogaclejapan/SmartTabLayout"
+            )
+        )
+        arrayList.add(
+            LicenseListData(
+                "SwipeBackLayout",
+                "An Android library that help you to build app with swipe back gesture.",
+                "ikew0ng",
+                "https://github.com/ikew0ng/SwipeBackLayout"
             )
         )
         binding.licenseList.adapter = LicenseListAdapter(

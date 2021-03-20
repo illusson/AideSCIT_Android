@@ -30,12 +30,14 @@
     <string name="title_timetable">课表</string>
     <string name="title_news">资讯</string>
     <string name="title_mine">我的</string>
+    <string name="title_info">个人信息</string>
     <string name="title_exam">考试安排</string>
 
     <string name="text_table_week_index">第 %1$d 周</string>
 
     <string name="title_room">空闲教室</string>
-    <string name="title_achievement">成绩</string>
+    <string name="text_uid">用户名：%1$s</string>
+    <string name="title_achievement">成绩单查询</string>
     <string name="title_category_quick">快捷启动</string>
     <string name="title_category_usual">常用功能</string>
     <string name="title_category_expand">拓展功能</string>
@@ -165,6 +167,20 @@
 
     <string name="text_check_cancel_login">你确定要退出吗？退出将无法继续使用“工科助手”。</string>
     <string name="title_check_cancel_login">确定退出？</string>
+
+    <string name="title_info_avatar">头像</string>
+    <string name="title_info_name">姓名</string>
+    <string name="title_info_uid_student">学号</string>
+    <string name="title_info_uid_teacher">工号</string>
+    <string name="title_info_faculty">学院</string>
+    <string name="title_info_specialty">专业</string>
+    <string name="title_info_class">班级</string>
+
+    <string name="title_privacy">隐私设置</string>
+    <string name="title_privacy_calender">允许工科助手访问日历权限</string>
+    <string name="test_privacy_authorized">已授权</string>
+    <string name="test_privacy_unauthorized">去设置</string>
+    <string name="text_privacy_calender">用于将课表导入日历等。</string>
 
     <string name="error_setup_failed">应用初始化失败，网络连接异常或服务器维护中</string>
     <string name="error_setup_timeout">应用初始化超时，网络连接异常或服务器维护中</string>
