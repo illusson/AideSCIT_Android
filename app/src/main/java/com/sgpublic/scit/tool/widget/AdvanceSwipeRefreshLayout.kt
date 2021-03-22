@@ -5,9 +5,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 
 import android.view.ViewConfiguration
+import androidx.annotation.Keep
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
+@Keep
 class AdvanceSwipeRefreshLayout(context: Context, attrs: AttributeSet?) :
     SwipeRefreshLayout(context, attrs) {
     private var startY = 0f

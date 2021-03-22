@@ -32,7 +32,7 @@ class APIHelper(private val access: String, private val refresh: String) {
     fun getLoginRequest(username: String, passwordEncrypted: String): Call {
         val url = "login"
         val argArray: Map<String, Any> = mapOf(
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "password" to passwordEncrypted,
             "platform" to PLATFORM,
             "ts" to getTS(),
@@ -45,7 +45,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "springboard"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -56,7 +56,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "token"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "refresh_token" to refresh,
             "ts" to getTS()
@@ -67,7 +67,7 @@ class APIHelper(private val access: String, private val refresh: String) {
     fun getSentenceRequest(): Call {
         val url = "hitokoto"
         val argArray: Map<String, Any> = mapOf(
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -77,7 +77,7 @@ class APIHelper(private val access: String, private val refresh: String) {
     fun getDayRequest(): Call {
         val url = "day"
         val argArray: Map<String, Any> = mapOf(
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -88,7 +88,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "news"
         val argArray: Map<String, Any> = mapOf(
             "action" to "type",
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -99,7 +99,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "news"
         val argArray: Map<String, Any> = mapOf(
             "action" to "headline",
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -110,7 +110,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "news"
         val argArray: Map<String, Any> = mapOf(
             "action" to "list",
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "page" to page,
             "platform" to PLATFORM,
             "tid" to type,
@@ -123,7 +123,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "info"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -134,7 +134,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "table"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "semester" to semester,
             "ts" to getTS(),
@@ -147,7 +147,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "exam"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "ts" to getTS()
         )
@@ -158,7 +158,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "achieve"
         val argArray: Map<String, Any> = mapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "platform" to PLATFORM,
             "semester" to semester,
             "ts" to getTS(),
@@ -171,7 +171,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         val url = "evaluate"
         val argArray: MutableMap<String, Any> = mutableMapOf(
             "access_token" to access,
-            "app_key" to Security.APP_KEY,
+            "app_key" to Security.getAppKey(),
             "action" to action,
             "platform" to PLATFORM
         )
@@ -265,7 +265,7 @@ class APIHelper(private val access: String, private val refresh: String) {
         }
 
         private fun getSign(): String {
-            val content = string + Security.APP_SECRET
+            val content = string + Security.getAppSecret()
             try {
                 val instance:MessageDigest = MessageDigest.getInstance("MD5")
                 val digest:ByteArray = instance.digest(content.toByteArray())

@@ -3,9 +3,10 @@ package com.sgpublic.scit.tool.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.Keep
 import androidx.core.widget.NestedScrollView
 
-
+@Keep
 class ObservableScrollView : NestedScrollView {
     private var contentView: View? = null
     private var scrollToBottomListener: ScrollToBottomListener? = null

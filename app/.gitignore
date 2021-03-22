@@ -1,5 +1,5 @@
 /build
 /debug
 /release
-/src/main/java/com/sgpublic/scit/tool/manager/Security.kt
+/src/main/cpp_private
 gradle.properties

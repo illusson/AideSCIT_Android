@@ -24,7 +24,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".activity.PrivacySetting"></activity>
+        <activity android:name=".activity.PrivacySetting" />
         <activity android:name=".activity.MyInfo" />
         <activity android:name=".activity.Welcome">
             <intent-filter>
@@ -41,7 +41,8 @@
         <activity android:name=".activity.Notices" />
         <activity android:name=".activity.Evaluate" />
         <activity android:name=".activity.License" />
-        <activity android:name=".activity.WebView" /> <!-- 魅族push应用定义消息receiver声明 -->
+        <activity android:name=".activity.WebView" />
+        <!-- 魅族push应用定义消息receiver声明 -->
         <!-- <receiver -->
         <!-- android:name="com.sgpublic.scit.tool.base.MeizuReceiver" -->
         <!-- tools:ignore="ExportedReceiver"> -->
