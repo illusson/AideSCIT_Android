@@ -26,8 +26,8 @@ android {
         applicationId "com.sgpublic.scit.tool"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 210320
-        versionName "2.0.0 Build 5"
+        versionCode 210323
+        versionName "2.0.0 Build 6"
 
         renderscriptTargetApi 26
         renderscriptSupportModeEnabled true

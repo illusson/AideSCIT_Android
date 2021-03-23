@@ -165,13 +165,13 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
         val config = ConfigManager(this@Achievement)
         val gradeStudent: Int = config.getInt("grade", 2019)
         val yearStudent: String = config.getString("school_year_inquiry", config.getString("school_year", "2019-2020"))
-        var yearSelected = 1
+        var yearSelected = 0
         for (year_index in 0 until 4) {
-            val itemYearText =
-                (gradeStudent + year_index).toString() + "-" + (gradeStudent + year_index + 1)
+            val itemYearText = (gradeStudent + year_index).toString() +
+                    "-" + (gradeStudent + year_index + 1)
             listYear.add(itemYearText)
             if (yearStudent == itemYearText) {
-                yearSelected = year_index
+                yearSelected = year_index + 1
             }
         }
         val arrayAdapterYear: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
