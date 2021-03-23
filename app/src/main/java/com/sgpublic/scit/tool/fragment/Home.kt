@@ -130,6 +130,7 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
         homeBanner = findViewById<BannerViewPager<BannerItem, NewsBannerAdapter>>(R.id.home_banner)
 
         binding.homeRefresh.setOnRefreshListener {
+            TableHelper(contest).getTable(ConfigManager(contest), week, callbackTable)
             NewsHelper(contest).getHeadline(this)
         }
     }
