@@ -17,9 +17,12 @@ import java.net.UnknownHostException
 
 class AchievementHelper(private val context: Context) {
     fun getMark(config: ConfigManager, callback: Callback){
+        var schoolYearInquiry = config.getString("school_year_inquiry")
+        if (schoolYearInquiry == context.getString(R.string.text_achievement_all)){
+            schoolYearInquiry = "all"
+        }
         APIHelper(config.getString("access_token")).getAchievementRequest(
-            config.getString("school_year_inquiry"),
-            config.getInt("semester_inquiry")
+            schoolYearInquiry, config.getInt("semester_inquiry")
         ).enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 MyLog.e("网络请求出错", e)

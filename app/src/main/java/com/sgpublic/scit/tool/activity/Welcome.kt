@@ -16,6 +16,7 @@ import com.sgpublic.scit.tool.base.MyLog
 import com.sgpublic.scit.tool.databinding.ActivityWelcomeBinding
 import com.sgpublic.scit.tool.helper.*
 import com.sgpublic.scit.tool.manager.ConfigManager
+import com.sgpublic.scit.tool.manager.Security
 import java.util.*
 
 class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
@@ -28,6 +29,8 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
     private lateinit var helper: HeaderInfoHelper
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        MyLog.d(Security.getAppKey())
+        MyLog.d(Security.getAppSecret())
         if (ConfigManager(this@Welcome).getBoolean("agreement_shown")){
             appSetup()
         } else {

@@ -58,6 +58,8 @@
     <string name="text_achievement_search">查询</string>
     <string name="text_achievement_name">课程</string>
     <string name="text_achievement_paper">期末成绩</string>
+    <string name="text_achievement_all">在校成绩</string>
+    <string name="text_achievement_year">全年</string>
     <string name="text_achievement_achievement">成绩</string>
     <string name="text_achievement_achievement_make">补考成绩</string>
     <string name="text_achievement_achievement_re">重修成绩</string>

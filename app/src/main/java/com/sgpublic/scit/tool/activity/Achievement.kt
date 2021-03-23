@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
@@ -51,7 +52,7 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
 
     private fun getAchievement(objects: JSONObject? = null){
         val year = binding.achievementYear.selectedItem.toString()
-        val semester = binding.achievementTerm.selectedItem.toString().toInt()
+        val semester = binding.achievementTerm.selectedItemPosition
         val config = ConfigManager(this@Achievement)
         config.putString("school_year_inquiry", year)
             .putInt("semester_inquiry", semester)
@@ -160,10 +161,11 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
         initViewAtTop(binding.achievementToolbar)
 
         val listYear: MutableList<String?> = ArrayList()
+        listYear.add(getString(R.string.text_achievement_all))
         val config = ConfigManager(this@Achievement)
         val gradeStudent: Int = config.getInt("grade", 2019)
         val yearStudent: String = config.getString("school_year_inquiry", config.getString("school_year", "2019-2020"))
-        var yearSelected = 0
+        var yearSelected = 1
         for (year_index in 0 until 4) {
             val itemYearText =
                 (gradeStudent + year_index).toString() + "-" + (gradeStudent + year_index + 1)
@@ -176,9 +178,28 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
             R.layout.item_option, listYear)
         binding.achievementYear.adapter = arrayAdapterYear
         binding.achievementYear.setSelection(yearSelected, true)
+        binding.achievementYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                binding.achievementAction.isClickable = true
+                binding.achievementTerm.isEnabled = position != 0
+            }
 
-        val semesterStudent: Int = config.getInt("semester_inquiry", config.getInt("semester", 1)) - 1
-        val listTerm: List<String?> = listOf("1", "2")
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                binding.achievementAction.isClickable = false
+            }
+        }
+        binding.achievementTerm.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                binding.achievementAction.isClickable = true
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                binding.achievementAction.isClickable = false
+            }
+        }
+
+        val semesterStudent: Int = config.getInt("semester_inquiry", config.getInt("semester", 1))
+        val listTerm: List<String?> = listOf(getString(R.string.text_achievement_year), "1", "2")
         val arrayAdapterTerm: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
             R.layout.item_option, listTerm)
         binding.achievementTerm.adapter = arrayAdapterTerm
