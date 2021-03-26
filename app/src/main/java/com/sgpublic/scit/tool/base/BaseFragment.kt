@@ -41,7 +41,7 @@ abstract class BaseFragment<T: ViewBinding>(val contest: AppCompatActivity) : Fr
         return (dpValue * scales + 0.5f).toInt()
     }
 
-    protected fun runOnUiThread(runnable: Runnable){
+    protected fun runOnUiThread(runnable: () -> Unit){
         contest.runOnUiThread(runnable)
     }
 

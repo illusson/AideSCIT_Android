@@ -29,8 +29,6 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
     private lateinit var helper: HeaderInfoHelper
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        MyLog.d(Security.getAppKey())
-        MyLog.d(Security.getAppSecret())
         if (ConfigManager(this@Welcome).getBoolean("agreement_shown")){
             appSetup()
         } else {

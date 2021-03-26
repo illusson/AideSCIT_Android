@@ -218,38 +218,46 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
                         continue
                     }
                     val dtStart = scheduleIndex[class_index][0]
-                    val dtEnd = scheduleIndex[class_index][1]
-
-                    var time = Calendar.getInstance()
+                    var classStart = Calendar.getInstance()
                     val startTime = (sdfDate.format(termDate.time) + dtStart).split("/").toTypedArray()
-                    time[Calendar.YEAR] = startTime[0].toInt()
-                    time[Calendar.MONTH] = startTime[1].toInt() - 1
-                    time[Calendar.DAY_OF_MONTH] = startTime[2].toInt()
-                    time[Calendar.HOUR_OF_DAY] = startTime[3].toInt()
-                    time[Calendar.MINUTE] = startTime[4].toInt()
-                    time[Calendar.SECOND] = 0
-                    time[Calendar.MILLISECOND] = 0
-                    val classStart = time
+                    classStart[Calendar.YEAR] = startTime[0].toInt()
+                    classStart[Calendar.MONTH] = startTime[1].toInt() - 1
+                    classStart[Calendar.DAY_OF_MONTH] = startTime[2].toInt()
+                    classStart[Calendar.HOUR_OF_DAY] = startTime[3].toInt()
+                    classStart[Calendar.MINUTE] = startTime[4].toInt()
+                    classStart[Calendar.SECOND] = 0
+                    classStart[Calendar.MILLISECOND] = 0
 
+                    val dtEnd = scheduleIndex[class_index][1]
+                    var classEnd = Calendar.getInstance()
                     val endTime = (sdfDate.format(termDate.time) + dtEnd).split("/").toTypedArray()
-                    time[Calendar.YEAR] = endTime[0].toInt()
-                    time[Calendar.MONTH] = endTime[1].toInt() - 1
-                    time[Calendar.DAY_OF_MONTH] = endTime[2].toInt()
-                    time[Calendar.HOUR_OF_DAY] = endTime[3].toInt()
-                    time[Calendar.MINUTE] = endTime[4].toInt()
-                    time[Calendar.SECOND] = 0
-                    time[Calendar.MILLISECOND] = 0
-                    val classEnd = time
+                    classEnd[Calendar.YEAR] = endTime[0].toInt()
+                    classEnd[Calendar.MONTH] = endTime[1].toInt() - 1
+                    classEnd[Calendar.DAY_OF_MONTH] = endTime[2].toInt()
+                    classEnd[Calendar.HOUR_OF_DAY] = endTime[3].toInt()
+                    classEnd[Calendar.MINUTE] = endTime[4].toInt()
+                    classEnd[Calendar.SECOND] = 0
+                    classEnd[Calendar.MILLISECOND] = 0
+
+                    val time = Calendar.getInstance()
+//                    time[Calendar.YEAR] = 2021
+//                    time[Calendar.MONTH] = 2
+//                    time[Calendar.DAY_OF_MONTH] = 26
+//                    time[Calendar.HOUR_OF_DAY] = 20
+//                    time[Calendar.MINUTE] = 37
+//                    time[Calendar.SECOND] = 0
+//                    time[Calendar.MILLISECOND] = 0
 
                     val item = ItemHomeTaskBinding.inflate(layoutInflater)
-                    time = Calendar.getInstance()
-
-                    item.itemTaskStart.text = scheduleIndex[class_index][0].replace("/", "：").subSequence(1, 6)
-                    item.itemTaskEnd.text = scheduleIndex[class_index][1].replace("/", "：").subSequence(1, 6)
+                    item.itemTaskStart.text = dtStart.replace("/", "：").subSequence(1, 6)
+                    item.itemTaskEnd.text = dtEnd.replace("/", "：").subSequence(1, 6)
                     item.itemTaskTitle.text = classData.getString("name")
                     item.itemTaskLocation.text = classData.getString("room")
                     if (time.before(classEnd) && time.after(classStart)){
                         item.itemTaskBase.setCardBackgroundColor(contest.getColor(R.color.color_task_doing))
+                        item.itemTaskLocation.text = String.format(getString(
+                            R.string.text_home_task_doing
+                        ), item.itemTaskLocation.text)
                     } else if (time.after(classEnd)){
                         item.itemTaskBase.setCardBackgroundColor(contest.getColor(R.color.color_task_waiting))
                         item.itemTaskBase.alpha = 0.3F

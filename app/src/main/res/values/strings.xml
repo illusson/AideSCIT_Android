@@ -51,7 +51,8 @@
     <string name="title_more">更多</string>
 
     <string name="text_home_task_header">%1$d年%2$d月%3$d %4$s</string>
-    <string name="text_home_task_right_now">还剩 %1$d 分钟开始 | %2$s</string>
+    <string name="text_home_task_doing">进行中 | %1$s</string>
+    <string name="text_home_task_right_now">%1$d 分钟开始 | %2$s</string>
 
     <string name="title_achievement_search">成绩查询</string>
     <string name="title_achievement_re">至今未过的课程</string>

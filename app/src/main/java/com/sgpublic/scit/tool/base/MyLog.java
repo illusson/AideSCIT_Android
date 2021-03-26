@@ -12,111 +12,61 @@ public class MyLog {
 
     public static void v(Object message){
         if (out){
-            doLog(new DoLogSimplify() {
-                @Override
-                public void onLog(String tag, String message) {
-                    Log.v(tag, message);
-                }
-            }, message);
+            doLog(Log::v, message);
         }
     }
 
     public static void v(Object message, Throwable e){
         if (out){
-            doLog(new DoLog() {
-                @Override
-                public void onLog(String tag, String message, Throwable e) {
-                    Log.v(tag, message);
-                }
-            }, message, e);
+            doLog((tag, message1, e1) -> Log.v(tag, message1), message, e);
         }
     }
 
     public static void d(Object message){
         if (out){
-            doLog(new DoLogSimplify() {
-                @Override
-                public void onLog(String tag, String message) {
-                    Log.d(tag, message);
-                }
-            }, message);
+            doLog(Log::d, message);
         }
     }
 
     public static void d(Object message, Throwable e){
         if (out){
-            doLog(new DoLog() {
-                @Override
-                public void onLog(String tag, String message, Throwable e) {
-                    Log.d(tag, message);
-                }
-            }, message, e);
+            doLog((tag, message1, e1) -> Log.d(tag, message1), message, e);
         }
     }
 
     public static void i(Object message){
         if (out){
-            doLog(new DoLogSimplify() {
-                @Override
-                public void onLog(String tag, String message) {
-                    Log.w(tag, message);
-                }
-            }, message);
+            doLog(Log::w, message);
         }
     }
 
     public static void i(Object message, Throwable e){
         if (out){
-            doLog(new DoLog() {
-                @Override
-                public void onLog(String tag, String message, Throwable e) {
-                    Log.i(tag, message);
-                }
-            }, message, e);
+            doLog((tag, message1, e1) -> Log.i(tag, message1), message, e);
         }
     }
 
     public static void w(Object message){
         if (out){
-            doLog(new DoLogSimplify() {
-                @Override
-                public void onLog(String tag, String message) {
-                    Log.w(tag, message);
-                }
-            }, message);
+            doLog(Log::w, message);
         }
     }
 
     public static void w(Object message, Throwable e){
         if (out){
-            doLog(new DoLog() {
-                @Override
-                public void onLog(String tag, String message, Throwable e) {
-                    Log.w(tag, message);
-                }
-            }, message, e);
+            doLog((tag, message1, e1) -> Log.w(tag, message1), message, e);
         }
     }
 
     public static void e(Object message){
         if (out){
-            doLog(new DoLogSimplify() {
-                @Override
-                public void onLog(String tag, String message) {
-                    Log.e(tag, message);
-                }
-            }, message);
+            doLog(Log::e, message);
         }
     }
 
     public static void e(Object message, Throwable e){
         if (out){
-            doLog(new DoLog() {
-                @Override
-                public void onLog(String tag, String message, Throwable e) {
-                    Log.e(tag, message);
-                }
-            }, message, e);
+            doLog((tag, message1, e1) -> Log.e(tag, message1), message, e);
         }
     }
 

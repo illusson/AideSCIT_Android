@@ -9,6 +9,7 @@ package com.sgpublic.scit.tool.base
 import android.app.Application
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.MIUIStyle
+import com.sgpublic.scit.tool.manager.Security
 
 @Suppress("unused")
 class Main : Application() {
