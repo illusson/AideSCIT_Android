@@ -169,7 +169,6 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
             val helper = LoginHelper(this@Welcome)
             helper.refreshToken(ConfigManager, object : LoginHelper.Callback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
-                    MyLog.d(message, e)
                     onFinished(false)
                 }
 

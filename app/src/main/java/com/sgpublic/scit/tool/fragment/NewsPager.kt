@@ -29,6 +29,8 @@ import com.sgpublic.scit.tool.widget.ObservableScrollView
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.NullPointerException
+import kotlin.jvm.Throws
 
 class NewsPager(private val contest: AppCompatActivity, private val name: String, private val tid: Int) : BaseFragment<PagerNewsBinding>(contest) {
     private var listPageSize = 0
@@ -80,12 +82,15 @@ class NewsPager(private val contest: AppCompatActivity, private val name: String
                 super.onNewsResult(news, hasNext)
                 this@NewsPager.hasNext = hasNext
                 runOnUiThread {
-                    loadGirdData(news)
+                    try {
+                        loadGirdData(news)
+                    } catch (ignored: NullPointerException) { }
                 }
             }
         })
     }
 
+    @Throws(NullPointerException::class)
     private fun loadGirdData(dataArray: ArrayList<NewsData>) {
         if (hasNext) {
             binding.sortGridEnd.setText(R.string.error_loading_more)
@@ -216,9 +221,9 @@ class NewsPager(private val contest: AppCompatActivity, private val name: String
                         )
                     }
                     loadGirdData(dataIndex)
-                } catch (e: JSONException) {
-                    MyLog.d(e.message)
-                }
+                } catch (ignored: JSONException) {
+                } catch (ignored: NullPointerException) {
+                } catch (ignored: IndexOutOfBoundsException) { }
             }
         }.start()
     }

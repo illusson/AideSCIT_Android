@@ -34,7 +34,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Home(private val contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(contest), NewsHelper.Callback {
-    private var homeBanner: BannerViewPager<BannerItem, NewsBannerAdapter>? = null
     private var timeChangeReceiver: TimeChangeReceiver? = null
 
     private var week: Int = 0
@@ -96,6 +95,7 @@ class Home(private val contest: AppCompatActivity) : BaseFragment<FragmentHomeBi
         initViewAtTop(binding.homeHello)
         taskBase1 = binding.homeTask1
         taskBase2 = binding.homeTask2
+        binding.homeRefresh.setProgressViewOffset(false, dip2px(-40F), dip2px(60F))
 
         val date: Int = HeaderInfoHelper(contest).getDate()
         val time: Int = HeaderInfoHelper(contest).getTime()
@@ -120,8 +120,6 @@ class Home(private val contest: AppCompatActivity) : BaseFragment<FragmentHomeBi
         binding.homeFrom.text = ConfigManager
             .getString("from")
 
-        homeBanner = findViewById<BannerViewPager<BannerItem, NewsBannerAdapter>>(R.id.home_banner)
-
         binding.homeRefresh.setOnRefreshListener {
             TableHelper(contest).getTable(week, callbackTable)
             NewsHelper(contest).getHeadline(this)
@@ -134,18 +132,15 @@ class Home(private val contest: AppCompatActivity) : BaseFragment<FragmentHomeBi
             val image: String = if (item.images.size == 0){ "" } else { item.images[0] }
             banners.add(BannerItem(contest, item.title, item.type, item.id, image))
         }
-        if (homeBanner == null){
-            return
-        }
-        homeBanner!!.setIndicatorVisibility(View.VISIBLE)
-        homeBanner!!.setIndicatorGravity(IndicatorGravity.CENTER)
-        homeBanner!!.setOnPageClickListener { i: Int ->
+        binding.homeBanner.setIndicatorVisibility(View.VISIBLE)
+        binding.homeBanner.setIndicatorGravity(IndicatorGravity.CENTER)
+        binding.homeBanner.setOnPageClickListener { i: Int ->
             WebView.startActivity(contest, banners[i].tid, banners[i].nid)
         }
-        homeBanner!!.setHolderCreator { NewsBannerAdapter() }
+        binding.homeBanner.setHolderCreator { NewsBannerAdapter() }
         runOnUiThread {
-            homeBanner!!.create(banners)
-            homeBanner!!.visibility = View.VISIBLE
+            binding.homeBanner.create(banners)
+            binding.homeBanner.visibility = View.VISIBLE
             binding.homeRefresh.isRefreshing = false
         }
     }
@@ -283,12 +278,12 @@ class Home(private val contest: AppCompatActivity) : BaseFragment<FragmentHomeBi
 
     override fun onPause() {
         super.onPause()
-        homeBanner?.stopLoop()
+        binding.homeBanner.stopLoop()
     }
 
     override fun onResume() {
         super.onResume()
-        homeBanner?.startLoop()
+        binding.homeBanner.startLoop()
     }
 
     override fun onDestroy() {

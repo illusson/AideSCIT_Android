@@ -49,10 +49,6 @@ abstract class BaseFragment<T: ViewBinding>(private val contest: AppCompatActivi
         contest.finish()
     }
 
-    protected fun <T: View?> findViewById(@IdRes res: Int): T? {
-        return view?.findViewById<T>(res)
-    }
-
     open fun getTitle(): CharSequence = ""
 
     protected open fun initViewAtTop(view: View){

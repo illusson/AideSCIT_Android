@@ -1,9 +1,7 @@
 package com.sgpublic.scit.tool.activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.base.CrashHandler

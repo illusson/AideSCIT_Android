@@ -24,7 +24,9 @@
 -keep class androidx.recyclerview.widget.* { *; }
 -keep class androidx.viewpager2.widget.* { *; }
 
--keep class com.wonderkiln.blurkit.* { *; }
+-keep class com.sgpublic.blurfixandroidx.* { *; }
+
+-keep class * extends androidx.viewbinding.ViewBinding { *; }
 
 -dontwarn android.renderscript.*
 -keep public class androidx.renderscript.* { *; }

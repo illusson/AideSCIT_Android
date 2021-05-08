@@ -66,7 +66,7 @@ class ExamHelper (private val context: Context) {
                         examData.getString("name"),
                         examData.getString("time"),
                         examData.getString("location"),
-                        examData.getString("sit_num")
+                        examData.getString("set_num")
                     ))
                 }
             }
