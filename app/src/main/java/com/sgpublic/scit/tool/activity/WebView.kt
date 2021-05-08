@@ -23,14 +23,15 @@ class WebView : BaseActivity<ActivityWebviewBinding>() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        initViewAtTop(binding.webToolbar)
         val url = intent.getStringExtra("url")
         url?.let {
             binding.webView.loadUrl(it)
         }
     }
 
-    override fun getContentView() = ActivityWebviewBinding.inflate(layoutInflater)
+    override fun onViewSetup() {
+        initViewAtTop(binding.webToolbar)
+    }
 
-    override fun onSetSwipeBackEnable(): Boolean = true
+    override fun isActivityAtBottom(): Boolean = false
 }

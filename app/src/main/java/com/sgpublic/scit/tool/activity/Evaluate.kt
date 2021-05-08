@@ -41,7 +41,7 @@ class Evaluate : BaseActivity<ActivityEvaluateBinding>(), EvaluateHelper.GetCall
         setOnLoadState(true)
         helper.check(object : EvaluateHelper.CheckCallback {
             override fun onFailure(code: Int, message: String?, e: Exception?) {
-                total = ConfigManager(this@Evaluate).getInt("evaluate_count")
+                total = ConfigManager.getInt("evaluate_count")
                 getEvaluation(index)
             }
 
@@ -53,8 +53,7 @@ class Evaluate : BaseActivity<ActivityEvaluateBinding>(), EvaluateHelper.GetCall
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
-        helper = EvaluateHelper(this@Evaluate, ConfigManager(this@Evaluate).getString(
+        helper = EvaluateHelper(this@Evaluate, ConfigManager.getString(
             "access_token", ""
         ))
         setProgressState()
@@ -101,7 +100,7 @@ class Evaluate : BaseActivity<ActivityEvaluateBinding>(), EvaluateHelper.GetCall
 
                         override fun onResult() {
                             if (index >= total){
-                                ConfigManager(this@Evaluate).putInt("evaluate_count", 0).apply()
+                                ConfigManager.putInt("evaluate_count", 0)
                                 onToast(R.string.title_evaluate_post_success)
                                 setOnLoadState(false)
                                 finish()
@@ -267,9 +266,7 @@ class Evaluate : BaseActivity<ActivityEvaluateBinding>(), EvaluateHelper.GetCall
         }
     }
 
-    override fun getContentView() = ActivityEvaluateBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable(): Boolean = false
+    override fun isActivityAtBottom() = false
 
     companion object{
         @JvmStatic

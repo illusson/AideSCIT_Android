@@ -14,12 +14,10 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.viewbinding.ViewBinding
 import com.sgpublic.scit.tool.BuildConfig
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.ActivityCollector
+import com.sgpublic.scit.tool.widget.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.base.BaseFragment
 import com.sgpublic.scit.tool.databinding.ActivityMainBinding
@@ -27,35 +25,17 @@ import com.sgpublic.scit.tool.fragment.Home
 import com.sgpublic.scit.tool.fragment.Mine
 import com.sgpublic.scit.tool.fragment.News
 import com.sgpublic.scit.tool.fragment.Table
-import java.util.*
 import kotlin.collections.ArrayList
 
 class Main : BaseActivity<ActivityMainBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        replaceFragment(R.id.main_fragment_home, Home(this@Main))
-        selectNavigation(0)
         initShortsCut()
         if (BuildConfig.DEBUG){
             onToast("debug")
         }
     }
 
-    override fun initViewAtBottom(view: View) {
-        rootViewBottom = view.layoutParams.height
-        ViewCompat.setOnApplyWindowInsetsListener(this.window.decorView) { v: View?, insets: WindowInsetsCompat? ->
-            if (insets != null) {
-                val b = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
-                val params = view.layoutParams
-                params.height = rootViewBottom + b
-                view.layoutParams = params
-                ViewCompat.onApplyWindowInsets(v!!, insets)
-            }
-            insets
-        }
-    }
-
     override fun onViewSetup() {
-        super.onViewSetup()
         binding.navHome.setOnClickListener {
             replaceFragment(R.id.main_fragment_home, Home(this@Main))
             selectNavigation(0)
@@ -72,6 +52,7 @@ class Main : BaseActivity<ActivityMainBinding>() {
             replaceFragment(R.id.main_fragment_mine, Mine(this@Main))
             selectNavigation(3)
         }
+        binding.navHome.callOnClick()
         initViewAtBottom(binding.navView)
     }
 
@@ -160,25 +141,7 @@ class Main : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    var last: Long = -1
-    override fun onBackPressed() {
-        val now = System.currentTimeMillis()
-        if (last == -1L) {
-            onToast("再点击一次退出")
-            last = now
-        } else {
-            if (now - last < 2000) {
-                ActivityCollector.finishAll()
-            } else {
-                last = now
-                onToast("请再点击一次退出")
-            }
-        }
-    }
-
-    override fun getContentView() = ActivityMainBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = false
+    override fun isActivityAtBottom() = true
 
     companion object {
         @JvmStatic

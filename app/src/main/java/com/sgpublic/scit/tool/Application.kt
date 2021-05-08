@@ -1,4 +1,4 @@
-package com.sgpublic.scit.tool.base
+package com.sgpublic.scit.tool
 
 //import com.umeng.analytics.MobclickAgent
 //import com.umeng.commonsdk.UMConfigure
@@ -9,13 +9,17 @@ package com.sgpublic.scit.tool.base
 import android.app.Application
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.MIUIStyle
-import com.sgpublic.scit.tool.manager.Security
+import com.sgpublic.scit.tool.base.CrashHandler
+import com.sgpublic.scit.tool.manager.ConfigManager
+import com.sgpublic.scit.tool.util.MyLog
 
 @Suppress("unused")
-class Main : Application() {
+class Application : Application() {
     override fun onCreate() {
         super.onCreate()
         MyLog.v("APP启动")
+        CrashHandler.init(this)
+        ConfigManager.init(this)
         DialogX.init(this)
         DialogX.globalStyle = MIUIStyle.style()
 //        BlurKit.init(this)

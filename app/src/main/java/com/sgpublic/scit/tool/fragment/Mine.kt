@@ -21,18 +21,17 @@ import com.sgpublic.scit.tool.helper.LoginHelper
 import com.sgpublic.scit.tool.manager.ConfigManager
 import java.util.*
 
-class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(contest) {
+class Mine(private val contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(contest) {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onFragmentCreated(savedInstanceState: Bundle?) {
+
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
         initViewAtTop(binding.mineToolbar)
 
-        binding.mineUsername.text = ConfigManager(contest).getString("name", "此人没有留下姓名……")
-        binding.mineUid.text = String.format(getString(R.string.text_uid), ConfigManager(contest).getString("username", "（未知）"))
+        binding.mineUsername.text = ConfigManager.getString("name", "此人没有留下姓名……")
+        binding.mineUid.text = String.format(getString(R.string.text_uid), ConfigManager.getString("username", "（未知）"))
 
         binding.mineAbout.setOnClickListener {
             val intent = Intent(contest, About::class.java)
@@ -76,7 +75,7 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
         binding.mineSpringboard.setOnClickListener {
             if (binding.mineSpringboardProgress.visibility != View.VISIBLE){
                 setSpringBoardLoadingState(true)
-                val access = ConfigManager(contest).getString("access_token", "")
+                val access = ConfigManager.getString("access_token", "")
                 LoginHelper(contest).springboard(access, object : LoginHelper.SpringboardCallback {
                     override fun onFailure(code: Int, message: String?, e: Exception?) {
                         springboard(
@@ -96,7 +95,7 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
             startActivity(intent)
         }
 
-        if (ConfigManager(contest).getInt("evaluate_count", 0) != 0){
+        if (ConfigManager.getInt("evaluate_count", 0) != 0){
             binding.mineEvaluate.setOnClickListener {
                 Evaluate.startActivity(contest)
             }
@@ -222,7 +221,7 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
 
     override fun onResume() {
         super.onResume()
-        binding.mineEvaluate.visibility = if (ConfigManager(contest).getInt("evaluate_count", 0) > 0){
+        binding.mineEvaluate.visibility = if (ConfigManager.getInt("evaluate_count", 0) > 0){
             View.VISIBLE
         } else { View.GONE }
     }
@@ -282,9 +281,5 @@ class Mine(contest: AppCompatActivity) : BaseFragment<FragmentMineBinding>(conte
                 }
             }, 500)
         }
-    }
-    
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): FragmentMineBinding {
-        return FragmentMineBinding.inflate(inflater, container, false)
     }
 }

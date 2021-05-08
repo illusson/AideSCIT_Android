@@ -1,4 +1,4 @@
-package com.sgpublic.scit.tool.base
+package com.sgpublic.scit.tool.util
 
 object Base64Helper {
     fun Decode(content: String): ByteArray? {

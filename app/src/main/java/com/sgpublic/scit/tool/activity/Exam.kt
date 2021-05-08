@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
+import com.sgpublic.scit.tool.base.CrashHandler
 import com.sgpublic.scit.tool.data.ExamData
 import com.sgpublic.scit.tool.databinding.ActivityExamBinding
 import com.sgpublic.scit.tool.databinding.ItemExamBinding
@@ -28,13 +29,12 @@ class Exam : BaseActivity<ActivityExamBinding>(), ExamHelper.Callback {
         if (objects != null) {
             helper.parsing(objects, this)
         } else {
-            helper.getExam(ConfigManager(this@Exam)
-                .getString("access_token"), this)
+            helper.getExam(ConfigManager.getString("access_token"), this)
         }
     }
 
     override fun onFailure(code: Int, message: String?, e: Exception?) {
-        saveExplosion(e, code)
+        CrashHandler.saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
         runOnUiThread {
             binding.examRefresh.isRefreshing = false
@@ -78,14 +78,10 @@ class Exam : BaseActivity<ActivityExamBinding>(), ExamHelper.Callback {
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
-
         initViewAtTop(binding.examToolbar)
         binding.examRefresh.setOnRefreshListener { getExam() }
         binding.examBack.setOnClickListener { finish() }
     }
 
-    override fun getContentView() = ActivityExamBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = true
+    override fun isActivityAtBottom() = false
 }

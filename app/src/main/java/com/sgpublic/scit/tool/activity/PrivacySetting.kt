@@ -15,8 +15,11 @@ import com.sgpublic.scit.tool.databinding.ActivityPrivacySettingBinding
 
 class PrivacySetting : BaseActivity<ActivityPrivacySettingBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        initViewAtTop(binding.privacyToolbar)
         checkPermissionStatus()
+    }
+
+    override fun onViewSetup() {
+        initViewAtTop(binding.privacyToolbar)
         binding.privacyCalenderBase.setOnClickListener {
             gotoMiuiPermission()
         }
@@ -103,7 +106,5 @@ class PrivacySetting : BaseActivity<ActivityPrivacySettingBinding>() {
         startActivity(intent)
     }
 
-    override fun getContentView() = ActivityPrivacySettingBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = true
+    override fun isActivityAtBottom() = false
 }

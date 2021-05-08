@@ -2,7 +2,7 @@ package com.sgpublic.scit.tool.helper
 
 import android.content.Context
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.data.EvaluationData
 import com.sgpublic.scit.tool.data.EvaluationQuestionData
 import com.sgpublic.scit.tool.activity.Login

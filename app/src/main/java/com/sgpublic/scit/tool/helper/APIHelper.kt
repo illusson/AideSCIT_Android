@@ -1,6 +1,6 @@
 package com.sgpublic.scit.tool.helper
 
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.manager.Security
 import okhttp3.Call
 import okhttp3.FormBody

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
@@ -15,7 +14,7 @@ import com.facebook.rebound.Spring
 import com.facebook.rebound.SpringConfig
 import com.facebook.rebound.SpringSystem
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.ActivityCollector
+import com.sgpublic.scit.tool.widget.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.databinding.ActivityLoginBinding
 import com.sgpublic.scit.tool.helper.APIHelper
@@ -27,9 +26,7 @@ import java.util.*
 class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        ConfigManager(this@Login)
-            .putBoolean("is_login", false)
-            .apply()
+        ConfigManager.putBoolean("is_login", false)
 //        if (!intent.getBooleanExtra("grand", false)) {
 //            login_permission.visibility = View.VISIBLE
 //            login_content.visibility = View.GONE
@@ -42,9 +39,8 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
-        binding.loginUsername.setText(ConfigManager(this@Login).getString("username"))
-        binding.loginPassword.setText(ConfigManager(this@Login).getString("password"))
+        binding.loginUsername.setText(ConfigManager.getString("username"))
+        binding.loginPassword.setText(ConfigManager.getString("password"))
 
         binding.loginActionCover.setOnClickListener { onAction() }
 
@@ -102,18 +98,16 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
             }
 
             override fun onResult(name: String, faculty: String, specialty: String, userClass: String, grade: Int) {
-                ConfigManager(this@Login)
-                    .putBoolean("is_login", true)
-                    .putString("username", binding.loginUsername.text.toString())
-                    .putString("access_token", access)
-                    .putString("refresh_token", refresh)
-                    .putLong("token_expired", APIHelper.getTS() + 2592000000L)
-                    .putString("name", name)
-                    .putString("faculty_name", faculty)
-                    .putString("specialty_name", specialty)
-                    .putString("class_name", userClass)
-                    .putInt("grade", grade)
-                    .apply()
+                ConfigManager.putBoolean("is_login", true)
+                ConfigManager.putString("username", binding.loginUsername.text.toString())
+                ConfigManager.putString("access_token", access)
+                ConfigManager.putString("refresh_token", refresh)
+                ConfigManager.putLong("token_expired", APIHelper.getTS() + 2592000000L)
+                ConfigManager.putString("name", name)
+                ConfigManager.putString("faculty_name", faculty)
+                ConfigManager.putString("specialty_name", specialty)
+                ConfigManager.putString("class_name", userClass)
+                ConfigManager.putInt("grade", grade)
                 setLoadingState(false)
                 Main.startActivity(this@Login)
             }
@@ -167,10 +161,8 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
     private fun onUsernameClear() {
         binding.loginUsername.setText("")
         binding.loginPassword.setText("")
-        ConfigManager(this@Login)
-            .putString("username", "")
-            .putString("password", "")
-            .apply()
+        ConfigManager.putString("username", "")
+        ConfigManager.putString("password", "")
     }
 
     private fun onPasswordVisible() {
@@ -236,7 +228,7 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
     }
 
     private fun setLoadingState(isLoading: Boolean) {
-        runOnUiThread{
+        runOnUiThread {
             binding.loginUsername.isEnabled = !isLoading
             binding.loginPassword.isEnabled = !isLoading
             binding.loginLoading.isEnabled = !isLoading
@@ -324,9 +316,7 @@ class Login : BaseActivity<ActivityLoginBinding>(), LoginHelper.Callback {
         }, 1400)
     }
 
-    override fun getContentView() = ActivityLoginBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = false
+    override fun isActivityAtBottom() = false
 
     companion object{
         @JvmStatic

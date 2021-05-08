@@ -1,12 +1,8 @@
 package com.sgpublic.scit.tool.base
 
-//import com.umeng.analytics.MobclickAgent
-//import com.umeng.message.PushAgent
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -14,46 +10,55 @@ import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewbinding.ViewBinding
-import com.sgpublic.scit.tool.databinding.ActivityAboutBinding
-import com.sgpublic.scit.tool.manager.ConfigManager
+import com.sgpublic.scit.tool.R
+import com.sgpublic.scit.tool.widget.ActivityCollector
+import com.sgpublic.swipebacklayoutx.SwipeBackLayoutX
+import com.sgpublic.swipebacklayoutx.app.SwipeBackActivity
 import com.yanzhenjie.sofia.Sofia
-import me.imid.swipebacklayout.lib.SwipeBackLayout
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.*
+import java.lang.reflect.ParameterizedType
 import java.util.*
 
 
-@SuppressLint("Registered")
-abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
+abstract class BaseActivity<T : ViewBinding>: SwipeBackActivity() {
     protected lateinit var binding: T
 
-    private val edgeSize: Int = 200
-    protected var rootViewBottom: Int = 0
+    private var rootViewBottom: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        PushAgent.getInstance(this).onAppStart()
 
         ActivityCollector.addActivity(this)
 
-        setSwipeBackEnable(onSetSwipeBackEnable())
-        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
-        swipeBackLayout.setEdgeSize(edgeSize)
-
-        binding = getContentView()
-        setContentView(binding.root)
+        setupContentView()
         onViewSetup()
         onActivityCreated(savedInstanceState)
     }
 
     protected abstract fun onActivityCreated(savedInstanceState: Bundle?)
 
-    protected abstract fun getContentView(): T
+    @Suppress("UNCHECKED_CAST")
+    private fun setupContentView() {
+        val parameterizedType: ParameterizedType = javaClass.genericSuperclass as ParameterizedType
+        val clazz = parameterizedType.actualTypeArguments[0] as Class<T>
+        val method = clazz.getMethod("inflate", LayoutInflater::class.java)
+        binding = method.invoke(null, layoutInflater) as T
+        setContentView(binding.root)
 
-    protected abstract fun onSetSwipeBackEnable(): Boolean
+        if (isActivityAtBottom()){
+            setSwipeBackEnable(false)
+        } else {
+            setSwipeBackEnable(true)
+            swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayoutX.EDGE_LEFT)
+            swipeBackLayout.setEdgeSize(200)
+        }
+
+        Sofia.with(this)
+            .statusBarBackgroundAlpha(0)
+            .navigationBarBackgroundAlpha(0)
+            .invasionNavigationBar()
+            .invasionStatusBar()
+            .statusBarDarkFont()
+    }
 
     protected open fun initViewAtTop(view: View){
         var statusbarheight = 0
@@ -66,21 +71,23 @@ abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
     }
 
     protected open fun initViewAtBottom(view: View) {
-        rootViewBottom = view.paddingBottom
-        ViewCompat.setOnApplyWindowInsetsListener(this.window.decorView) { v, insets ->
-            var b = 0
+        rootViewBottom = view.layoutParams.height
+        ViewCompat.setOnApplyWindowInsetsListener(this.window.decorView) { v: View?, insets: WindowInsetsCompat? ->
             if (insets != null) {
-                b = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+                val b = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+                val params = view.layoutParams
+                params.height = rootViewBottom + b
+                view.layoutParams = params
+                ViewCompat.onApplyWindowInsets(v!!, insets)
             }
-            view.setPadding(
-                view.paddingLeft, view.paddingTop, view.paddingRight, rootViewBottom + b
-            )
-            ViewCompat.onApplyWindowInsets(v, insets)
+            insets
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-        grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         val fragments = supportFragmentManager.fragments
         for (fragment in fragments) {
@@ -88,14 +95,7 @@ abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
         }
     }
 
-    protected open fun onViewSetup(){
-        Sofia.with(this)
-            .statusBarBackgroundAlpha(0)
-            .navigationBarBackgroundAlpha(0)
-            .invasionNavigationBar()
-            .invasionStatusBar()
-            .statusBarDarkFont()
-    }
+    abstract fun onViewSetup()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -105,33 +105,30 @@ abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        val fragments = supportFragmentManager.fragments
+        for (fragment in fragments) {
+            fragment?.onPause()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-//        MobclickAgent.onResume(this)
         val fragments = supportFragmentManager.fragments
         for (fragment in fragments) {
             fragment?.onResume()
         }
     }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        MobclickAgent.onPause(this)
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
         ActivityCollector.removeActivity(this)
     }
 
-    protected open fun setAnimateState(
-        is_visible: Boolean,
-        duration: Int,
-        view: View,
-        callback: Runnable? = null
-    ) {
+    protected open fun setAnimateState(isVisible: Boolean, duration: Int, view: View, callback: Runnable? = null) {
         runOnUiThread {
-            if (is_visible) {
+            if (isVisible) {
                 view.visibility = View.VISIBLE
                 view.animate().alphaBy(0f).alpha(1f).setDuration(duration.toLong())
                     .setListener(null)
@@ -141,10 +138,34 @@ abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
                     .setListener(null)
                 Timer().schedule(object : TimerTask() {
                     override fun run() {
-                        view.visibility = View.GONE
-                        callback?.run()
+                        runOnUiThread {
+                            view.visibility = View.GONE
+                            callback?.run()
+                        }
                     }
                 }, duration.toLong())
+            }
+        }
+    }
+
+    protected open fun isActivityAtBottom(): Boolean = false
+
+    private var last: Long = -1
+    override fun onBackPressed() {
+        if (!isActivityAtBottom()){
+            super.onBackPressed()
+            return
+        }
+        val now = System.currentTimeMillis()
+        if (last == -1L) {
+            onToast(R.string.text_back_exit)
+            last = now
+        } else {
+            if (now - last < 2000) {
+                ActivityCollector.finishAll()
+            } else {
+                last = now
+                onToast(R.string.text_back_exit_notice)
             }
         }
     }
@@ -173,80 +194,5 @@ abstract class BaseActivity<T: ViewBinding>: SwipeBackActivity() {
     protected fun dip2px(dpValue: Float): Int {
         val scales = resources.displayMetrics.density
         return (dpValue * scales + 0.5f).toInt()
-    }
-
-    protected open fun saveExplosion(e: Throwable?, code: Int) {
-        try {
-            e?.let {
-                val exceptionLog: JSONObject
-                var exceptionLogContent = JSONArray()
-                val exception = File(
-                    applicationContext.getExternalFilesDir("log")?.path,
-                    "exception.json"
-                )
-                var log_content: String
-                try {
-                    val fileInputStream =
-                        FileInputStream(exception)
-                    val bufferedReader =
-                        BufferedReader(InputStreamReader(fileInputStream))
-                    var line: String?
-                    val stringBuilder = StringBuilder()
-                    while (bufferedReader.readLine().also { line = it } != null) {
-                        stringBuilder.append(line)
-                    }
-                    log_content = stringBuilder.toString()
-                } catch (e1: IOException) {
-                    log_content = ""
-                }
-                if (log_content != "") {
-                    exceptionLog = JSONObject(log_content)
-                    if (!exceptionLog.isNull("logs")) {
-                        exceptionLogContent = exceptionLog.getJSONArray("logs")
-                    }
-                }
-                val elements = e.stackTrace
-                var elementIndex: StackTraceElement
-                val crashMsgJson = JSONObject()
-                val crashMsgArray = JSONArray()
-                val crashMsgArrayIndex = JSONObject()
-                val crashStackTrace = JSONArray()
-                var crashMsgIndex = 0
-                while (crashMsgIndex < elements.size && crashMsgIndex < 10) {
-                    elementIndex = e.stackTrace[crashMsgIndex]
-                    val crashStackTraceIndex = JSONObject()
-                    crashStackTraceIndex.put("class", elementIndex.className)
-                    crashStackTraceIndex.put("line", elementIndex.lineNumber)
-                    crashStackTraceIndex.put("method", elementIndex.methodName)
-                    crashStackTrace.put(crashStackTraceIndex)
-                    crashMsgIndex++
-                }
-                val configString = StringBuilder(e.toString())
-                for (config_index in 0..2) {
-                    elementIndex = elements[config_index]
-                    configString.append("\nat ").append(elementIndex.toString())
-                }
-                ConfigManager(this).putString("last_exception", configString.toString())
-                crashMsgArrayIndex.put("code", code)
-                crashMsgArrayIndex.put("message", e.toString())
-                crashMsgArrayIndex.put("stack_trace", crashStackTrace)
-                crashMsgArray.put(crashMsgArrayIndex)
-                var exceptionLogIndex = 0
-                while (exceptionLogIndex < exceptionLogContent.length() && exceptionLogIndex < 2) {
-                    val msg_index =
-                        exceptionLogContent.getJSONObject(exceptionLogIndex)
-                    if (crashMsgArrayIndex.toString() != msg_index.toString()) {
-                        crashMsgArray.put(msg_index)
-                    }
-                    exceptionLogIndex++
-                }
-                crashMsgJson.put("logs", crashMsgArray)
-                val fileOutputStream = FileOutputStream(exception)
-                fileOutputStream.write(crashMsgJson.toString().toByteArray())
-                fileOutputStream.close()
-            }
-        } catch (ignore: JSONException) {
-        } catch (ignore: IOException) {
-        } catch (ignore: IllegalArgumentException) {}
     }
 }

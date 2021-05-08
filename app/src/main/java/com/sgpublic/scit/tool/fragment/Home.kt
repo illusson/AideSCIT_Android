@@ -1,6 +1,5 @@
 package com.sgpublic.scit.tool.fragment
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -16,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.activity.WebView
 import com.sgpublic.scit.tool.base.BaseFragment
+import com.sgpublic.scit.tool.base.CrashHandler
 import com.sgpublic.scit.tool.data.BannerItem
 import com.sgpublic.scit.tool.data.NewsData
 import com.sgpublic.scit.tool.databinding.FragmentHomeBinding
@@ -33,7 +33,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(contest), NewsHelper.Callback {
+class Home(private val contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(contest), NewsHelper.Callback {
     private var homeBanner: BannerViewPager<BannerItem, NewsBannerAdapter>? = null
     private var timeChangeReceiver: TimeChangeReceiver? = null
 
@@ -46,7 +46,7 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
     private var callbackTable = object : TableHelper.Callback {
         override fun onFailure(code: Int, message: String?, e: Exception?) {
             super.onFailure(code, message, e)
-            saveExplosion(e, code)
+            CrashHandler.saveExplosion(e, code)
             onToast(R.string.text_load_failed, message, code)
         }
 
@@ -59,7 +59,7 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
     private val callbackDate = object : HeaderInfoHelper.Callback{
         override fun onFailure(code: Int, message: String?, e: Exception?) {
             super.onFailure(code, message, e)
-            saveExplosion(e, code)
+            CrashHandler.saveExplosion(e, code)
             onToast(R.string.text_load_failed, message, code)
         }
 
@@ -78,28 +78,21 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
         }
     }
 
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
-        return FragmentHomeBinding.inflate(inflater, container, false)
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onFragmentCreated(savedInstanceState: Bundle?) {
         NewsHelper(contest).getHeadline(this)
-        week = ConfigManager(contest).getInt("week")
+        week = ConfigManager.getInt("week")
         getTable(CacheManager(contest).read(CacheManager.CACHE_TABLE))
     }
 
     private fun getTable(objects: JSONObject? = null){
         if (objects == null){
-            TableHelper(contest).getTable(ConfigManager(contest), week, callbackTable)
+            TableHelper(contest).getTable(week, callbackTable)
         } else {
             callbackTable.onReadFinish(false)
         }
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
         initViewAtTop(binding.homeHello)
         taskBase1 = binding.homeTask1
         taskBase2 = binding.homeTask2
@@ -107,7 +100,7 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
         val date: Int = HeaderInfoHelper(contest).getDate()
         val time: Int = HeaderInfoHelper(contest).getTime()
 
-        if (ConfigManager(contest).getInt("week") == 0) {
+        if (ConfigManager.getInt("week") == 0) {
             binding.homeHello.text = java.lang.String.format(
                 this.getString(R.string.text_hello_holiday),
                 this.getString(time), this.getString(date)
@@ -116,21 +109,21 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
             binding.homeHello.text = java.lang.String.format(
                 this.getString(R.string.text_hello),
                 this.getString(time),
-                ConfigManager(contest).getInt("week").toString(),
+                ConfigManager.getInt("week").toString(),
                 this.getString(date)
             )
         }
 
-        binding.homeContent.text = ConfigManager(contest)
+        binding.homeContent.text = ConfigManager
             .getString("sentence", "祝你一天好心情哦~")
 
-        binding.homeFrom.text = ConfigManager(contest)
+        binding.homeFrom.text = ConfigManager
             .getString("from")
 
         homeBanner = findViewById<BannerViewPager<BannerItem, NewsBannerAdapter>>(R.id.home_banner)
 
         binding.homeRefresh.setOnRefreshListener {
-            TableHelper(contest).getTable(ConfigManager(contest), week, callbackTable)
+            TableHelper(contest).getTable(week, callbackTable)
             NewsHelper(contest).getHeadline(this)
         }
     }
@@ -218,7 +211,7 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
                         continue
                     }
                     val dtStart = scheduleIndex[class_index][0]
-                    var classStart = Calendar.getInstance()
+                    val classStart = Calendar.getInstance()
                     val startTime = (sdfDate.format(termDate.time) + dtStart).split("/").toTypedArray()
                     classStart[Calendar.YEAR] = startTime[0].toInt()
                     classStart[Calendar.MONTH] = startTime[1].toInt() - 1
@@ -229,7 +222,7 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
                     classStart[Calendar.MILLISECOND] = 0
 
                     val dtEnd = scheduleIndex[class_index][1]
-                    var classEnd = Calendar.getInstance()
+                    val classEnd = Calendar.getInstance()
                     val endTime = (sdfDate.format(termDate.time) + dtEnd).split("/").toTypedArray()
                     classEnd[Calendar.YEAR] = endTime[0].toInt()
                     classEnd[Calendar.MONTH] = endTime[1].toInt() - 1
@@ -240,13 +233,6 @@ class Home(contest: AppCompatActivity) : BaseFragment<FragmentHomeBinding>(conte
                     classEnd[Calendar.MILLISECOND] = 0
 
                     val time = Calendar.getInstance()
-//                    time[Calendar.YEAR] = 2021
-//                    time[Calendar.MONTH] = 2
-//                    time[Calendar.DAY_OF_MONTH] = 26
-//                    time[Calendar.HOUR_OF_DAY] = 20
-//                    time[Calendar.MINUTE] = 37
-//                    time[Calendar.SECOND] = 0
-//                    time[Calendar.MILLISECOND] = 0
 
                     val item = ItemHomeTaskBinding.inflate(layoutInflater)
                     item.itemTaskStart.text = dtStart.replace("/", "：").subSequence(1, 6)

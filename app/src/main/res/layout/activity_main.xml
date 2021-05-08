@@ -5,9 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWindowBackground"
-    android:fitsSystemWindows="true">
-
+    android:background="@color/colorWindowBackground">
     <FrameLayout
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
@@ -30,7 +28,7 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-    <com.wonderkiln.blurkit.BlurLayout
+    <com.sgpublic.blurfixandroidx.BlurLayout
         android:id="@+id/nav_view"
         android:visibility="visible"
         android:layout_width="match_parent"
@@ -159,5 +157,5 @@
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
         </LinearLayout>
-    </com.wonderkiln.blurkit.BlurLayout>
+    </com.sgpublic.blurfixandroidx.BlurLayout>
 </FrameLayout>

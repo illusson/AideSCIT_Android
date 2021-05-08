@@ -2,7 +2,7 @@ package com.sgpublic.scit.tool.helper
 
 import android.content.Context
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.data.FailedMarkData
 import com.sgpublic.scit.tool.data.PassedMarkData
 import com.sgpublic.scit.tool.manager.CacheManager
@@ -14,15 +14,16 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.UnknownHostException
+import kotlin.jvm.Throws
 
 class AchievementHelper(private val context: Context) {
-    fun getMark(config: ConfigManager, callback: Callback){
-        var schoolYearInquiry = config.getString("school_year_inquiry")
+    fun getMark(callback: Callback){
+        var schoolYearInquiry = ConfigManager.getString("school_year_inquiry")
         if (schoolYearInquiry == context.getString(R.string.text_achievement_all)){
             schoolYearInquiry = "all"
         }
-        APIHelper(config.getString("access_token")).getAchievementRequest(
-            schoolYearInquiry, config.getInt("semester_inquiry")
+        APIHelper(ConfigManager.getString("access_token")).getAchievementRequest(
+            schoolYearInquiry, ConfigManager.getInt("semester_inquiry")
         ).enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 MyLog.e("网络请求出错", e)

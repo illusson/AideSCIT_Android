@@ -2,7 +2,7 @@ package com.sgpublic.scit.tool.helper
 
 import android.content.Context
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.data.NewsData
 import com.sgpublic.scit.tool.manager.CacheManager
 import okhttp3.Call
@@ -12,6 +12,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.UnknownHostException
+import kotlin.jvm.Throws
 
 class NewsHelper(private val context: Context) {
     fun getHeadline(callback: Callback){

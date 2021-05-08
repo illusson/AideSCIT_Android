@@ -130,26 +130,25 @@ class CalendarManager(val context: Context) {
         // 插入账户
         event.put("calendar_id", CalendarID)
         event.put("eventLocation", location)
-        val mCalendar = Calendar.getInstance()
         //提醒开始时间
+        val start = Calendar.getInstance()
         val startTime = dtStart.split("/").toTypedArray()
-        mCalendar[Calendar.YEAR] = startTime[0].toInt() //年
-        mCalendar[Calendar.MONTH] = startTime[1].toInt() - 1 //月
-        mCalendar[Calendar.DAY_OF_MONTH] = startTime[2].toInt() //日
-        mCalendar[Calendar.HOUR_OF_DAY] = startTime[3].toInt() //时
-        mCalendar[Calendar.MINUTE] = startTime[4].toInt() //分
-        val start = mCalendar.time.time
+        start[Calendar.YEAR] = startTime[0].toInt() //年
+        start[Calendar.MONTH] = startTime[1].toInt() - 1 //月
+        start[Calendar.DAY_OF_MONTH] = startTime[2].toInt() //日
+        start[Calendar.HOUR_OF_DAY] = startTime[3].toInt() //时
+        start[Calendar.MINUTE] = startTime[4].toInt() //分
 
         //提醒结束时间
+        val end = Calendar.getInstance()
         val endTime = dtEnd.split("/").toTypedArray()
-        mCalendar[Calendar.YEAR] = endTime[0].toInt() //年
-        mCalendar[Calendar.MONTH] = endTime[1].toInt() - 1 //月
-        mCalendar[Calendar.DAY_OF_MONTH] = endTime[2].toInt() //日
-        mCalendar[Calendar.HOUR_OF_DAY] = endTime[3].toInt() //时
-        mCalendar[Calendar.MINUTE] = endTime[4].toInt() //分
-        val end = mCalendar.time.time
-        event.put("dtstart", start)
-        event.put("dtend", end)
+        end[Calendar.YEAR] = endTime[0].toInt() //年
+        end[Calendar.MONTH] = endTime[1].toInt() - 1 //月
+        end[Calendar.DAY_OF_MONTH] = endTime[2].toInt() //日
+        end[Calendar.HOUR_OF_DAY] = endTime[3].toInt() //时
+        end[Calendar.MINUTE] = endTime[4].toInt() //分
+        event.put("dtstart", start.timeInMillis)
+        event.put("dtend", end.timeInMillis)
         if (preRemindTime != 0) {
             event.put("hasAlarm", 1)
             event.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Beijing")

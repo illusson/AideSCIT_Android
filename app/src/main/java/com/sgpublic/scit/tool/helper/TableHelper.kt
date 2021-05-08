@@ -1,8 +1,8 @@
-package com.sgpublic.scit.tool.helper;
+package com.sgpublic.scit.tool.helper
 
 import android.content.Context
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.data.TableData
 import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.ConfigManager
@@ -13,20 +13,21 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.UnknownHostException
+import kotlin.jvm.Throws
 
 class TableHelper (val context: Context) {
     companion object{
         private const val tag: String = "TableHelper"
     }
 
-    fun getTable(config: ConfigManager, callback: Callback){
-        getTable(config, config.getInt("week"), callback)
+    fun getTable(callback: Callback){
+        getTable(ConfigManager.getInt("week"), callback)
     }
 
-    fun getTable(config: ConfigManager, week: Int, callback: Callback?){
-        APIHelper(config.getString("access_token")).getTableRequest(
-            config.getString("school_year"),
-            config.getInt("semester")
+    fun getTable(week: Int, callback: Callback?){
+        APIHelper(ConfigManager.getString("access_token")).getTableRequest(
+            ConfigManager.getString("school_year"),
+            ConfigManager.getInt("semester")
         ).enqueue(object : okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
                 MyLog.e("网络请求出错", e)

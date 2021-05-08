@@ -9,6 +9,7 @@ import android.widget.GridLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseFragment
+import com.sgpublic.scit.tool.base.CrashHandler
 import com.sgpublic.scit.tool.data.TableData
 import com.sgpublic.scit.tool.databinding.FragmentTableBinding
 import com.sgpublic.scit.tool.databinding.ItemTimetableBinding
@@ -17,7 +18,7 @@ import com.sgpublic.scit.tool.manager.CacheManager
 import com.sgpublic.scit.tool.manager.ConfigManager
 import org.json.JSONObject
 
-class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(contest), TableHelper.Callback {
+class Table(private val contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(contest), TableHelper.Callback {
     private var showTable: Boolean = false
 
     private var week: Int = 0
@@ -25,9 +26,17 @@ class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(con
     private var viewWidth: Int = 0
     private var viewHeight: Int = 0
 
-    override fun onViewSetup() {
-        super.onViewSetup()
+    override fun onFragmentCreated(savedInstanceState: Bundle?) {
+        viewWidth = (resources.displayMetrics.widthPixels - dip2px(40F)) / 6
+        viewHeight = dip2px(110F)
+        week = arguments?.getInt("week") ?: 0
+        if (week == 0){
+            week = ConfigManager.getInt("week")
+        }
+        getTable(CacheManager(contest).read(CacheManager.CACHE_TABLE))
+    }
 
+    override fun onViewSetup() {
         binding.timetableRefresh.setOnRefreshListener { getTable() }
         binding.timetableRefresh.setColorSchemeResources(R.color.colorAlert)
         initViewAtTop(binding.tableToolbar)
@@ -59,17 +68,6 @@ class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(con
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewWidth = (resources.displayMetrics.widthPixels - dip2px(40F)) / 6
-        viewHeight = dip2px(110F)
-        week = arguments?.getInt("week") ?: 0
-        if (week == 0){
-            week = ConfigManager(contest).getInt("week")
-        }
-        getTable(CacheManager(contest).read(CacheManager.CACHE_TABLE))
-    }
-
     private fun getTable(objects: JSONObject? = null){
         binding.tablePre.isEnabled = false
         binding.tableNext.isEnabled = false
@@ -78,7 +76,7 @@ class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(con
                 TableHelper(contest).parsing(objects, week, this)
             }.start()
         } else {
-            TableHelper(contest).getTable(ConfigManager(contest), week, this)
+            TableHelper(contest).getTable(week, this)
         }
         binding.tableWeek.text = String.format(getString(R.string.text_table_week_index), week)
     }
@@ -94,7 +92,7 @@ class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(con
     }
 
     override fun onFailure(code: Int, message: String?, e: Exception?) {
-        saveExplosion(e, code)
+        CrashHandler.saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
         binding.timetableRefresh.isRefreshing = false
     }
@@ -157,9 +155,5 @@ class Table(contest: AppCompatActivity) : BaseFragment<FragmentTableBinding>(con
 //        outState.putString("table", table.toString())
         outState.putInt("week", week)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): FragmentTableBinding {
-        return FragmentTableBinding.inflate(inflater, container, false)
     }
 }

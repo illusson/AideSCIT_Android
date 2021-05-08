@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
+import com.sgpublic.scit.tool.base.CrashHandler
 import com.sgpublic.scit.tool.databinding.ActivityNoticesBinding
 import com.sgpublic.scit.tool.helper.HeaderInfoHelper
 import com.sgpublic.scit.tool.helper.TableHelper
@@ -83,7 +84,7 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
     }
 
     override fun onFailure(code: Int, message: String?, e: Exception?) {
-        saveExplosion(e, code)
+        CrashHandler.saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
         setOnActionMode(false, 0)
     }
@@ -154,8 +155,6 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
 
     @SuppressLint("SetTextI18n")
     override fun onViewSetup() {
-        super.onViewSetup()
-
         binding.noticesNewestBase.setOnClickListener(this)
         binding.noticesPreBase.setOnClickListener(this)
         binding.noticesPreTimeBase.setOnClickListener(this)
@@ -222,14 +221,11 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
 
     private fun getTable(useNewest: Boolean){
         if (useNewest){
-            TableHelper(this@Notices).getTable(
-                ConfigManager(this@Notices),
-                object : TableHelper.Callback{
-                    override fun onReadStart() {
-                        onReadTable()
-                    }
+            TableHelper(this@Notices).getTable(object : TableHelper.Callback{
+                override fun onReadStart() {
+                    onReadTable()
                 }
-            )
+            })
         } else {
             onReadTable()
         }
@@ -368,7 +364,5 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
         }
     }
 
-    override fun getContentView() = ActivityNoticesBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = true
+    override fun isActivityAtBottom() = false
 }

@@ -20,7 +20,7 @@ import com.bumptech.glide.request.target.Target
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.activity.WebView
 import com.sgpublic.scit.tool.base.BaseFragment
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.data.NewsData
 import com.sgpublic.scit.tool.databinding.ItemNewsBinding
 import com.sgpublic.scit.tool.databinding.PagerNewsBinding
@@ -30,22 +30,16 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class NewsPager(contest: AppCompatActivity, private val name: String, private val tid: Int) : BaseFragment<PagerNewsBinding>(contest) {
+class NewsPager(private val contest: AppCompatActivity, private val name: String, private val tid: Int) : BaseFragment<PagerNewsBinding>(contest) {
     private var listPageSize = 0
     private var hasNext = false
     private var loading = false
 
     private val sortData: ArrayList<CharSequence> = arrayListOf()
 
-    override fun getContentView(inflater: LayoutInflater, container: ViewGroup?): PagerNewsBinding {
-        return PagerNewsBinding.inflate(inflater, container, false)
-    }
-
     override fun getTitle() = name
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onFragmentCreated(savedInstanceState: Bundle?) {
         listPageSize = 0
 
         binding.sortRefresh.setOnRefreshListener {
@@ -65,7 +59,6 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
         binding.sortScroll.setOnScrollToBottomListener(binding.sortScrollContent, object : ObservableScrollView.ScrollToBottomListener{
             override fun onScrollToBottom() {
                 if (!loading){
@@ -180,7 +173,7 @@ class NewsPager(contest: AppCompatActivity, private val name: String, private va
         if (sortData.size < 1) {
             val arrays = JSONArray()
             for (dataIndex in dataArray) {
-                val objectIndex: JSONObject = JSONObject().run {
+                val objectIndex: JSONObject = JSONObject().apply {
                     put("title", dataIndex.title)
                     put("tid", dataIndex.type)
                     put("nid", dataIndex.id)

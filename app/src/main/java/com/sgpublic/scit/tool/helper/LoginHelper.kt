@@ -2,8 +2,8 @@ package com.sgpublic.scit.tool.helper
 
 import android.content.Context
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.Base64Helper
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.util.Base64Helper
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.manager.ConfigManager
 import com.sgpublic.scit.tool.activity.Login
 import okhttp3.Call
@@ -154,7 +154,7 @@ class LoginHelper (val context: Context) {
                     }
                     -401 -> {
                         MyLog.i("用户登录状态失效")
-                        if (ConfigManager(context).getBoolean("is_login")){
+                        if (ConfigManager.getBoolean("is_login")){
                             callback.onFailure(-100, context.getString(R.string.error_login_expired))
                             Login.startActivity(context)//, true)
                         } else {

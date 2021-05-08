@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.sgpublic.scit.tool.R
 import com.sgpublic.scit.tool.base.BaseActivity
+import com.sgpublic.scit.tool.base.CrashHandler
 import com.sgpublic.scit.tool.data.FailedMarkData
 import com.sgpublic.scit.tool.data.PassedMarkData
 import com.sgpublic.scit.tool.databinding.ActivityAchievementBinding
@@ -42,7 +43,7 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
                         onReadFinish()
                     }
                 } else {
-                    helper.getMark(ConfigManager(this@Achievement), this)
+                    helper.getMark(this)
                 }
             }
         } else if (objects != null){
@@ -53,10 +54,8 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
     private fun getAchievement(objects: JSONObject? = null){
         val year = binding.achievementYear.selectedItem.toString()
         val semester = binding.achievementTerm.selectedItemPosition
-        val config = ConfigManager(this@Achievement)
-        config.putString("school_year_inquiry", year)
-            .putInt("semester_inquiry", semester)
-            .apply()
+        ConfigManager.putString("school_year_inquiry", year)
+        ConfigManager.putInt("semester_inquiry", semester)
         binding.achievementRefresh.isRefreshing = true
         val helper = AchievementHelper(this@Achievement)
         if (objects != null) {
@@ -66,12 +65,12 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
                 onReadFinish()
             }
         } else {
-            helper.getMark(ConfigManager(this@Achievement), this)
+            helper.getMark(this)
         }
     }
 
     override fun onFailure(code: Int, message: String?, e: Exception?) {
-        saveExplosion(e, code)
+        CrashHandler.saveExplosion(e, code)
         onToast(R.string.text_load_failed, message, code)
         runOnUiThread {
             binding.achievementRefresh.isRefreshing = false
@@ -157,14 +156,12 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
         initViewAtTop(binding.achievementToolbar)
 
         val listYear: MutableList<String?> = ArrayList()
         listYear.add(getString(R.string.text_achievement_all))
-        val config = ConfigManager(this@Achievement)
-        val gradeStudent: Int = config.getInt("grade", 2019)
-        val yearStudent: String = config.getString("school_year_inquiry", config.getString("school_year", "2019-2020"))
+        val gradeStudent: Int = ConfigManager.getInt("grade", 2019)
+        val yearStudent: String = ConfigManager.getString("school_year_inquiry", ConfigManager.getString("school_year", "2019-2020"))
         var yearSelected = 0
         for (year_index in 0 until 4) {
             val itemYearText = (gradeStudent + year_index).toString() +
@@ -198,7 +195,7 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
             }
         }
 
-        val semesterStudent: Int = config.getInt("semester_inquiry", config.getInt("semester", 1))
+        val semesterStudent: Int = ConfigManager.getInt("semester_inquiry", ConfigManager.getInt("semester", 1))
         val listTerm: List<String?> = listOf(getString(R.string.text_achievement_year), "1", "2")
         val arrayAdapterTerm: ArrayAdapter<String?> = ArrayAdapter(this@Achievement,
             R.layout.item_option, listTerm)
@@ -222,7 +219,5 @@ class Achievement : BaseActivity<ActivityAchievementBinding>(), AchievementHelpe
         super.onSaveInstanceState(outState)
     }
 
-    override fun getContentView() = ActivityAchievementBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = true
+    override fun isActivityAtBottom() = false
 }

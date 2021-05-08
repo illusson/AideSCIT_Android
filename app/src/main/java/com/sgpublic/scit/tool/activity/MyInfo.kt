@@ -13,16 +13,14 @@ import com.sgpublic.scit.tool.manager.ConfigManager
 
 class MyInfo : BaseActivity<ActivityMyInfoBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        val manager = ConfigManager(this)
-        binding.infoName.text = manager.getString("name")
-        binding.infoUid.text = manager.getString("username")
-        binding.infoFaculty.text = manager.getString("faculty_name")
-        binding.infoSpecialty.text = manager.getString("specialty_name")
-        binding.infoClass.text = manager.getString("class_name")
+        binding.infoName.text = ConfigManager.getString("name")
+        binding.infoUid.text = ConfigManager.getString("username")
+        binding.infoFaculty.text = ConfigManager.getString("faculty_name")
+        binding.infoSpecialty.text = ConfigManager.getString("specialty_name")
+        binding.infoClass.text = ConfigManager.getString("class_name")
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
         initViewAtTop(binding.infoToolbar)
         binding.infoClassBase.setOnClickListener {  }
         binding.infoSpecialtyBase.setOnClickListener {  }
@@ -39,9 +37,7 @@ class MyInfo : BaseActivity<ActivityMyInfoBinding>() {
             alert.setTitle(R.string.title_check_logout)
             alert.setMessage(R.string.text_check_logout)
             alert.setPositiveButton(R.string.text_ok) { _, _ ->
-                ConfigManager(this@MyInfo)
-                    .putBoolean("is_login", false)
-                    .apply()
+                ConfigManager.putBoolean("is_login", false)
                 deleteShortCut()
 
                 CacheManager(this@MyInfo)
@@ -65,7 +61,5 @@ class MyInfo : BaseActivity<ActivityMyInfoBinding>() {
         }
     }
 
-    override fun getContentView() = ActivityMyInfoBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable(): Boolean = true
+    override fun isActivityAtBottom() = false
 }

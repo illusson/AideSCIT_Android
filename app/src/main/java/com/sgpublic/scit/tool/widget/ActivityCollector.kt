@@ -1,4 +1,4 @@
-package com.sgpublic.scit.tool.base
+package com.sgpublic.scit.tool.widget
 
 import android.app.Activity
 import java.util.*

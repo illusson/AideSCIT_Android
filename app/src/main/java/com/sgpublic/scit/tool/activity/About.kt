@@ -5,20 +5,22 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import com.sgpublic.scit.tool.BuildConfig
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.ActivityCollector
+import com.sgpublic.scit.tool.widget.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
 import com.sgpublic.scit.tool.databinding.ActivityAboutBinding
 import com.sgpublic.scit.tool.helper.UpdateHelper
 
 class About : BaseActivity<ActivityAboutBinding>(), UpdateHelper.Callback {
-    @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initViewAtTop(binding.aboutBack)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onViewSetup() {
         binding.aboutBack.setOnClickListener { finish() }
 
         binding.aboutUpdate.setOnClickListener {
@@ -99,9 +101,7 @@ class About : BaseActivity<ActivityAboutBinding>(), UpdateHelper.Callback {
         }
     }
 
-    override fun getContentView() = ActivityAboutBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = true
+    override fun isActivityAtBottom() = false
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {

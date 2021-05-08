@@ -2,7 +2,6 @@ package com.sgpublic.scit.tool.activity
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Handler
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.TextView
@@ -10,13 +9,13 @@ import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.interfaces.OnBindView
 import com.kongzue.dialogx.interfaces.OnDialogButtonClickListener
 import com.sgpublic.scit.tool.R
-import com.sgpublic.scit.tool.base.ActivityCollector
+import com.sgpublic.scit.tool.widget.ActivityCollector
 import com.sgpublic.scit.tool.base.BaseActivity
-import com.sgpublic.scit.tool.base.MyLog
+import com.sgpublic.scit.tool.base.CrashHandler
+import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.databinding.ActivityWelcomeBinding
 import com.sgpublic.scit.tool.helper.*
 import com.sgpublic.scit.tool.manager.ConfigManager
-import com.sgpublic.scit.tool.manager.Security
 import java.util.*
 
 class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
@@ -29,7 +28,7 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
     private lateinit var helper: HeaderInfoHelper
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        if (ConfigManager(this@Welcome).getBoolean("agreement_shown")){
+        if (ConfigManager.getBoolean("agreement_shown")){
             appSetup()
         } else {
             Timer().schedule(object : TimerTask() {
@@ -57,40 +56,31 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
     }
 
     private fun appSetup(){
-        ConfigManager(this@Welcome)
-            .putBoolean("agreement_shown", true)
-            .apply()
-        helper = HeaderInfoHelper(this@Welcome, ConfigManager(this@Welcome).getString("access_token"))
+        ConfigManager.putBoolean("agreement_shown", true)
+        helper = HeaderInfoHelper(this@Welcome, ConfigManager.getString("access_token"))
         getSemesterInfo()
         getSentence()
         checkLogin()
     }
 
     override fun onViewSetup() {
-        super.onViewSetup()
         initViewAtBottom(binding.welcomeAbout)
     }
 
-    override fun getContentView() = ActivityWelcomeBinding.inflate(layoutInflater)
-
-    override fun onSetSwipeBackEnable() = false
+    override fun isActivityAtBottom() = false
 
     private fun checkEvaluate(){
-        val helper = EvaluateHelper(this@Welcome, ConfigManager(this@Welcome).getString(
+        val helper = EvaluateHelper(this@Welcome, ConfigManager.getString(
             "access_token", ""
         ))
         helper.check(object : EvaluateHelper.CheckCallback {
             override fun onFailure(code: Int, message: String?, e: Exception?) {
-                ConfigManager(this@Welcome)
-                    .putInt("evaluate_count", 0)
-                    .apply()
+                ConfigManager.putInt("evaluate_count", 0)
                 onFinished(true)
             }
 
             override fun onResult(count: Int) {
-                ConfigManager(this@Welcome)
-                    .putInt("evaluate_count", count)
-                    .apply()
+                ConfigManager.putInt("evaluate_count", count)
                 onFinished(true)
             }
         })
@@ -103,10 +93,8 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
             }
 
             override fun onSentenceResult(sentence: String, from: String) {
-                ConfigManager(this@Welcome)
-                    .putString("sentence", sentence)
-                    .putString("from", from)
-                    .apply()
+                ConfigManager.putString("sentence", sentence)
+                ConfigManager.putString("from", from)
                 onFinished(true)
             }
         })
@@ -154,16 +142,14 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
     private fun getSemesterInfo(){
         helper.getSemesterInfo(object : HeaderInfoHelper.Callback {
             override fun onFailure(code: Int, message: String?, e: Exception?) {
-                saveExplosion(e, code)
+                CrashHandler.saveExplosion(e, code)
                 onFinished(false)
             }
 
             override fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int, startDate: Date) {
-                ConfigManager(this@Welcome)
-                    .putString("school_year", schoolYear)
-                    .putInt("semester", semester)
-                    .putInt("week", week)
-                    .apply()
+                ConfigManager.putString("school_year", schoolYear)
+                ConfigManager.putInt("semester", semester)
+                ConfigManager.putInt("week", week)
                 onFinished(true)
             }
         })
@@ -177,22 +163,20 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
 //        for (permission in permissions) {
 //            grand = grand && permission == PackageManager.PERMISSION_GRANTED
 //        }
-        isLogin = ConfigManager(this@Welcome).getBoolean("is_login")
-        val manager = ConfigManager(this@Welcome)
+        isLogin = ConfigManager.getBoolean("is_login")
+        val manager = ConfigManager
         if (isLogin && manager.getLong("token_expired", 0) < APIHelper.getTS()){
             val helper = LoginHelper(this@Welcome)
-            helper.refreshToken(ConfigManager(this@Welcome), object : LoginHelper.Callback {
+            helper.refreshToken(ConfigManager, object : LoginHelper.Callback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
                     MyLog.d(message, e)
                     onFinished(false)
                 }
 
                 override fun onResult(access: String, refresh: String) {
-                    ConfigManager(this@Welcome)
-                        .putString("access_token", access)
-                        .putString("refresh_token", refresh)
-                        .putLong("token_expired", System.currentTimeMillis() + 2591990L)
-                        .apply()
+                    ConfigManager.putString("access_token", access)
+                    ConfigManager.putString("refresh_token", refresh)
+                    ConfigManager.putLong("token_expired", APIHelper.getTS() + 2591990L)
                     onFinished(true)
                 }
             })
