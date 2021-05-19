@@ -1,7 +1,7 @@
 package com.sgpublic.scit.tool.helper
 
-import com.sgpublic.scit.tool.util.MyLog
 import com.sgpublic.scit.tool.manager.Security
+import com.sgpublic.scit.tool.util.MyLog
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit
 class APIHelper(private val access: String, private val refresh: String) {
     companion object {
         private const val API_HOST: String = "https://tool.eclass.sgpublic.xyz"
+//        private const val API_HOST: String = "http://192.168.211.90:8000"
         private const val PLATFORM: String = "android"
 
         const val METHOD_GET: Int = 0
@@ -206,6 +207,11 @@ class APIHelper(private val access: String, private val refresh: String) {
             //debug & api/v1
             val apiVersion = "api"
             "$API_HOST/$apiVersion/$url"
+//            if (BuildConfig.DEBUG){
+//                "$API_HOST_TEST/$apiVersion/$url"
+//            } else {
+//                "$API_HOST/$apiVersion/$url"
+//            }
         }
         val request: Request = Request.Builder().run {
             val body = GetArgs(argArray)

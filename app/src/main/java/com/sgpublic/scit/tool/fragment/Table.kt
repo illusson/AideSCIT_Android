@@ -27,7 +27,7 @@ class Table(private val contest: AppCompatActivity) : BaseFragment<FragmentTable
     private var viewHeight: Int = 0
 
     override fun onFragmentCreated(savedInstanceState: Bundle?) {
-        viewWidth = (resources.displayMetrics.widthPixels - dip2px(40F)) / 6
+        viewWidth = (resources.displayMetrics.widthPixels - dip2px(20F)) / 7
         viewHeight = dip2px(110F)
         week = arguments?.getInt("week") ?: 0
         if (week == 0){
@@ -125,7 +125,9 @@ class Table(private val contest: AppCompatActivity) : BaseFragment<FragmentTable
 
         val params = GridLayout.LayoutParams()
         params.rowSpec = GridLayout.spec(classIndex % 2)
-        params.columnSpec = GridLayout.spec(dayIndex)
+        params.columnSpec = GridLayout.spec(
+            if (dayIndex == 6) 0 else dayIndex + 1
+        )
         params.width = viewWidth
         params.height = viewHeight
         itemTimetable.layoutParams = params
