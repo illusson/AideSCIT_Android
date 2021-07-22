@@ -91,13 +91,13 @@
                     android:src="@drawable/ic_timetable"
                     android:layout_gravity="center_horizontal"
                     app:tint="@color/colorPrimary"
-                    android:contentDescription="@string/title_timetable"
+                    android:contentDescription="@string/title_schedule"
                     tools:ignore="NestedWeights" />
                 <TextView
                     android:id="@+id/nav_table_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_timetable"
+                    android:text="@string/title_schedule"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp"
                     android:layout_gravity="center_horizontal" />
@@ -118,7 +118,7 @@
                     android:src="@drawable/ic_news"
                     android:layout_gravity="center_horizontal"
                     app:tint="@color/colorPrimary"
-                    android:contentDescription="@string/title_timetable"
+                    android:contentDescription="@string/title_schedule"
                     tools:ignore="NestedWeights" />
                 <TextView
                     android:id="@+id/nav_news_title"
@@ -145,7 +145,7 @@
                     android:src="@drawable/ic_mine"
                     android:layout_gravity="center_horizontal"
                     app:tint="@color/colorPrimary"
-                    android:contentDescription="@string/title_timetable"
+                    android:contentDescription="@string/title_schedule"
                     tools:ignore="NestedWeights" />
                 <TextView
                     android:id="@+id/nav_mine_title"

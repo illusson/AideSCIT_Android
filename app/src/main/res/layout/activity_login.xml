@@ -169,14 +169,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        android:fitsSystemWindows="true">
+        android:orientation="horizontal">
         <CheckBox
             android:id="@+id/login_agreement_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
-            android:text="@string/text_agreement_summary"
-            android:fitsSystemWindows="true" />
+            android:text="@string/text_agreement_summary" />
     </LinearLayout>
 </FrameLayout>

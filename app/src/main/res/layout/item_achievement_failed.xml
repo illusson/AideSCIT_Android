@@ -21,6 +21,9 @@
         android:layout_weight="1"
         android:textSize="14sp"
         android:textColor="@color/color_table_content"
-        android:gravity="center"
-        android:padding="6dp" />
+        android:gravity="end"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="16dp" />
 </LinearLayout>

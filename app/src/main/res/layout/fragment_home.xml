@@ -1,67 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginBottom="5dp">
-
-    <com.sgpublic.scit.tool.widget.AdvanceSwipeRefreshLayout
-        android:id="@+id/home_refresh"
+    android:fitsSystemWindows="true">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/home_appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ScrollView
+        android:layout_height="wrap_content"
+        android:background="@color/colorWindowBackground"
+        app:elevation="0dp"
+        android:fitsSystemWindows="true">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:overScrollMode="never">
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/colorWindowBackground"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:statusBarScrim="@color/colorWindowBackground"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:titleEnabled="false"
+            android:fitsSystemWindows="true">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="40dp"
-                android:paddingBottom="64dp"
-                android:orientation="vertical">
-                <LinearLayout
+                android:paddingTop="60dp"
+                android:orientation="vertical"
+                app:layout_collapseMode="none"
+                android:fitsSystemWindows="true">
+                <TextView
+                    android:id="@+id/home_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="24sp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/color_font_normal"
+                    android:textStyle="bold"
+                    android:fitsSystemWindows="true"/>
+                <TextView
+                    android:id="@+id/home_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_table_soup"/>
+                <TextView
+                    android:id="@+id/home_from"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:gravity="end"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="20dp"
                     android:paddingStart="20dp"
-                    android:paddingEnd="20dp">
-                    <TextView
-                        android:id="@+id/home_hello"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="5dp"
-                        android:textColor="@color/color_font_normal"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/home_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:textSize="14sp"
-                        android:textColor="@color/color_table_soup"/>
-
-                    <TextView
-                        android:id="@+id/home_from"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginBottom="20dp"
-                        android:maxLines="1"
-                        android:textSize="14sp"
-                        android:textColor="@color/color_table_soup"/>
-                </LinearLayout>
-
+                    android:paddingEnd="20dp"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_table_soup"/>
                 <com.zhpan.bannerview.BannerViewPager
                     android:id="@+id/home_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="207dp"
+                    android:layout_height="197dp"
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
                     app:bvp_auto_play="true"
@@ -70,22 +73,94 @@
                     app:bvp_page_style="multi_page_overlap"
                     app:bvp_reveal_width="55dp"
                     app:bvp_scroll_duration="1000" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:id="@+id/home_task_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-                    <LinearLayout
-                        android:id="@+id/home_task_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-                </FrameLayout>
             </LinearLayout>
-        </ScrollView>
-    </com.sgpublic.scit.tool.widget.AdvanceSwipeRefreshLayout>
-</LinearLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/home_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+                <TextView
+                    android:id="@+id/home_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/color_font_normal"/>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="64dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <com.sgpublic.aidescit.widget.ObservableScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+            <FrameLayout
+                android:id="@+id/home_task"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/home_task_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+                <LinearLayout
+                    android:id="@+id/home_task_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </FrameLayout>
+        </com.sgpublic.aidescit.widget.ObservableScrollView>
+        <LinearLayout
+            android:id="@+id/hone_news"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <com.ogaclejapan.smarttablayout.SmartTabLayout
+                android:id="@+id/home_news_tab"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:visibility="visible"
+                android:clipToPadding="false"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                app:stl_defaultTabTextColor="@color/colorPrimary"
+                app:stl_defaultTabTextHorizontalPadding="18dp"
+                app:stl_dividerColor="@color/colorTransparent"
+                app:stl_dividerThickness="0dp"
+                app:stl_indicatorColor="@color/colorCompat"
+                app:stl_indicatorCornerRadius="18dp"
+                app:stl_indicatorGravity="center"
+                app:stl_indicatorInterpolation="smart"
+                app:stl_indicatorThickness="36dp"
+                app:stl_underlineColor="@color/colorTransparent"
+                app:stl_underlineThickness="0dp"/>
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/hone_news_pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:overScrollMode="never"/>
+        </LinearLayout>
+    </FrameLayout>
+
+<!--    <com.sgpublic.aidescit.widget.AdvanceSwipeRefreshLayout-->
+<!--        android:id="@+id/home_refresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+<!--        </LinearLayout>-->
+<!--    </com.sgpublic.aidescit.widget.AdvanceSwipeRefreshLayout>-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -7,8 +7,8 @@
     <string name="text_back_exit_notice">请再点击一次退出</string>
 
     <string name="title_agreement">协议与政策</string>
-    <string name="text_agreement_summary">同意<a href="http://tool.eclass.sgpublic.xyz/about/protocol.html">《用户服务协议》</a>和<a href="http://tool.eclass.sgpublic.xyz/about/privacy.html">《隐私政策》</a></string>
-    <string name="text_agreement_content_1">感谢您信任并使用工科助手，在使用工科助手服务前，请仔细阅读<a href="http://tool.eclass.sgpublic.xyz/about/protocol.html">《用户服务协议》</a>和<a href="http://tool.eclass.sgpublic.xyz/about/privacy.html">《隐私政策》</a>的全部内容，以了解用户权益义务和个人信息处理规则。</string>
+    <string name="text_agreement_summary">同意<a href="http://aidescit.sgpublic.xyz/about/protocol.html">《用户服务协议》</a>和<a href="http://aidescit.sgpublic.xyz/about/privacy.html">《隐私政策》</a></string>
+    <string name="text_agreement_content_1">感谢您信任并使用工科助手，在使用工科助手服务前，请仔细阅读<a href="http://aidescit.sgpublic.xyz/about/protocol.html">《用户服务协议》</a>和<a href="http://aidescit.sgpublic.xyz/about/privacy.html">《隐私政策》</a>的全部内容，以了解用户权益义务和个人信息处理规则。</string>
     <string name="text_agreement_content_2">点击同意即代表您和您的监护人已阅读并同意全部条款。</string>
     <string name="text_agreement_agree">同意</string>
     <string name="text_agreement_disagree">不同意并退出APP</string>
@@ -30,7 +30,8 @@
     <string name="permission_granted">已授权</string>
 
     <string name="title_home">首页</string>
-    <string name="title_timetable">课表</string>
+    <string name="title_schedule">课表</string>
+    <string name="title_itinerary">日程</string>
     <string name="title_news">资讯</string>
     <string name="title_mine">我的</string>
     <string name="title_info">个人信息</string>
@@ -140,7 +141,7 @@
     <string name="title_about_feedback">问题反馈</string>
     <string name="title_about_update">检查更新</string>
     <string name="title_about_developer">开发者</string>
-    <string name="title_about_agreement"><a href="http://tool.eclass.sgpublic.xyz/about/protocol.html">《用户服务协议》</a> | <a href="http://tool.eclass.sgpublic.xyz/about/privacy.html">《隐私政策》</a></string>
+    <string name="title_about_agreement"><a href="http://aidescit.sgpublic.xyz/about/protocol.html">《用户服务协议》</a> | <a href="http://aidescit.sgpublic.xyz/about/privacy.html">《隐私政策》</a></string>
     <string name="title_about_license">开源许可</string>
 
     <string name="title_update_get">有更新版本</string>
@@ -203,7 +204,9 @@
 
     <string name="title_function_crash">应用意外退出</string>
     <string name="text_function_crash">非常抱歉，应用受不可抗力意外退出，您可以选择复制错误信息反馈给开发者。</string>
+    <string name="text_function_crash_no_message">非常抱歉，应用受不可抗力意外停止，即将退出。</string>
     <string name="text_function_crash_copy">复制错误信息</string>
     <string name="text_function_crash_copy_success">复制成功</string>
     <string name="text_function_crash_exit">下次一定</string>
+    <string name="text_function_crash_ok">我知道了</string>
 </resources>

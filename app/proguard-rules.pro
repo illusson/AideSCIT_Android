@@ -21,6 +21,8 @@
 
 #-renamesourcefileattribute SourceFile
 
+-keep class com.sgpublic.aidescit.**
+
 -keep class androidx.recyclerview.widget.* { *; }
 -keep class androidx.viewpager2.widget.* { *; }
 

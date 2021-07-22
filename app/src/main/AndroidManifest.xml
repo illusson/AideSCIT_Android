@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.sgpublic.scit.tool">
+    package="com.sgpublic.aidescit">
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" /> -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" /> -->
     <!-- <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" /> -->
     <!-- <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" /> -->
     <!-- <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" /> -->
@@ -15,7 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <application
-        android:name=".Application"
+        android:name="com.sgpublic.aidescit.Application"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,27 +25,27 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".activity.PrivacySetting" />
-        <activity android:name=".activity.MyInfo" />
-        <activity android:name=".activity.Welcome">
+        <activity android:name="com.sgpublic.aidescit.activity.PrivacySetting" />
+        <activity android:name="com.sgpublic.aidescit.activity.MyInfo" />
+        <activity android:name="com.sgpublic.aidescit.activity.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.Main" />
-        <activity android:name=".activity.Login" />
-        <activity android:name=".activity.Achievement" />
-        <activity android:name=".activity.About" />
-        <activity android:name=".activity.Exam" />
-        <activity android:name=".activity.Notices" />
-        <activity android:name=".activity.Evaluate" />
-        <activity android:name=".activity.License" />
-        <activity android:name=".activity.WebView" />
+        <activity android:name="com.sgpublic.aidescit.activity.Main" />
+        <activity android:name="com.sgpublic.aidescit.activity.Login" />
+        <activity android:name="com.sgpublic.aidescit.activity.Achievement" />
+        <activity android:name="com.sgpublic.aidescit.activity.About" />
+        <activity android:name="com.sgpublic.aidescit.activity.Exam" />
+        <activity android:name="com.sgpublic.aidescit.activity.Notices" />
+        <activity android:name="com.sgpublic.aidescit.activity.Evaluate" />
+        <activity android:name="com.sgpublic.aidescit.activity.License" />
+        <activity android:name="com.sgpublic.aidescit.activity.WebView" />
         <!-- 魅族push应用定义消息receiver声明 -->
         <!-- <receiver -->
-        <!-- android:name="com.sgpublic.scit.tool.base.MeizuReceiver" -->
+        <!-- android:name="com.sgpublic.tool.base.MeizuReceiver" -->
         <!-- tools:ignore="ExportedReceiver"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="com.meizu.flyme.push.intent.MESSAGE" /> -->
