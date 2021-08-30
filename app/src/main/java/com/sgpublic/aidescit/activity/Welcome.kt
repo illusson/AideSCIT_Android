@@ -10,10 +10,10 @@ import com.kongzue.dialogx.interfaces.OnBindView
 import com.kongzue.dialogx.interfaces.OnDialogButtonClickListener
 import com.sgpublic.aidescit.R
 import com.sgpublic.aidescit.base.BaseActivity
-import com.sgpublic.aidescit.util.CrashHandler
 import com.sgpublic.aidescit.databinding.ActivityWelcomeBinding
 import com.sgpublic.aidescit.helper.*
 import com.sgpublic.aidescit.manager.ConfigManager
+import com.sgpublic.aidescit.util.CrashHandler
 import com.sgpublic.aidescit.widget.ActivityCollector
 import java.util.*
 
@@ -116,7 +116,7 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
         builder.setTitle(R.string.title_update_get)
         builder.setCancelable(force == 0)
         builder.setMessage(
-            java.lang.String.format(this@Welcome.getString(updateHeader[force]), sizeString) + "\n" +
+            String.format(this@Welcome.getString(updateHeader[force]), sizeString) + "\n" +
                     this@Welcome.getString(R.string.text_update_version) + verName + "\n" +
                     this@Welcome.getString(R.string.text_update_changelog) + "\n" + changelog
         )
@@ -145,9 +145,13 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
                 onFinished(false)
             }
 
-            override fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int, startDate: Date) {
+            override fun onSemesterInfoResult(
+                semester: Int, schoolYear: String, week: Int,
+                startDate: Date, scheduleCanInquire: Boolean
+            ) {
                 ConfigManager.putString("school_year", schoolYear)
                 ConfigManager.putInt("semester", semester)
+                ConfigManager.putBoolean("schedule_can_inquire", scheduleCanInquire)
                 ConfigManager.putInt("week", week)
                 onFinished(true)
             }
@@ -167,7 +171,11 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
             val helper = LoginHelper(this@Welcome)
             helper.refreshToken(ConfigManager, object : LoginHelper.Callback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
-                    onFinished(false)
+                    if (code == -100){
+                        Login.startActivity(this@Welcome)
+                    } else {
+                        onFinished(false)
+                    }
                 }
 
                 override fun onResult(access: String, refresh: String) {

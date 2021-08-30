@@ -110,7 +110,7 @@ class ScheduleHelper (val context: Context) {
                         }
                     }
                 }
-                callback.onReadFinish(isEmpty == 0)
+                callback.onReadFinish(isEmpty == 0, tableObject.isNull(DAY_INDEX[0]))
             } catch (e: JSONException) {
                 MyLog.e("schedule数据解析失败", e)
                 callback.onFailure(-404, e.message, e)
@@ -122,6 +122,6 @@ class ScheduleHelper (val context: Context) {
         fun onFailure(code: Int, message: String?, e: Exception? = null) {}
         fun onReadStart(){}
         fun onRead(dayIndex: Int, classIndex: Int, data: ScheduleData?){}
-        fun onReadFinish(isEmpty: Boolean){}
+        fun onReadFinish(isEmpty: Boolean, isSundayEmpty: Boolean = false){}
     }
 }

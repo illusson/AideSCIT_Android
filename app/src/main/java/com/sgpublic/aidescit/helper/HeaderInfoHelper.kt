@@ -99,7 +99,7 @@ class HeaderInfoHelper(private val context: Context, private val access: String)
                     callback.onSemesterInfoResult(
                         dayObject.getInt("semester"),
                         dayObject.getString("school_year"),
-                        week, date
+                        week, date, dayObject.getBoolean("schedule_can_inquire")
                     )
                 } catch (e: Exception) {
                     MyLog.e("day数据解析失败", e)
@@ -141,6 +141,6 @@ class HeaderInfoHelper(private val context: Context, private val access: String)
     interface Callback {
         fun onFailure(code: Int, message: String?, e: Exception? = null){}
         fun onSentenceResult(sentence: String, from: String){}
-        fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int, startDate: Date){}
+        fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int, startDate: Date, scheduleCanInquire: Boolean){}
     }
 }

@@ -12,12 +12,12 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.sgpublic.aidescit.R
 import com.sgpublic.aidescit.base.BaseActivity
-import com.sgpublic.aidescit.util.CrashHandler
 import com.sgpublic.aidescit.databinding.ActivityNoticesBinding
 import com.sgpublic.aidescit.helper.HeaderInfoHelper
 import com.sgpublic.aidescit.helper.ScheduleHelper
 import com.sgpublic.aidescit.manager.CacheManager
 import com.sgpublic.aidescit.manager.CalendarManager
+import com.sgpublic.aidescit.util.CrashHandler
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -75,7 +75,7 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
         return XXPermissions.isGranted(this, Permission.WRITE_CALENDAR, Permission.READ_CALENDAR)
     }
 
-    override fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int, startDate: Date) {
+    override fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int, startDate: Date, scheduleCanInquire: Boolean) {
         this.startDate.time = startDate
         setOnActionMode(false, 0)
     }

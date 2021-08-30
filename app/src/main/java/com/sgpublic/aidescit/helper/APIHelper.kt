@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit
 class APIHelper(private val access: String, private val refresh: String) {
     companion object {
         private val API_HOST: String get() = if (BuildConfig.DEBUG){
+//            "https://api.sgpublic.xyz/aidescit"
             "http://192.168.2.155:8001/aidescit"
         } else {
             "https://api.sgpublic.xyz/aidescit"

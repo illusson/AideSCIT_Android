@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.sgpublic.aidescit">
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,14 +22,13 @@
         android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme"
-        tools:targetApi="n">
+        android:theme="@style/AppTheme">
         <activity android:name="com.sgpublic.aidescit.activity.PrivacySetting" />
         <activity android:name="com.sgpublic.aidescit.activity.MyInfo" />
-        <activity android:name="com.sgpublic.aidescit.activity.Welcome">
+        <activity android:name="com.sgpublic.aidescit.activity.Welcome"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

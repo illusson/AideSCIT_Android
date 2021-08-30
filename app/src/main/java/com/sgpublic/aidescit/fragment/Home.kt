@@ -50,8 +50,9 @@ class Home(override val contest: AppCompatActivity) : BaseFragment<FragmentHomeB
             onToast(R.string.text_load_failed, message, code)
         }
 
-        override fun onReadFinish(isEmpty: Boolean) {
-            super.onReadFinish(isEmpty)
+        override fun onReadFinish(isEmpty: Boolean, isSundayEmpty: Boolean) {
+            super.onReadFinish(isEmpty, isSundayEmpty)
+            ConfigManager.putBoolean("is_sunday_empty", isSundayEmpty)
             HeaderInfoHelper(contest).getSemesterInfo(callbackDate)
         }
     }
@@ -64,7 +65,7 @@ class Home(override val contest: AppCompatActivity) : BaseFragment<FragmentHomeB
         }
 
         override fun onSemesterInfoResult(semester: Int, schoolYear: String, week: Int,
-            startDate: Date) {
+            startDate: Date, scheduleCanInquire: Boolean) {
             this@Home.startDate = startDate
 
             onTaskLoad()

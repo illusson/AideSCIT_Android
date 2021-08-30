@@ -18,7 +18,6 @@ import com.yanzhenjie.sofia.Sofia
 import java.lang.reflect.ParameterizedType
 import java.util.*
 
-
 abstract class BaseActivity<T : ViewBinding>: SwipeBackActivity() {
     protected lateinit var binding: T
 

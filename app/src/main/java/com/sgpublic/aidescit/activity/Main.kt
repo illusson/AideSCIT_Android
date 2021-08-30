@@ -29,8 +29,11 @@ class Main : BaseActivity<ActivityMainBinding>() {
         if (ConfigManager.getInt("week", 0) != 0){
             return
         }
-        binding.navTable.visibility = View.GONE
         binding.navNews.visibility = View.GONE
+        if (ConfigManager.getBoolean("scheduleCanInquire", true)){
+            return
+        }
+        binding.navTable.visibility = View.GONE
     }
 
     override fun onViewSetup() {

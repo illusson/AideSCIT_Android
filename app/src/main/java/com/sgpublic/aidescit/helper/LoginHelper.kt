@@ -153,11 +153,10 @@ class LoginHelper (val context: Context) {
                         } else { "" }
                         callback.onResult(objects.getString("access_token"), refresh)
                     }
-                    -401 -> {
+                    -404 -> {
                         MyLog.i("用户登录状态失效")
                         if (ConfigManager.getBoolean("is_login")){
                             callback.onFailure(-100, context.getString(R.string.error_login_expired))
-                            Login.startActivity(context)//, true)
                         } else {
                             callback.onFailure(-100, objects.getString("message"))
                         }
