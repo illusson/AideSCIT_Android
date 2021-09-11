@@ -173,6 +173,7 @@ class Welcome : BaseActivity<ActivityWelcomeBinding>(), UpdateHelper.Callback {
                 override fun onFailure(code: Int, message: String?, e: Exception?) {
                     if (code == -100){
                         Login.startActivity(this@Welcome)
+                        onToast(message)
                     } else {
                         onFinished(false)
                     }

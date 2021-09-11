@@ -4,8 +4,6 @@ import android.util.Log
 import com.sgpublic.aidescit.BuildConfig
 
 object MyLog {
-    private val out = BuildConfig.DEBUG
-
     fun v(message: Any) {
         doLog(object : DoLogSimplify {
             override fun onLog(tag: String, message: String) {
@@ -87,7 +85,7 @@ object MyLog {
     }
 
     private fun doLog(doLog: DoLogSimplify, message: Any) {
-        if (!out) {
+        if (!BuildConfig.DEBUG) {
             return
         }
         val ste = Throwable().stackTrace[2]
@@ -107,7 +105,7 @@ object MyLog {
     }
 
     private fun doLog(doLog: DoLog, message: Any, e: Throwable) {
-        if (!out) {
+        if (!BuildConfig.DEBUG) {
             return
         }
         val ste = Throwable().stackTrace[2]

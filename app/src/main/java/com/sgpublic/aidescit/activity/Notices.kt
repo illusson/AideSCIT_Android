@@ -171,50 +171,47 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
     }
 
     override fun onClick(v: View?) {
-        v?.let {
-            when (it.id) {
-                R.id.notices_back -> { onBackPressed() }
-                R.id.notices_newest_base -> {
-                    binding.noticesNewestSwitch.isChecked = !binding.noticesNewestSwitch.isChecked
-                }
-                R.id.notices_pre_base -> {
-                    binding.noticesPreSwitch.isChecked = !binding.noticesPreSwitch.isChecked
-                }
-                R.id.notices_pre_time_base -> {
-                    val preTimeSetDoing = preTimeSet
-                    AlertDialog.Builder(this@Notices).run {
-                        setTitle(R.string.title_calendar_pre_time_choose)
-                        setSingleChoiceItems(
-                            pre_time_description, preTimeSet
-                        ) { _, which -> preTimeSet = which }
-                        setPositiveButton(R.string.text_ok){ _, _ ->
-                            binding.noticesPreTime.text = preTimeArray[preTimeSet].toString()
-                        }
-                        setNegativeButton(R.string.text_cancel){ _, _ ->
-                            preTimeSet = preTimeSetDoing
-                        }
-                    }.show()
-                }
-                R.id.notices_insert -> {
-                    if (!checkSelfPermission()){
-                        onToast(R.string.text_notices_permission_current)
-                        return
+        when (v?.id) {
+            R.id.notices_back -> { onBackPressed() }
+            R.id.notices_newest_base -> {
+                binding.noticesNewestSwitch.isChecked = !binding.noticesNewestSwitch.isChecked
+            }
+            R.id.notices_pre_base -> {
+                binding.noticesPreSwitch.isChecked = !binding.noticesPreSwitch.isChecked
+            }
+            R.id.notices_pre_time_base -> {
+                val preTimeSetDoing = preTimeSet
+                AlertDialog.Builder(this@Notices).run {
+                    setTitle(R.string.title_calendar_pre_time_choose)
+                    setSingleChoiceItems(
+                        pre_time_description, preTimeSet
+                    ) { _, which -> preTimeSet = which }
+                    setPositiveButton(R.string.text_ok){ _, _ ->
+                        binding.noticesPreTime.text = preTimeArray[preTimeSet].toString()
                     }
-                    if (manager.checkCalendarAccount() <= 0) {
-                        addCalendarAccount()
+                    setNegativeButton(R.string.text_cancel){ _, _ ->
+                        preTimeSet = preTimeSetDoing
                     }
-                    if (manager.checkCalendarAccount() > 0) {
-                        getTable(binding.noticesNewestSwitch.isChecked)
-                    } else { null }
+                }.show()
+            }
+            R.id.notices_insert -> {
+                if (!checkSelfPermission()){
+                    onToast(R.string.text_notices_permission_current)
+                    return
                 }
-                R.id.notices_delete -> {
-                    if (!checkSelfPermission()){
-                        onToast(R.string.text_notices_permission_current)
-                        return
-                    }
-                    doDelete()
+                if (manager.checkCalendarAccount() <= 0) {
+                    addCalendarAccount()
                 }
-                else -> null
+                if (manager.checkCalendarAccount() > 0) {
+                    getTable(binding.noticesNewestSwitch.isChecked)
+                }
+            }
+            R.id.notices_delete -> {
+                if (!checkSelfPermission()){
+                    onToast(R.string.text_notices_permission_current)
+                    return
+                }
+                doDelete()
             }
         }
     }
@@ -222,7 +219,7 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
     private fun getTable(useNewest: Boolean){
         if (useNewest){
             ScheduleHelper(this@Notices).getSchedule(object : ScheduleHelper.Callback{
-                override fun onReadStart() {
+                override fun onReadStart(isSundayEmpty: Boolean) {
                     onReadTable()
                 }
             })
@@ -270,50 +267,50 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
 
             var classCountIndex = 0
 
-            for (week_index in 1 .. 18) {
-                for (day_index in 1 .. 7) {
+            for (weekIndex in 1 .. 18) {
+                ScheduleHelper.DAY_INDEX.forEach { day ->
                     termDate.add(Calendar.DAY_OF_YEAR, 1)
-                    if (day_index == 1) {
-                        continue
-                    }
-                    var scheduleIndex: Array<Array<String>>
+
                     val scheduleSet = Calendar.getInstance()
                     scheduleSet.time = termDate.time
                     scheduleSet.set(Calendar.YEAR, 2000)
-                    val isWeekend = if (termDate.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY || termDate.get(
-                            Calendar.DAY_OF_WEEK
-                        ) == Calendar.SATURDAY
-                    ) 1 else 0
-                    scheduleIndex = if (scheduleSet.before(scheduleSummer[1]) and scheduleSet.after(scheduleSummer[0])) {
+                    val isWeekend = if (termDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+                        || termDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) 1 else 0
+                    val scheduleIndex: Array<Pair<String, String>> = if (
+                        scheduleSet.before(scheduleSummer[1]) && scheduleSet.after(scheduleSummer[0])
+                    ) {
                         CalendarManager.CLASS_SUMMER[isWeekend]
                     } else {
                         CalendarManager.CLASS_WINTER[isWeekend]
                     }
-                    classFor@for (class_index in 0 .. 4) {
+                    ScheduleHelper.CLASS_INDEX.forEach classFor@{ clazz ->
                         val classLocationCount = try {
-                            scheduleObj.getJSONObject(ScheduleHelper.DAY_INDEX[day_index - 1])
-                                .getJSONArray(ScheduleHelper.CLASS_INDEX[class_index])
+                            scheduleObj.getJSONObject(day).getJSONArray(clazz)
                         } catch (e: JSONException) {
-                            continue@classFor
+                            return@classFor
                         }
-                        for (class_count in 0 until classLocationCount.length()) {
+                        for (classCount in 0 until classLocationCount.length()) {
                             classCountIndex++
-                            val classData = classLocationCount.getJSONObject(class_count)
+                            val classData = classLocationCount.getJSONObject(classCount)
                             val classRange = classData.getJSONArray("range")
                             var rangeJudge = false
                             for (indexRange in 0 until classRange.length()){
-                                rangeJudge = rangeJudge or (classRange.getInt(indexRange) == week_index)
+                                if (classRange.getInt(indexRange) == weekIndex){
+                                    rangeJudge = true
+                                    continue
+                                }
                             }
                             if (!rangeJudge){
                                 continue
                             }
+                            val classIndex = ScheduleHelper.CLASS_INDEX.indexOf(clazz)
                             val classTime = arrayOf(
-                                sdfDate.format(termDate.time) + scheduleIndex[class_index][0],
-                                sdfDate.format(termDate.time) + scheduleIndex[class_index][1]
+                                sdfDate.format(termDate.time) + scheduleIndex[classIndex].first,
+                                sdfDate.format(termDate.time) + scheduleIndex[classIndex].second
                             )
                             insertedIndex ++
                             runOnUiThread {
-                                val stateText = java.lang.String.format(
+                                val stateText = String.format(
                                     getString(R.string.text_calendar_doing),
                                     insertedIndex
                                 )
@@ -324,7 +321,7 @@ class Notices : BaseActivity<ActivityNoticesBinding>(), View.OnClickListener, He
                                 classTime[0],
                                 classTime[1],
                                 classData.getString("name"),
-                                CalendarManager.CLASS_DESCRIPTION[class_count] + " " + classData.getString("room") + " " + classData.getString(
+                                CalendarManager.CLASS_DESCRIPTION[classCount] + " " + classData.getString("room") + " " + classData.getString(
                                     "teacher"
                                 ),
                                 classData.getString("room") + " " + classData.getString(

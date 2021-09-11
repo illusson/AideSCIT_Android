@@ -32,18 +32,18 @@ class CalendarManager(val context: Context) {
 
         val CLASS_WINTER = arrayOf(
             arrayOf(
-                arrayOf("/08/20", "/10/00"), arrayOf("/10/20", "/12/00"), arrayOf("/14/00", "/15/40"), arrayOf("/16/00", "/17/40"), arrayOf("/19/00", "/20/40")
+                Pair("/08/20", "/10/00"), Pair("/10/20", "/12/00"), Pair("/14/00", "/15/40"), Pair("/16/00", "/17/40"), Pair("/19/00", "/20/40")
             ),
             arrayOf(
-                arrayOf("/08/20", "/10/00"), arrayOf("/10/20", "/12/00"), arrayOf("/13/10", "/14/50"), arrayOf("/15/00", "/16/40"), arrayOf("/19/00", "/20/40")
+                Pair("/08/20", "/10/00"), Pair("/10/20", "/12/00"), Pair("/13/10", "/14/50"), Pair("/15/00", "/16/40"), Pair("/19/00", "/20/40")
             )
         )
         val CLASS_SUMMER = arrayOf(
             arrayOf(
-                arrayOf("/08/20", "/10/00"), arrayOf("/10/20", "/12/00"), arrayOf("/14/30", "/16/10"), arrayOf("/16/20", "/18/00"), arrayOf("/19/20", "/21/00")
+                Pair("/08/20", "/10/00"), Pair("/10/20", "/12/00"), Pair("/14/30", "/16/10"), Pair("/16/20", "/18/00"), Pair("/19/20", "/21/00")
             ),
             arrayOf(
-                arrayOf("/08/20", "/10/00"), arrayOf("/10/20", "/12/00"), arrayOf("/13/10", "/14/50"), arrayOf("/15/00", "/16/40"), arrayOf("/19/00", "/20/40")
+                Pair("/08/20", "/10/00"), Pair("/10/20", "/12/00"), Pair("/13/10", "/14/50"), Pair("/15/00", "/16/40"), Pair("/19/00", "/20/40")
             )
         )
         val CLASS_DESCRIPTION = arrayOf(
@@ -76,9 +76,9 @@ class CalendarManager(val context: Context) {
             val count = userCursor.count
             if (count > 0) {
                 userCursor.moveToFirst()
-                CalendarID = userCursor
-                    .getInt(userCursor.getColumnIndex(CalendarContract.Calendars._ID))
-                    .toLong()
+                CalendarID = userCursor.getInt(
+                    userCursor.getColumnIndex(CalendarContract.Calendars._ID)
+                ).toLong()
                 CalendarID
             } else {
                 -1
@@ -153,9 +153,9 @@ class CalendarManager(val context: Context) {
             event.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Beijing")
             val newEvent = context.contentResolver
                 .insert(Uri.parse(CALENDAR_EVENT_URL), event)
-            val event_id = newEvent!!.lastPathSegment!!.toLong()
+            val eventId = newEvent!!.lastPathSegment!!.toLong()
             val values = ContentValues()
-            values.put("event_id", event_id)
+            values.put("event_id", eventId)
             values.put("minutes", preRemindTime)
             try {
                 context.contentResolver
@@ -185,7 +185,9 @@ class CalendarManager(val context: Context) {
                 eventCursor.moveToFirst()
                 while (!eventCursor.isAfterLast) {
                     val id =
-                        eventCursor.getInt(eventCursor.getColumnIndex(CalendarContract.Calendars._ID)) //取得id
+                        eventCursor.getInt(
+                            eventCursor.getColumnIndex(CalendarContract.Calendars._ID)
+                        ) //取得id
                     val deleteUri = ContentUris.withAppendedId(
                         Uri.parse(CALENDAR_EVENT_URL),
                         id.toLong()

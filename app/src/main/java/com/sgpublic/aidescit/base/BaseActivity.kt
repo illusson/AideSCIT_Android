@@ -172,6 +172,9 @@ abstract class BaseActivity<T : ViewBinding>: SwipeBackActivity() {
     }
 
     protected fun onToast(content: String?) {
+        if (content == null){
+            return
+        }
         runOnUiThread {
             Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
         }

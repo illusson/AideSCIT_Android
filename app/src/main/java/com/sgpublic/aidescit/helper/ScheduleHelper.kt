@@ -17,8 +17,8 @@ import java.net.UnknownHostException
 class ScheduleHelper (val context: Context) {
     companion object {
         val DAY_INDEX = arrayOf(
-            "sunday", "monday", "tuesday", "wednesday",
-            "thursday", "friday", "saturday"
+            "monday", "tuesday", "wednesday", "thursday",
+            "friday", "saturday", "sunday"
         )
 
         val CLASS_INDEX = arrayOf(
@@ -75,42 +75,47 @@ class ScheduleHelper (val context: Context) {
     fun parsing(objects: JSONObject, week: Int, callback: Callback?){
         callback?.let {
             try {
-                callback.onReadStart()
                 var isEmpty = 0
                 val tableObject = objects.getJSONObject("schedule")
-                DAY_INDEX.forEachIndexed for1@{ dayIndex, day ->
+                callback.onReadStart(tableObject.isNull(DAY_INDEX[6]))
+                DAY_INDEX.forEach forDay@{ day ->
                     if (tableObject.isNull(day)){
-                        for (classIndex in CLASS_INDEX.indices){
-                            callback.onRead(dayIndex, classIndex, null)
+                        for (clazz in CLASS_INDEX){
+                            callback.onRead(day, clazz, null)
                         }
-                        return@for1
+                        return@forDay
                     }
                     val dayObject = tableObject.getJSONObject(day)
-                    CLASS_INDEX.forEachIndexed for2@{ classIndex, clazz ->
+                    CLASS_INDEX.forEach forClass@{ clazz ->
                         if (dayObject.isNull(clazz)){
-                            callback.onRead(dayIndex, classIndex, null)
-                            return@for2
+                            callback.onRead(day, clazz, null)
+                            return@forClass
                         }
                         val indexArray = dayObject.getJSONArray(clazz)
-                        for (index in 0 until indexArray.length()){
+                        for (index in 0 until indexArray.length()) {
                             val indexObject = indexArray.getJSONObject(index)
                             val rangeObject = indexObject.getJSONArray("range")
                             var rangeJudge = false
-                            for (indexRange in 0 until rangeObject.length()){
-                                rangeJudge = rangeJudge or (rangeObject.getInt(indexRange) == week)
+                            for (indexRange in 0 until rangeObject.length()) {
+                                if (rangeObject.getInt(indexRange) == week){
+                                    rangeJudge = true
+                                    break
+                                }
                             }
                             if (rangeJudge){
-                                callback.onRead(dayIndex, classIndex, ScheduleData(
+                                callback.onRead(day, clazz, ScheduleData(
                                     indexObject.getString("name"),
                                     indexObject.getString("teacher"),
                                     indexObject.getString("room")
                                 ))
-                                isEmpty ++
+                                isEmpty++
+                            } else {
+                                callback.onRead(day, clazz, null)
                             }
                         }
                     }
                 }
-                callback.onReadFinish(isEmpty == 0, tableObject.isNull(DAY_INDEX[0]))
+                callback.onReadFinish(isEmpty == 0)
             } catch (e: JSONException) {
                 MyLog.e("schedule数据解析失败", e)
                 callback.onFailure(-404, e.message, e)
@@ -120,8 +125,8 @@ class ScheduleHelper (val context: Context) {
 
     interface Callback {
         fun onFailure(code: Int, message: String?, e: Exception? = null) {}
-        fun onReadStart(){}
-        fun onRead(dayIndex: Int, classIndex: Int, data: ScheduleData?){}
-        fun onReadFinish(isEmpty: Boolean, isSundayEmpty: Boolean = false){}
+        fun onReadStart(isSundayEmpty: Boolean = false){}
+        fun onRead(day: String, clazz: String, data: ScheduleData?){}
+        fun onReadFinish(isEmpty: Boolean){}
     }
 }

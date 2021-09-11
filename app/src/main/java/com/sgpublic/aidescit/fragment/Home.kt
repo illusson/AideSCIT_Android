@@ -50,9 +50,7 @@ class Home(override val contest: AppCompatActivity) : BaseFragment<FragmentHomeB
             onToast(R.string.text_load_failed, message, code)
         }
 
-        override fun onReadFinish(isEmpty: Boolean, isSundayEmpty: Boolean) {
-            super.onReadFinish(isEmpty, isSundayEmpty)
-            ConfigManager.putBoolean("is_sunday_empty", isSundayEmpty)
+        override fun onReadFinish(isEmpty: Boolean) {
             HeaderInfoHelper(contest).getSemesterInfo(callbackDate)
         }
     }
@@ -214,7 +212,7 @@ class Home(override val contest: AppCompatActivity) : BaseFragment<FragmentHomeB
                 continue
             }
             val betweenDays = ((termDate.timeInMillis-time2) / (1000*3600*24)).toInt()
-            var scheduleIndex: Array<Array<String>>
+            var scheduleIndex: Array<Pair<String, String>>
             val scheduleSet = Calendar.getInstance()
             scheduleSet.time = termDate.time
             scheduleSet.set(Calendar.YEAR, 2000)
@@ -251,7 +249,7 @@ class Home(override val contest: AppCompatActivity) : BaseFragment<FragmentHomeB
                     if (!rangeJudge){
                         continue
                     }
-                    val dtStart = scheduleIndex[classIndex][0]
+                    val dtStart = scheduleIndex[classIndex].first
                     val classStart = Calendar.getInstance()
                     val startTime = (sdfDate.format(termDate.time) + dtStart).split("/").toTypedArray()
                     classStart[Calendar.YEAR] = startTime[0].toInt()
@@ -262,7 +260,7 @@ class Home(override val contest: AppCompatActivity) : BaseFragment<FragmentHomeB
                     classStart[Calendar.SECOND] = 0
                     classStart[Calendar.MILLISECOND] = 0
 
-                    val dtEnd = scheduleIndex[classIndex][1]
+                    val dtEnd = scheduleIndex[classIndex].second
                     val classEnd = Calendar.getInstance()
                     val endTime = (sdfDate.format(termDate.time) + dtEnd).split("/").toTypedArray()
                     classEnd[Calendar.YEAR] = endTime[0].toInt()

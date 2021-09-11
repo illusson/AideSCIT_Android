@@ -22,22 +22,10 @@ class Schedule(contest: AppCompatActivity) : BaseFragment<FragmentScheduleBindin
 
     private var week: Int = 0
 
-    private val isSundayEmpty: Boolean = ConfigManager.getBoolean("is_sunday_empty")
     private var viewWidth: Int = 0
     private var viewHeight: Int = 0
 
     override fun onFragmentCreated(savedInstanceState: Bundle?) {
-        val daySize: Int
-        if (isSundayEmpty) {
-            binding.timetableGridMorning.columnCount = 6
-            binding.timetableGridNoon.columnCount = 6
-            binding.timetableGridEvening.columnCount = 6
-            daySize = 6
-        } else {
-            daySize = 7
-        }
-        viewWidth = (resources.displayMetrics.widthPixels - dip2px(20F)) / daySize
-        viewHeight = dip2px(110F)
         week = arguments?.getInt("week")
             ?: ConfigManager.getInt("week", 0)
         if (week == 0){
@@ -98,7 +86,18 @@ class Schedule(contest: AppCompatActivity) : BaseFragment<FragmentScheduleBindin
         binding.tableWeek.text = String.format(getString(R.string.text_table_week_index), week)
     }
 
-    override fun onReadStart() {
+    override fun onReadStart(isSundayEmpty: Boolean) {
+        val daySize: Int
+        if (isSundayEmpty) {
+            runOnUiThread {
+                binding.scheduleSunday.visibility = View.GONE
+            }
+            daySize = 6
+        } else {
+            daySize = 7
+        }
+        viewWidth = (resources.displayMetrics.widthPixels - dip2px(20F)) / daySize
+        viewHeight = dip2px(110F)
         showTable = false
         runOnUiThread {
             binding.timetableGrid.visibility = View.INVISIBLE
@@ -114,15 +113,12 @@ class Schedule(contest: AppCompatActivity) : BaseFragment<FragmentScheduleBindin
         binding.timetableRefresh.isRefreshing = false
     }
 
-    override fun onRead(dayIndex: Int, classIndex: Int, data: ScheduleData?) {
-        if (isSundayEmpty && dayIndex == 0){
-            return
-        }
-
+    override fun onRead(day: String, clazz: String, data: ScheduleData?) {
         if (!showTable){
             showTable = true
         }
 
+        val classIndex = ScheduleHelper.CLASS_INDEX.indexOf(clazz)
         val parent: ViewGroup = when {
             classIndex < 2 -> binding.timetableGridMorning
             classIndex < 4 -> binding.timetableGridNoon
@@ -143,7 +139,9 @@ class Schedule(contest: AppCompatActivity) : BaseFragment<FragmentScheduleBindin
 
         val params = GridLayout.LayoutParams()
         params.rowSpec = GridLayout.spec(classIndex % 2)
-        params.columnSpec = GridLayout.spec(dayIndex - (if (isSundayEmpty) 1 else 0))
+        params.columnSpec = GridLayout.spec(
+            ScheduleHelper.DAY_INDEX.indexOf(day)
+        )
         params.width = viewWidth
         params.height = viewHeight
         itemTimetable.layoutParams = params
@@ -153,7 +151,7 @@ class Schedule(contest: AppCompatActivity) : BaseFragment<FragmentScheduleBindin
         }
     }
 
-    override fun onReadFinish(isEmpty: Boolean, isSundayEmpty: Boolean) {
+    override fun onReadFinish(isEmpty: Boolean) {
         runOnUiThread {
             if (isEmpty) {
                 binding.timetableGrid.visibility = View.GONE
@@ -162,14 +160,10 @@ class Schedule(contest: AppCompatActivity) : BaseFragment<FragmentScheduleBindin
                 binding.timetableGrid.visibility = View.VISIBLE
                 binding.timetableEmpty.visibility = View.GONE
             }
-            if (this.isSundayEmpty){
-                binding.scheduleSunday.visibility = View.GONE
-            }
             binding.tablePre.isEnabled = true
             binding.tableNext.isEnabled = true
             binding.timetableRefresh.isRefreshing = false
         }
-        ConfigManager.putBoolean("is_sunday_empty", isSundayEmpty)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
