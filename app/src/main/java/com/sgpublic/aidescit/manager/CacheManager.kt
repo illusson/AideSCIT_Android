@@ -21,7 +21,7 @@ class CacheManager (context: Context) {
         return this
     }
 
-    fun read(name: String): JSONObject?{
+    fun read(name: String): JSONObject? {
         return try {
             val cacheString = File(cacheDir, name).readText()
             JSONObject(cacheString)
