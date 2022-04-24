@@ -3,11 +3,11 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.18.1)
 
 # Declares and names the project.
 
-project("SCITEduTool")
+project("AideSCIT")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -15,7 +15,7 @@ project("SCITEduTool")
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-             scitedutool_secret
+        AideSCIT_SEC
 
              # Sets the library as a shared library.
              SHARED
@@ -41,7 +41,7 @@ find_library( # Sets the name of the path variable.
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-                       scitedutool_secret
+        AideSCIT_SEC
 
                        # Links the target library to the log library
                        # included in the NDK.

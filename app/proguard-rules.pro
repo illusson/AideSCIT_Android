@@ -18,22 +18,4 @@
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-
 #-renamesourcefileattribute SourceFile
-
--keep class com.sgpublic.aidescit.**
-
--keep class androidx.recyclerview.widget.* { *; }
--keep class androidx.viewpager2.widget.* { *; }
-
--keep class com.sgpublic.blurfixandroidx.* { *; }
-
--keep class * extends androidx.viewbinding.ViewBinding { *; }
-
--dontwarn android.renderscript.*
--keep public class androidx.renderscript.* { *; }
-
--keep class com.kongzue.dialogx.* { *; }
--dontwarn com.kongzue.dialogx.*
-
--keep class android.view.* { *; }

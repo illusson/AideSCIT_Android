@@ -1,7 +1,6 @@
 /build
 /debug
 /release
-/release32
 
 /src/main/cpp_private
 gradle.properties

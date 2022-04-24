@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorWindowBackground"
-    tools:context=".activity.MyInfo">
+    tools:context="io.github.sgpublic.aidescit.activity.MyInfo">
     <FrameLayout
         android:id="@+id/info_toolbar"
         android:layout_width="match_parent"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWindowBackground"
     android:orientation="vertical"
-    tools:context=".activity.PrivacySetting">
+    tools:context="io.github.sgpublic.aidescit.activity.PrivacySetting">
     <FrameLayout
         android:id="@+id/privacy_toolbar"
         android:layout_width="match_parent"

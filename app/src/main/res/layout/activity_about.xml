@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.About">
+    tools:context="io.github.sgpublic.aidescit.activity.About">
 
     <ImageView
         android:id="@+id/about_back"
